@@ -1,20 +1,24 @@
 package com.uc3m.whatthepass.models
 
-import androidx.annotation.Nullable
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.*
+import androidx.room.ForeignKey.CASCADE
 import java.sql.Blob
 
 @Entity(tableName = "Password",
-        foreignKeys = [ForeignKey(entity = User::class, parentColumns = ["email"], childColumns = ["user"], onDelete = ForeignKey.CASCADE, onUpdate = ForeignKey.CASCADE)],
+        //foreignKeys = [ForeignKey(entity = User::class, parentColumns = ["email"], childColumns = ["user"], onDelete = ForeignKey.CASCADE, onUpdate = ForeignKey.CASCADE)],
         indices = [Index(value = ["name"], unique = true)])
 data class Password(
         @PrimaryKey(autoGenerate = true)
         val id: Int,
         val name: String,
-        val user: User,
-        val hashPassword: Blob,
-        val url: String? = null
+        @ForeignKey
+                (entity = User::class,
+                parentColumns = ["email"],
+                childColumns = ["user"],
+                onDelete = CASCADE,
+                onUpdate = CASCADE
+                )
+        val user: String,
+        val hashPassword: String,
+        val url: String?
 )

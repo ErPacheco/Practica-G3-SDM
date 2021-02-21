@@ -11,7 +11,7 @@ interface FileDao {
 
     // Busca los ficheros de un usuario
     @Query("SELECT * from File where user = :email")
-    suspend fun findByUser(email: String): LiveData<List<File>>
+    suspend fun findByUser(email: String): List<File>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateFile(file: File)

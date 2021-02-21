@@ -8,7 +8,7 @@ class UserRepository(private val userDao: UserDao) {
         userDao.findUserByEmailAndMasterPass(email, password)
     }
 
-    suspend fun addUser(email: String, password: Blob) {
+    suspend fun addUser(email: String, password: String) {
         val user = User(email = email, masterPass = password)
         userDao.addUser(user)
     }

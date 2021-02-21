@@ -8,7 +8,6 @@ import java.sql.Blob
 data class User(
         @PrimaryKey
         val email: String,
-        val masterPass: Blob,
-
+        val masterPass: String,
 
 )
