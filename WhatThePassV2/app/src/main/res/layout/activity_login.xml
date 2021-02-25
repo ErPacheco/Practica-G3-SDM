@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".views.login.LoginActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/login_fragment"
-        android:name="com.uc3m.whatthepass.LoginFragment"
+        android:name="com.uc3m.whatthepass.views.login.LoginFragment"
         android:layout_width="389dp"
         android:layout_height="785dp"
         app:layout_constraintBottom_toBottomOf="parent"

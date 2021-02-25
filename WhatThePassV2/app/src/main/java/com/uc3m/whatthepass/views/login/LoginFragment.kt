@@ -1,11 +1,10 @@
-package com.uc3m.whatthepass
+package com.uc3m.whatthepass.views.login
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListAdapter
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.uc3m.whatthepass.databinding.FragmentLoginBinding

@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WhatThePass">
-        <activity android:name=".LoginActivity">
+        <activity android:name=".views.login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
