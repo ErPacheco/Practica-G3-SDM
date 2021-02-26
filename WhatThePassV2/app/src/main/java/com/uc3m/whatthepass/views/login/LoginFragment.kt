@@ -9,9 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.uc3m.whatthepass.databinding.FragmentLoginBinding
 import com.uc3m.whatthepass.viewModels.UserViewModel
 import com.uc3m.whatthepass.views.passAndFiles.PassAndFilesActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.regex.Pattern
 
 class LoginFragment : Fragment() {
@@ -34,7 +38,9 @@ class LoginFragment : Fragment() {
         }
 
         binding.login.setOnClickListener{
-            loginUser()
+                lifecycleScope.launch{
+                    loginUser()
+                }
         }
 
         return view
@@ -60,10 +66,12 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun loginUser() {
+    private suspend fun loginUser() {
         val email = binding.email.text.toString()
         val masterPassword = binding.password.text.toString()
-        val loginFind = userViewModel.loginUser(email, masterPassword)
+        val loginFind = withContext(Dispatchers.IO){
+            userViewModel.loginUser(email, masterPassword)
+        }
         if(loginFind) {
             loginView()
             Toast.makeText(requireContext(), "Inicio de sesión correcto!", Toast.LENGTH_LONG).show()
