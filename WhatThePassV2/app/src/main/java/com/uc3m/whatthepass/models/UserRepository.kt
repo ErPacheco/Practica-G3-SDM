@@ -1,14 +1,13 @@
 package com.uc3m.whatthepass.models
 
 import androidx.lifecycle.LiveData
-import java.sql.Blob
 
 class UserRepository(private val userDao: UserDao) {
 
     val readAll: LiveData<List<User>> = userDao.readAll()
 
-    suspend fun readUser(email: String, password: String) {
-        userDao.findUserByEmailAndMasterPass(email, password)
+    suspend fun readUser(email: String, password: String): User? {
+        return userDao.findUserByEmailAndMasterPass(email, password)
     }
 
     suspend fun addUser(email: String, password: String) {
