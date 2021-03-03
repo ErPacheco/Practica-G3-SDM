@@ -23,7 +23,8 @@ class PasswordInfoFragment : Fragment() {
         binding = FragmentPasswordInfoBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val email = arguments?.getString("email");
+        val activity = PassAndFilesActivity()
+        val email = activity.getMyData()
 
         passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
 

@@ -26,8 +26,6 @@ class PasswordView : Fragment() {
         binding = FragmentPasswordViewBinding.inflate(inflater, container, false)
         val view = binding.root
 
-
-
         passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
         val adapter = ListAdapter()
         val recyclerView = binding.recyclerView2
