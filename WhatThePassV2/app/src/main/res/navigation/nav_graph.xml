@@ -17,5 +17,9 @@
     <fragment
         android:id="@+id/passwordInfoFragment"
         android:name="com.uc3m.whatthepass.views.passAndFiles.PasswordInfoFragment"
-        android:label="PasswordInfoFragment" />
+        android:label="PasswordInfoFragment" >
+        <action
+            android:id="@+id/action_passwordInfoFragment_to_passwordView"
+            app:destination="@id/passwordView" />
+    </fragment>
 </navigation>

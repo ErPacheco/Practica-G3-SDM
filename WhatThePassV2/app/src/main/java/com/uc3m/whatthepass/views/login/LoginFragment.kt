@@ -54,7 +54,7 @@ class LoginFragment : Fragment() {
             if(passwordCheck(masterPassword)) {
                 userViewModel.addUser(email, masterPassword)
                 Toast.makeText(requireContext(), "Usuario creado!", Toast.LENGTH_LONG).show()
-                loginView()
+                loginView(email)
                 binding.email.text.clear()
                 binding.password.text.clear()
             } else {
@@ -73,7 +73,7 @@ class LoginFragment : Fragment() {
             userViewModel.loginUser(email, masterPassword)
         }
         if(loginFind) {
-            loginView()
+            loginView(email)
             Toast.makeText(requireContext(), "Inicio de sesión correcto!", Toast.LENGTH_LONG).show()
             binding.email.text.clear()
             binding.password.text.clear()
@@ -84,8 +84,9 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun loginView() {
+    private fun loginView(email:String) {
         val intent = Intent(this@LoginFragment.context, PassAndFilesActivity::class.java)
+        intent.putExtra("email", email)
 
         activity?.startActivity(intent)
     }
