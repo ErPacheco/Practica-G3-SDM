@@ -1,58 +1,81 @@
 package com.uc3m.whatthepass.views.passAndFiles
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.uc3m.whatthepass.R
+import com.uc3m.whatthepass.databinding.FragmentPasswordInfoBinding
+import com.uc3m.whatthepass.viewModels.PasswordViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [PasswordInfoFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class PasswordInfoFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var binding: FragmentPasswordInfoBinding
+    private lateinit var passwordViewModel: PasswordViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentPasswordInfoBinding.inflate(inflater, container, false)
+        val view = binding.root
+
+        val email = arguments?.getString("email");
+
+        passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
+
+        binding.createPassButton.setOnClickListener{
+            if (email != null) {
+                insertPassword(email)
+            } else {
+                Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+            }
         }
+
+        binding.clearCreateInputs.setOnClickListener{
+            clearData()
+        }
+
+        return view
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_password_info, container, false)
+    private fun insertPassword(email: String) {
+        val input_title = binding.titleInput.text.toString()
+        val input_password = binding.passwordInput.text.toString()
+        val input_url = binding.urlInput.text.toString()
+
+        when(checkInputs(input_title, input_password)) {
+            1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
+            2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
+            3 -> {
+                passwordViewModel.addPassword(input_title, email, input_password, input_url)
+                Toast.makeText(requireContext(), "Password created!", Toast.LENGTH_LONG).show()
+                findNavController().navigate(R.id.action_passwordInfoFragment_to_passwordView)
+            }
+        }
+
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment PasswordInfoFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-                PasswordInfoFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
-                    }
-                }
+    private fun clearData() {
+        binding.titleInput.text.clear()
+        binding.passwordInput.text.clear()
+        binding.urlInput.text.clear()
+    }
+
+    private fun checkInputs(title: String, pass: String):Int {
+        return when {
+            title.isEmpty() -> {
+                1
+            }
+            pass.isEmpty() -> {
+                2
+            }
+            else -> {
+                3
+            }
+        }
     }
 }

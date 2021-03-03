@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.uc3m.whatthepass.models.*
+import com.uc3m.whatthepass.util.Hash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -18,9 +19,10 @@ class PasswordViewModel(application: Application): AndroidViewModel(application)
         readAll = repository.readAll
     }
 
-        fun addPassword(password: Password){
+    fun addPassword(name: String, emailUser: String, password: String, url: String){
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addPassword(password)
+            val masterPass = Hash.sha512Hash(password)
+            repository.addPassword(name, emailUser, masterPass, url)
         }
     }
     fun deletePasswordByUser(user: String) {
