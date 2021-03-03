@@ -9,7 +9,7 @@ import androidx.room.ForeignKey.CASCADE
 data class Password(
         @PrimaryKey(autoGenerate = true)
         val id: Int,
-        val name: String,
+        val name: String,// nombre de entrada
         @ForeignKey
                 (entity = User::class,
                 parentColumns = ["email"],
@@ -18,6 +18,7 @@ data class Password(
                 onUpdate = CASCADE
                 )
         val user: String,
+
        // @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
         val hashPassword: String,
         val url: String?

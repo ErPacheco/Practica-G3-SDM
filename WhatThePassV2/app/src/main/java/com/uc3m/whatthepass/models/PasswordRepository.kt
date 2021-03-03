@@ -11,4 +11,8 @@ class PasswordRepository(private val passwordDao: PasswordDao) {
     suspend fun findPasswordByUser (user: String){
         passwordDao.findByUser(user)
     }
+
+    suspend fun deletePasswordByUser (user:String){
+        passwordDao.deleteByUser(user)
+    }
 }

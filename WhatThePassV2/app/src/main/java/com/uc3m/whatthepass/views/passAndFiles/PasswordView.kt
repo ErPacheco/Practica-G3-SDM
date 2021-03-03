@@ -17,7 +17,7 @@ class PasswordView : Fragment() {
     // TODO: Rename and change types of parameters
     private lateinit var binding: FragmentPasswordViewBinding
     private lateinit var passwordViewModel: PasswordViewModel
-
+    lateinit var comm: Comunicator
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -26,12 +26,13 @@ class PasswordView : Fragment() {
         binding = FragmentPasswordViewBinding.inflate(inflater, container, false)
         val view = binding.root
 
+
+
+        passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
         val adapter = ListAdapter()
         val recyclerView = binding.recyclerView2
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
         passwordViewModel.readAll.observe(viewLifecycleOwner, {
             password -> adapter.setData(password)
         })
@@ -39,6 +40,9 @@ class PasswordView : Fragment() {
         binding.addButton.setOnClickListener{
             findNavController().navigate(R.id.action_passwordView_to_passwordInfoFragment)
         }
+
+
+
 
         return view
     }

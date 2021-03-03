@@ -23,4 +23,9 @@ class PasswordViewModel(application: Application): AndroidViewModel(application)
             repository.addPassword(password)
         }
     }
+    fun deletePasswordByUser(user: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deletePasswordByUser(user)
+        }
+    }
 }

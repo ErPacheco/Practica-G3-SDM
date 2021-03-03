@@ -22,4 +22,7 @@ interface PasswordDao {
 
     @Query("SELECT * FROM Password ORDER BY id ASC")
     fun readAll(): LiveData<List<Password>>
+
+    @Query("DELETE FROM Password where user=:email")
+    suspend fun deleteByUser(email:String)
 }

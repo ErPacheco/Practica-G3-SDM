@@ -87,6 +87,8 @@ class LoginFragment : Fragment() {
     private fun loginView() {
         val intent = Intent(this@LoginFragment.context, PassAndFilesActivity::class.java)
 
+
+
         activity?.startActivity(intent)
     }
 
