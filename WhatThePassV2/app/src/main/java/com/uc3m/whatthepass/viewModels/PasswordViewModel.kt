@@ -21,7 +21,7 @@ class PasswordViewModel(application: Application): AndroidViewModel(application)
 
     fun addPassword(name: String, emailUser: String, password: String, url: String){
         viewModelScope.launch(Dispatchers.IO) {
-            val masterPass = Hash.sha512Hash(password)
+            val masterPass = Hash.bcryptHash(password)
             repository.addPassword(name, emailUser, masterPass, url)
         }
     }

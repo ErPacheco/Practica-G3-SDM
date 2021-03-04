@@ -10,6 +10,10 @@ class UserRepository(private val userDao: UserDao) {
         return userDao.findUserByEmailAndMasterPass(email, password)
     }
 
+    suspend fun readUserEmail(email: String): User? {
+        return userDao.findUserByEmail(email)
+    }
+
     suspend fun addUser(email: String, password: String) {
         val user = User(email = email, masterPass = password)
         userDao.addUser(user)

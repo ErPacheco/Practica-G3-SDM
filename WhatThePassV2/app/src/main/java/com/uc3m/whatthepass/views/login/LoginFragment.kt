@@ -34,7 +34,9 @@ class LoginFragment : Fragment() {
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
         binding.signin.setOnClickListener{
-            insertUser()
+            lifecycleScope.launch{
+                insertUser()
+            }
         }
 
         binding.login.setOnClickListener{
@@ -46,23 +48,30 @@ class LoginFragment : Fragment() {
         return view
     }
 
-    private fun insertUser() {
+    private suspend fun insertUser() {
         val email = binding.email.text.toString()
         val masterPassword = binding.password.text.toString()
 
         if(emailCheck(email)) {
             if(passwordCheck(masterPassword)) {
-                userViewModel.addUser(email, masterPassword)
-                Toast.makeText(requireContext(), "Usuario creado!", Toast.LENGTH_LONG).show()
-                loginView(email)
-                binding.email.text.clear()
-                binding.password.text.clear()
+                val registerFind = withContext(Dispatchers.IO){
+                    userViewModel.addUser(email, masterPassword)
+                }
+                if (registerFind) {
+                    Toast.makeText(requireContext(), "User created!", Toast.LENGTH_LONG).show()
+                    loginView(email)
+                    binding.email.text.clear()
+                    binding.password.text.clear()
+                } else {
+                    Toast.makeText(requireContext(), "The email is already registered!", Toast.LENGTH_LONG).show()
+                }
+
             } else {
                 Toast.makeText(requireContext(), "La contraseña está mal introducida! Tiene que incluir minúsculas, " +
                         "mayúsculas y números, con una longitud mínima de 8 caracteres", Toast.LENGTH_LONG).show()
             }
         } else {
-            Toast.makeText(requireContext(), "La entrada tiene que ser un email", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "The input must be an email", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -74,11 +83,11 @@ class LoginFragment : Fragment() {
         }
         if(loginFind) {
             loginView(email)
-            Toast.makeText(requireContext(), "Inicio de sesión correcto!", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Successful login!", Toast.LENGTH_LONG).show()
             binding.email.text.clear()
             binding.password.text.clear()
         } else {
-            Toast.makeText(requireContext(), "Usuario no registrado!", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "User not registered!", Toast.LENGTH_LONG).show()
             binding.email.text.clear()
             binding.password.text.clear()
         }
