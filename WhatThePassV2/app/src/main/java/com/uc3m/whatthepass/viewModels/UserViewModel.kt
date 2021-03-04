@@ -9,6 +9,7 @@ import com.uc3m.whatthepass.models.User
 import com.uc3m.whatthepass.models.UserRepository
 import com.uc3m.whatthepass.models.WhatTheDatabase
 import com.uc3m.whatthepass.util.Hash
+import com.uc3m.whatthepass.util.Hash.verifyHash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -27,19 +28,20 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
 
     fun addUser(email: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val masterPass = Hash.sha512Hash(password)
+            val masterPass = Hash.bcryptHash(password)
             repository.addUser(email, masterPass)
         }
     }
 
     suspend fun loginUser(email: String, password: String): Boolean {
-        val masterPass = Hash.sha512Hash(password)
-        val userFind = repository.readUser(email, masterPass)
-        if (userFind != null) {
-            logged = true
+        val userFind = repository.readUserEmail(email)
+        if(userFind != null) {
+            val res = verifyHash(password, userFind.masterPass)
+            logged = res
         } else {
             logged = false
         }
+
         return logged
     }
 }
