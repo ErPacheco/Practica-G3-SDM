@@ -19,6 +19,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
     val readAll: LiveData<List<User>>
     private val repository: UserRepository
     private var logged: Boolean = false
+    private var register: Boolean = false
 
     init {
         val userDao = WhatTheDatabase.getDatabase(application).userDao()
@@ -26,11 +27,16 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
         readAll = repository.readAll
     }
 
-    fun addUser(email: String, password: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+    suspend fun addUser(email: String, password: String): Boolean {
+        val userFind = repository.readUserEmail(email)
+        if (userFind != null) {
+            register = false
+        } else {
             val masterPass = Hash.bcryptHash(password)
             repository.addUser(email, masterPass)
+            register = true
         }
+        return register
     }
 
     suspend fun loginUser(email: String, password: String): Boolean {
