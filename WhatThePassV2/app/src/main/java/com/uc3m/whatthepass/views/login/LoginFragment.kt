@@ -81,12 +81,14 @@ class LoginFragment : Fragment() {
         val loginFind = withContext(Dispatchers.IO){
             userViewModel.loginUser(email, masterPassword)
         }
+
         if(loginFind) {
             loginView(email)
             Toast.makeText(requireContext(), "Successful login!", Toast.LENGTH_LONG).show()
             binding.email.text.clear()
             binding.password.text.clear()
         } else {
+           
             Toast.makeText(requireContext(), "User not registered!", Toast.LENGTH_LONG).show()
             binding.email.text.clear()
             binding.password.text.clear()

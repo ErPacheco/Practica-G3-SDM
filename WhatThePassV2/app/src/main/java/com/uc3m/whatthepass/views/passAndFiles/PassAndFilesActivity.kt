@@ -8,9 +8,10 @@ import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.models.Password
 
 
-class PassAndFilesActivity : AppCompatActivity(),Comunicator {
+class PassAndFilesActivity : AppCompatActivity() {
 
     private var email = "a@gmail.com" // Esto es un ejemplo, queremos solucionarlo para la siguiente entrega
+    //var sessionId = intent.getStringExtra("email")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +43,7 @@ class PassAndFilesActivity : AppCompatActivity(),Comunicator {
         return navController.navigateUp() ||super.onSupportNavigateUp()
     }
 
-    override fun passDataCom(password_input: Password) {
-        TODO("Not yet implemented")
-    }
+
+
+
 }
