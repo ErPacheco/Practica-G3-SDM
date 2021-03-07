@@ -1,5 +1,6 @@
 package com.uc3m.whatthepass.views.passAndFiles
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,10 +23,9 @@ class PasswordInfoFragment : Fragment() {
     ): View? {
         binding = FragmentPasswordInfoBinding.inflate(inflater, container, false)
         val view = binding.root
-
-        val activity = PassAndFilesActivity()
-        val email = activity.getMyData()
-
+        
+        val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE)
+        val email = sp?.getString("loginEmail", null);
         passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
 
         binding.createPassButton.setOnClickListener{

@@ -1,13 +1,13 @@
 package com.uc3m.whatthepass.views.login
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.uc3m.whatthepass.databinding.FragmentLoginBinding
@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.regex.Pattern
 
+
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
     private lateinit var userViewModel: UserViewModel
@@ -25,8 +26,8 @@ class LoginFragment : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -40,9 +41,9 @@ class LoginFragment : Fragment() {
         }
 
         binding.login.setOnClickListener{
-                lifecycleScope.launch{
-                    loginUser()
-                }
+            lifecycleScope.launch{
+                loginUser()
+            }
         }
 
         return view
@@ -95,12 +96,15 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun loginView(email:String) {
+    private fun loginView(email: String) {
+        // Save preferences
+        val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE) ?: return
+        with(sp.edit()) {
+            putString("loginEmail", email)
+            commit()
+        }
+
         val intent = Intent(this@LoginFragment.context, PassAndFilesActivity::class.java)
-        intent.putExtra("email", email)
-
-
-
         activity?.startActivity(intent)
     }
 

@@ -16,7 +16,6 @@ import com.uc3m.whatthepass.databinding.FragmentPasswordViewBinding
 import com.uc3m.whatthepass.viewModels.PasswordViewModel
 
 class PasswordView : Fragment() {
-    // TODO: Rename and change types of parameters
     private lateinit var binding: FragmentPasswordViewBinding
     private lateinit var passwordViewModel: PasswordViewModel
 
