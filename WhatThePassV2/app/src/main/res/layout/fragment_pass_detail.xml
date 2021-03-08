@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.passAndFiles.PassDetailFragment">
+
+    <TextView
+        android:id="@+id/defaultInput4"
+        android:layout_width="316dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/default_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputURILabel"
+        android:background="@drawable/bottom_border"/>
+
+    <TextView
+        android:id="@+id/inputURILabel"
+        android:layout_width="316dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="56dp"
+        android:text="@string/uri"
+        android:textSize="10sp"
+        android:textColor="@color/third_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/defaultInput3"
+        tools:ignore="SmallSp" />
+
+    <TextView
+        android:id="@+id/defaultInput3"
+        android:layout_width="316dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/default_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputPasswordLabel"
+        android:background="@drawable/bottom_border" />
+
+    <TextView
+        android:id="@+id/inputPasswordLabel"
+        android:layout_width="316dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/input_password"
+        android:textSize="10sp"
+        android:textColor="@color/third_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/defaultInput2"
+        tools:ignore="SmallSp" />
+
+    <TextView
+        android:id="@+id/defaultInput2"
+        android:layout_width="316dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/default_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputEmailUsernameLabel"
+        android:background="@drawable/bottom_border" />
+
+    <TextView
+        android:id="@+id/passwordDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="68dp"
+        android:text="@string/password_input_detail"
+        android:textColor="@color/primary_color"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/inputNameLabel"
+        android:layout_width="316dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/input_name_label"
+        android:textSize="10sp"
+        android:textColor="@color/third_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordDetail"
+        tools:ignore="SmallSp" />
+
+    <TextView
+        android:id="@+id/inputEmailUsernameLabel"
+        android:layout_width="316dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/input_email_input_username"
+        android:textSize="10sp"
+        android:textColor="@color/third_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/defaultInput"
+        tools:ignore="SmallSp" />
+
+    <TextView
+        android:id="@+id/defaultInput"
+        android:layout_width="316dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/default_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputNameLabel"
+        android:background="@drawable/bottom_border" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/editPasswordButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="28dp"
+        android:backgroundTint="@color/third_color"
+        android:clickable="true"
+        android:contentDescription="@string/edit_password_input"
+        android:src="@drawable/ic_baseline_edit_24"
+        android:tint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

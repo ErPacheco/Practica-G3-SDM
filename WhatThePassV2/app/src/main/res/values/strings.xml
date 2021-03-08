@@ -30,4 +30,11 @@
     <string name="url">URL</string>
     <string name="create">Create</string>
     <string name="clear">Clear</string>
+    <string name="password_input_detail">Password Input Detail</string>
+    <string name="default_text">Default text</string>
+    <string name="input_email_input_username">Input email / input username</string>
+    <string name="input_name_label">Input name</string>
+    <string name="input_password">Input password</string>
+    <string name="uri">URI</string>
+    <string name="edit_password_input">Edit password input</string>
 </resources>
