@@ -1,17 +1,18 @@
 package com.uc3m.whatthepass.views.passAndFiles
 
-import android.graphics.ColorSpace
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.RecyclerViewItemBinding
 import com.uc3m.whatthepass.models.Password
 
 
-
-
-class ListAdapter: RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
+class ListAdapter(/*val context: Context*/): RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
 
     private var passwordList = emptyList<Password>()
     class MyViewHolder(val binding: RecyclerViewItemBinding): RecyclerView.ViewHolder(binding.root)
@@ -27,9 +28,8 @@ class ListAdapter: RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
         with(holder){
             binding.textView.text = currentItem.name
             binding.textView2.text = currentItem.url
-
-
         }
+        
     }
 
     override fun getItemCount(): Int {
@@ -44,9 +44,13 @@ class ListAdapter: RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
     fun deleteItem(index: Int):Password{
         val pas=this.passwordList[index]
         this.passwordList.drop(index)
-        notifyDataSetChanged()
+        notifyItemRemoved(index)
         return pas
 
+    }
+
+    fun getData(index: Int):Password{
+        return this.passwordList[index]
     }
 
 
