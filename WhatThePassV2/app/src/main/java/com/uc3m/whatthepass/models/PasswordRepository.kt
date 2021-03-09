@@ -6,8 +6,8 @@ class PasswordRepository(private val passwordDao: PasswordDao) {
 
     val readAll: LiveData<List<Password>> = passwordDao.readAll()
 
-    suspend fun addPassword(name: String, password: String, emailUser: String, url: String) {
-        val pass = Password(0, name, password, emailUser, url)
+    suspend fun addPassword(name: String, emailUser: String, email: String, user: String, password: String, url: String) {
+        val pass = Password(0, name, emailUser, email, user, password, url)
         passwordDao.addPassword(pass)
     }
 

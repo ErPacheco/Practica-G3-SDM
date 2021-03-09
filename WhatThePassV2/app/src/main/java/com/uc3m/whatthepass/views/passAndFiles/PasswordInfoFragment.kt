@@ -45,6 +45,8 @@ class PasswordInfoFragment : Fragment() {
 
     private fun insertPassword(email: String) {
         val input_title = binding.titleInput.text.toString()
+        val input_email = binding.emailInput.text.toString()
+        val input_username = binding.usernameInput.text.toString()
         val input_password = binding.passwordInput.text.toString()
         val input_url = binding.urlInput.text.toString()
 
@@ -52,7 +54,7 @@ class PasswordInfoFragment : Fragment() {
             1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
             2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
             3 -> {
-                passwordViewModel.addPassword(input_title, email, input_password, input_url)
+                passwordViewModel.addPassword(input_title, email, input_email, input_username, input_password, input_url)
                 Toast.makeText(requireContext(), "Password created!", Toast.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_passwordInfoFragment_to_passwordView)
             }

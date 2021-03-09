@@ -24,9 +24,9 @@
     <string name="menu_slideshow">Slideshow</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="input_name">Input Name</string>
+    <string name="input_name">Input Name*</string>
     <string name="create_password_input">Create password input</string>
-    <string name="password">Password</string>
+    <string name="password_input">Password*</string>
     <string name="url">URL</string>
     <string name="create">Create</string>
     <string name="clear">Clear</string>
@@ -37,4 +37,6 @@
     <string name="input_password">Input password</string>
     <string name="uri">URI</string>
     <string name="edit_password_input">Edit password input</string>
+    <string name="email">Email</string>
+    <string name="username">Username</string>
 </resources>

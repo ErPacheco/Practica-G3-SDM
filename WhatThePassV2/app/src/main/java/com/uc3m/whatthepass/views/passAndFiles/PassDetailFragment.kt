@@ -16,8 +16,6 @@ class PassDetailFragment : Fragment() {
     ): View? {
         binding = FragmentPassDetailBinding.inflate(inflater, container, false)
         val view = binding.root
-
-
         return view
     }
 }
