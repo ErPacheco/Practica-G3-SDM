@@ -20,10 +20,10 @@ class PasswordViewModel(application: Application): AndroidViewModel(application)
         readAll = repository.readAll
     }
 
-    fun addPassword(name: String, emailUser: String, email: String, user: String, password: String, url: String){
+    fun addPassword(name: String, emailUser: String, email: String, user: String, password: String, url: String, masterPass: String){
         viewModelScope.launch(Dispatchers.IO) {
-            val masterPass = Hash.bcryptHash(password)
-            repository.addPassword(name, emailUser, email, user, masterPass, url)
+            val passwordToAdd = Hash.encrypt(password, masterPass)
+            repository.addPassword(name, emailUser, email, user, passwordToAdd, url)
         }
     }
     fun deletePasswordByUser(user: String) {

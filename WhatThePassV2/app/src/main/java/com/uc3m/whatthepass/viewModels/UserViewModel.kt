@@ -1,18 +1,13 @@
 package com.uc3m.whatthepass.viewModels
 
 import android.app.Application
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
 import com.uc3m.whatthepass.models.User
 import com.uc3m.whatthepass.models.UserRepository
 import com.uc3m.whatthepass.models.WhatTheDatabase
 import com.uc3m.whatthepass.util.Hash
 import com.uc3m.whatthepass.util.Hash.verifyHash
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class UserViewModel(application: Application): AndroidViewModel(application) {
 
@@ -49,5 +44,9 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
         }
 
         return logged
+    }
+
+    suspend fun findUserByEmail(email: String): User? {
+        return repository.readUserEmail(email)
     }
 }

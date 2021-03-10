@@ -11,6 +11,9 @@ import com.uc3m.whatthepass.databinding.FragmentPassDetailBinding
 import com.uc3m.whatthepass.models.Password
 import com.uc3m.whatthepass.viewModels.PasswordViewModel
 import android.util.Log
+import android.widget.Toast
+import at.favre.lib.crypto.bcrypt.BCrypt
+import com.uc3m.whatthepass.util.Hash
 
 
 class PassDetailFragment : Fragment() {
@@ -24,21 +27,36 @@ class PassDetailFragment : Fragment() {
     ): View? {
         binding = FragmentPassDetailBinding.inflate(inflater, container, false)
         val view = binding.root
-        return view
-    }
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        var password: Password? = null;
         passwordViewModel.message.observe(viewLifecycleOwner, object : Observer<Password> {
             override fun onChanged(o: Password?) {
                 if(o!=null){
-                   val password=o
-                    Log.d("Mensaje enviado", password.user)
+                    password=o
                     // aqui introducir los datos de password en los campos correspondientes
                 }
 
             }
         })
+
+        if(password != null) {
+            insertFields(password!!)
+        } else {
+            Toast.makeText(requireContext(), "Error!!!!!", Toast.LENGTH_LONG).show()
+        }
+        return view
+    }
+
+    private fun insertFields(password: Password) {
+        binding.titleDetail.text = password.name
+        binding.emailDetail.text = password.inputEmail
+        binding.usernameDetail.text = password.inputUser
+
+        binding.passwordDetail.text = password.hashPassword
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
     }
 }

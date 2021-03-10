@@ -7,15 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentPasswordInfoBinding
+import com.uc3m.whatthepass.models.User
 import com.uc3m.whatthepass.viewModels.PasswordViewModel
+import com.uc3m.whatthepass.viewModels.UserViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.net.UnknownServiceException
 
 class PasswordInfoFragment : Fragment() {
     private lateinit var binding: FragmentPasswordInfoBinding
     private lateinit var passwordViewModel: PasswordViewModel
+    private lateinit var userViewModel: UserViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -23,14 +32,26 @@ class PasswordInfoFragment : Fragment() {
     ): View? {
         binding = FragmentPasswordInfoBinding.inflate(inflater, container, false)
         val view = binding.root
-        
-        val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE)
-        val email = sp?.getString("loginEmail", null);
+
+        userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
         passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
 
+
+        val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE)
+        val email = sp?.getString("loginEmail", null);
+        var userLogin: User? = null;
+        if(email != null) {
+            lifecycleScope.launch{
+                userLogin = userViewModel.findUserByEmail(email)
+            }
+        } else {
+            Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+        }
+
+
         binding.createPassButton.setOnClickListener{
-            if (email != null) {
-                insertPassword(email)
+            if (email != null && userLogin != null) {
+                insertPassword(email, userLogin!!.masterPass)
             } else {
                 Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
             }
@@ -43,7 +64,7 @@ class PasswordInfoFragment : Fragment() {
         return view
     }
 
-    private fun insertPassword(email: String) {
+    private fun insertPassword(email: String, masterPass: String) {
         val input_title = binding.titleInput.text.toString()
         val input_email = binding.emailInput.text.toString()
         val input_username = binding.usernameInput.text.toString()
@@ -54,7 +75,7 @@ class PasswordInfoFragment : Fragment() {
             1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
             2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
             3 -> {
-                passwordViewModel.addPassword(input_title, email, input_email, input_username, input_password, input_url)
+                passwordViewModel.addPassword(input_title, email, input_email, input_username, input_password, input_url, masterPass)
                 Toast.makeText(requireContext(), "Password created!", Toast.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_passwordInfoFragment_to_passwordView)
             }
