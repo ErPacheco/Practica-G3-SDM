@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.uc3m.whatthepass.R
@@ -15,7 +16,7 @@ import com.uc3m.whatthepass.viewModels.PasswordViewModel
 
 class PasswordInfoFragment : Fragment() {
     private lateinit var binding: FragmentPasswordInfoBinding
-    private lateinit var passwordViewModel: PasswordViewModel
+    private  val passwordViewModel:PasswordViewModel by activityViewModels()
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -26,11 +27,12 @@ class PasswordInfoFragment : Fragment() {
         
         val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE)
         val email = sp?.getString("loginEmail", null);
-        passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
-
+       // passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
+        val adapter = ListAdapter(passwordViewModel)
         binding.createPassButton.setOnClickListener{
             if (email != null) {
                 insertPassword(email)
+                adapter.notifyDataSetChanged()
             } else {
                 Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
             }

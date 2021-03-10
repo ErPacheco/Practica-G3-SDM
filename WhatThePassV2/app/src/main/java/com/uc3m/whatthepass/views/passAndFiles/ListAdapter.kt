@@ -10,10 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.RecyclerViewItemBinding
 import com.uc3m.whatthepass.models.Password
+import com.uc3m.whatthepass.viewModels.PasswordViewModel
 
 
-class ListAdapter(/*val context: Context*/): RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
-
+class ListAdapter(passwordViewModel: PasswordViewModel): RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
+    private val passwordViewModel= passwordViewModel
     private var passwordList = emptyList<Password>()
     class MyViewHolder(val binding: RecyclerViewItemBinding): RecyclerView.ViewHolder(binding.root)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -29,7 +30,7 @@ class ListAdapter(/*val context: Context*/): RecyclerView.Adapter<ListAdapter.My
             binding.textView.text = currentItem.name
             binding.textView2.text = currentItem.url
         }
-        
+
     }
 
     override fun getItemCount(): Int {

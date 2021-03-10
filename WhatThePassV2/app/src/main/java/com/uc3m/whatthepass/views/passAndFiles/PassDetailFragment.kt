@@ -16,7 +16,7 @@ import android.util.Log
 class PassDetailFragment : Fragment() {
     private lateinit var binding: FragmentPassDetailBinding
     private  val passwordViewModel: PasswordViewModel by activityViewModels()
-
+    private lateinit var password: Password
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +33,7 @@ class PassDetailFragment : Fragment() {
         passwordViewModel.message.observe(viewLifecycleOwner, object : Observer<Password> {
             override fun onChanged(o: Password?) {
                 if(o!=null){
-                   val password=o
+                    password=o
                     Log.d("Mensaje enviado", password.user)
                     // aqui introducir los datos de password en los campos correspondientes
                 }
