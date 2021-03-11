@@ -46,7 +46,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
         return logged
     }
 
-    suspend fun findUserByEmail(email: String): User? {
+    suspend fun findUserByEmail(email: String): User {
         return repository.readUserEmail(email)
     }
 }

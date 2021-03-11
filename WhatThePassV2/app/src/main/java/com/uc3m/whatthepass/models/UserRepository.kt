@@ -10,7 +10,7 @@ class UserRepository(private val userDao: UserDao) {
         return userDao.findUserByEmailAndMasterPass(email, password)
     }
 
-    suspend fun readUserEmail(email: String): User? {
+    suspend fun readUserEmail(email: String): User {
         return userDao.findUserByEmail(email)
     }
 
@@ -26,8 +26,6 @@ class UserRepository(private val userDao: UserDao) {
 
     suspend fun deleteUser(email: String) {
         val user = userDao.findUserByEmail(email)
-        if(user != null) {
-            userDao.deleteUser(user)
-        }
+        userDao.deleteUser(user)
     }
 }

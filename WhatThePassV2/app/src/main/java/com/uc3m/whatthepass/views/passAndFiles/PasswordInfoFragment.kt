@@ -16,37 +16,40 @@ import com.uc3m.whatthepass.databinding.FragmentPasswordInfoBinding
 import com.uc3m.whatthepass.models.User
 import com.uc3m.whatthepass.viewModels.PasswordViewModel
 import com.uc3m.whatthepass.viewModels.UserViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.net.UnknownServiceException
 
 class PasswordInfoFragment : Fragment() {
     private lateinit var binding: FragmentPasswordInfoBinding
-    private  val passwordViewModel:PasswordViewModel by activityViewModels()
+    private lateinit var userViewModel: UserViewModel
+    private val passwordViewModel: PasswordViewModel by activityViewModels()
+
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPasswordInfoBinding.inflate(inflater, container, false)
         val view = binding.root
 
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
-        passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
-
 
         val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE)
-        val email = sp?.getString("loginEmail", null);
+        val email = sp?.getString("loginEmail", null)
        // passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
         val adapter = ListAdapter(passwordViewModel)
-        binding.createPassButton.setOnClickListener{
-            if (email != null) {
-                insertPassword(email)
-                adapter.notifyDataSetChanged()
-            } else {
-                Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+        lateinit var userLogin: User
+        if(email != null) {
+            lifecycleScope.launch{
+                userLogin = userViewModel.findUserByEmail(email)
             }
+        } else {
+            Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+            return view
+        }
+
+        binding.createPassButton.setOnClickListener{
+            insertPassword(email, userLogin.masterPass)
+            adapter.notifyDataSetChanged()
         }
 
         binding.clearCreateInputs.setOnClickListener{
@@ -57,17 +60,17 @@ class PasswordInfoFragment : Fragment() {
     }
 
     private fun insertPassword(email: String, masterPass: String) {
-        val input_title = binding.titleInput.text.toString()
-        val input_email = binding.emailInput.text.toString()
-        val input_username = binding.usernameInput.text.toString()
-        val input_password = binding.passwordInput.text.toString()
-        val input_url = binding.urlInput.text.toString()
+        val inputTitle = binding.titleInput.text.toString()
+        val inputEmail = binding.emailInput.text.toString()
+        val inputUsername = binding.usernameInput.text.toString()
+        val inputPassword = binding.passwordInput.text.toString()
+        val inputUrl = binding.urlInput.text.toString()
 
-        when(checkInputs(input_title, input_password)) {
+        when(checkInputs(inputTitle, inputPassword)) {
             1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
             2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
             3 -> {
-                passwordViewModel.addPassword(input_title, email, input_email, input_username, input_password, input_url, masterPass)
+                passwordViewModel.addPassword(inputTitle, email, inputEmail, inputUsername, inputPassword, inputUrl, masterPass)
                 Toast.makeText(requireContext(), "Password created!", Toast.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_passwordInfoFragment_to_passwordView)
             }
