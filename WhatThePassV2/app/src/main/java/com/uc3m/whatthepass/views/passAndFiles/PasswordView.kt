@@ -1,14 +1,17 @@
 package com.uc3m.whatthepass.views.passAndFiles
 
 
+import android.content.ContentValues.TAG
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -50,8 +53,17 @@ class PasswordView : Fragment(){
                 passwordViewModel.readAll.observe(viewLifecycleOwner, { password ->
                     adapter.setData(password)
                 })
-        
 
+        recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object : RecyclerItemClickListener.OnItemClickListener {
+
+            override fun onItemClick(view: View, position: Int) {
+                passwordViewModel.sentPassword(adapter.getData(position))
+                findNavController().navigate(R.id.action_passwordView_to_passDetailFragment)
+            }
+            override fun onItemLongClick(view: View?, position: Int) {
+                TODO("do nothing")
+            }
+        }))
         binding.addButton.setOnClickListener{
             findNavController().navigate(R.id.action_passwordView_to_passwordInfoFragment)
         }

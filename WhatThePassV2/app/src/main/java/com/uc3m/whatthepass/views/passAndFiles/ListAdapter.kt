@@ -16,6 +16,8 @@ import com.uc3m.whatthepass.viewModels.PasswordViewModel
 class ListAdapter(passwordViewModel: PasswordViewModel): RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
     private val passwordViewModel= passwordViewModel
     private var passwordList = emptyList<Password>()
+
+
     class MyViewHolder(val binding: RecyclerViewItemBinding): RecyclerView.ViewHolder(binding.root)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding = RecyclerViewItemBinding.inflate(LayoutInflater.from(parent.context), parent,
@@ -30,6 +32,7 @@ class ListAdapter(passwordViewModel: PasswordViewModel): RecyclerView.Adapter<Li
             binding.textView.text = currentItem.name
             binding.textView2.text = currentItem.url
         }
+
 
     }
 
@@ -57,3 +60,4 @@ class ListAdapter(passwordViewModel: PasswordViewModel): RecyclerView.Adapter<Li
 
 
 }
+
