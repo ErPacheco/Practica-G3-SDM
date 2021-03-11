@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -23,8 +23,7 @@ import java.net.UnknownServiceException
 
 class PasswordInfoFragment : Fragment() {
     private lateinit var binding: FragmentPasswordInfoBinding
-    private lateinit var passwordViewModel: PasswordViewModel
-    private lateinit var userViewModel: UserViewModel
+    private  val passwordViewModel:PasswordViewModel by activityViewModels()
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -39,19 +38,12 @@ class PasswordInfoFragment : Fragment() {
 
         val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE)
         val email = sp?.getString("loginEmail", null);
-        var userLogin: User? = null;
-        if(email != null) {
-            lifecycleScope.launch{
-                userLogin = userViewModel.findUserByEmail(email)
-            }
-        } else {
-            Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
-        }
-
-
+       // passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
+        val adapter = ListAdapter(passwordViewModel)
         binding.createPassButton.setOnClickListener{
-            if (email != null && userLogin != null) {
-                insertPassword(email, userLogin!!.masterPass)
+            if (email != null) {
+                insertPassword(email)
+                adapter.notifyDataSetChanged()
             } else {
                 Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
             }

@@ -19,7 +19,7 @@ import com.uc3m.whatthepass.util.Hash
 class PassDetailFragment : Fragment() {
     private lateinit var binding: FragmentPassDetailBinding
     private  val passwordViewModel: PasswordViewModel by activityViewModels()
-
+    private lateinit var password: Password
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +32,7 @@ class PassDetailFragment : Fragment() {
             override fun onChanged(o: Password?) {
                 if(o!=null){
                     password=o
+                    Log.d("Mensaje enviado", password.user)
                     // aqui introducir los datos de password en los campos correspondientes
                 }
 

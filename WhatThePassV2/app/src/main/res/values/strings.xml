@@ -39,5 +39,7 @@
     <string name="edit_password_input">Edit password input</string>
     <string name="email">Email</string>
     <string name="username">Username</string>
+    <string name="passwords">Passwords</string>
+    <string name="files">Files</string>
     <string name="input_username">Input username</string>
 </resources>
