@@ -6,107 +6,49 @@
     android:layout_height="match_parent"
     tools:context=".views.passAndFiles.PassDetailFragment">
 
-    <TextView
-        android:id="@+id/inputUsernameLabel"
-        android:layout_width="316dp"
-        android:layout_height="19dp"
-        android:layout_marginTop="28dp"
-        android:text="@string/input_username"
-        android:textColor="@color/third_color"
-        android:textSize="10sp"
+    <ImageButton
+        android:id="@+id/copyButton"
+        style="@style/Widget.AppCompat.ImageButton"
+        android:layout_width="34dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="425dp"
+        android:background="#00FFFFFF"
+        android:outlineProvider="none"
+        android:clickable="true"
+        android:src="@drawable/ic_baseline_content_copy_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintHorizontal_bias="0.874"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailDetail"
-        tools:ignore="SmallSp" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/copybutton" />
 
-    <TextView
-        android:id="@+id/usernameDetail"
-        android:layout_width="316dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bottom_border"
-        android:text="@string/default_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
+    <ImageButton
+        android:id="@+id/viewButton"
+        style="@style/Widget.AppCompat.ImageButton"
+        android:layout_width="34dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="425dp"
+        android:background="#00FFFFFF"
+        android:outlineProvider="none"
+        android:clickable="true"
+        android:src="@drawable/ic_baseline_remove_red_eye_24"
+        app:layout_constraintEnd_toStartOf="@+id/copyButton"
+        app:layout_constraintHorizontal_bias="0.96"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputUsernameLabel" />
-
-    <TextView
-        android:id="@+id/inputPasswordLabel"
-        android:layout_width="316dp"
-        android:layout_height="19dp"
-        android:layout_marginTop="28dp"
-        android:text="@string/input_password"
-        android:textColor="@color/third_color"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameDetail"
-        tools:ignore="SmallSp" />
-
-    <TextView
-        android:id="@+id/passwordDetailInput"
-        android:layout_width="316dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="4dp"
-        android:background="@drawable/bottom_border"
-        android:text="@string/default_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputPasswordLabel" />
-
-    <TextView
-        android:id="@+id/inputURILabel"
-        android:layout_width="316dp"
-        android:layout_height="19dp"
-        android:layout_marginTop="56dp"
-        android:text="@string/uri"
-        android:textColor="@color/third_color"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordDetailInput"
-        tools:ignore="SmallSp" />
-
-    <TextView
-        android:id="@+id/URIDetail"
-        android:layout_width="316dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bottom_border"
-        android:text="@string/default_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputURILabel" />
-
-    <TextView
-        android:id="@+id/emailDetail"
-        android:layout_width="316dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/default_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputEmailUsernameLabel"
-        android:background="@drawable/bottom_border" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/viewbutton" />
 
     <TextView
         android:id="@+id/passwordDetailTITLE"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="104dp"
         android:text="@string/password_input_detail"
         android:textColor="@color/primary_color"
-        android:textSize="20sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -114,10 +56,10 @@
         android:id="@+id/inputNameLabel"
         android:layout_width="316dp"
         android:layout_height="19dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="24dp"
         android:text="@string/input_name_label"
-        android:textSize="10sp"
         android:textColor="@color/third_color"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
@@ -125,17 +67,57 @@
         tools:ignore="SmallSp" />
 
     <TextView
-        android:id="@+id/inputEmailUsernameLabel"
+        android:id="@+id/usernameDetail"
         android:layout_width="316dp"
-        android:layout_height="19dp"
-        android:layout_marginTop="28dp"
-        android:text="@string/input_email"
-        android:textSize="10sp"
-        android:textColor="@color/third_color"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bottom_border"
+        android:text="@string/default_text"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleDetail"
+        app:layout_constraintTop_toBottomOf="@+id/inputUsernameLabel" />
+
+    <TextView
+        android:id="@+id/inputURILabel"
+        android:layout_width="316dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/uri"
+        android:textColor="@color/third_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordDetailInput"
+        tools:ignore="SmallSp" />
+
+    <TextView
+        android:id="@+id/URIDetail"
+        android:layout_width="316dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bottom_border"
+        android:text="@string/default_text"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputURILabel" />
+
+    <TextView
+        android:id="@+id/inputUsernameLabel"
+        android:layout_width="316dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/input_username"
+        android:textColor="@color/third_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailDetail"
         tools:ignore="SmallSp" />
 
     <TextView
@@ -143,24 +125,83 @@
         android:layout_width="316dp"
         android:layout_height="25dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/bottom_border"
         android:text="@string/default_text"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputNameLabel"
-        android:background="@drawable/bottom_border" />
+        app:layout_constraintTop_toBottomOf="@+id/inputNameLabel" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/editPasswordButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="60dp"
-        android:layout_marginBottom="116dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="164dp"
         android:backgroundTint="@color/third_color"
         android:clickable="true"
         android:contentDescription="@string/edit_password_input"
         android:src="@drawable/ic_baseline_edit_24"
         android:tint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:rippleColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/inputEmailUsernameLabel"
+        android:layout_width="316dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/input_email"
+        android:textColor="@color/third_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleDetail"
+        tools:ignore="SmallSp" />
+
+    <TextView
+        android:id="@+id/emailDetail"
+        android:layout_width="316dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bottom_border"
+        android:text="@string/default_text"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputEmailUsernameLabel" />
+
+    <TextView
+        android:id="@+id/inputPasswordLabel"
+        android:layout_width="316dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/input_password"
+        android:textColor="@color/third_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameDetail"
+        tools:ignore="SmallSp" />
+
+    <TextView
+        android:id="@+id/passwordDetailInput"
+        android:layout_width="316dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bottom_border"
+        android:inputType="textPassword"
+        android:text="@string/default_text"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputPasswordLabel"
+        tools:ignore="TextViewEdits" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/passwordView"
         android:name="com.uc3m.whatthepass.views.passAndFiles.PasswordView"
-        android:label="fragment_password_view"
+        android:label="Password List"
         tools:layout="@layout/fragment_password_view">
         <action
             android:id="@+id/action_passwordView_to_passwordInfoFragment"
@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/passwordInfoFragment"
         android:name="com.uc3m.whatthepass.views.passAndFiles.PasswordInfoFragment"
-        android:label="PasswordInfoFragment" >
+        android:label="Password Create">
         <action
             android:id="@+id/action_passwordInfoFragment_to_passwordView"
             app:destination="@id/passwordView" />
@@ -28,8 +28,8 @@
     <fragment
         android:id="@+id/passDetailFragment"
         android:name="com.uc3m.whatthepass.views.passAndFiles.PassDetailFragment"
-        android:label="fragment_pass_detail"
-        tools:layout="@layout/fragment_pass_detail" >
+        android:label="Password Detail"
+        tools:layout="@layout/fragment_pass_detail">
         <action
             android:id="@+id/action_passDetailFragment_to_passwordView"
             app:destination="@id/passwordView" />

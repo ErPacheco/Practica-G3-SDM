@@ -2,6 +2,8 @@ package com.uc3m.whatthepass.views.passAndFiles
 
 import android.content.Context
 import android.os.Bundle
+import android.renderscript.ScriptGroup
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +36,19 @@ class PassDetailFragment : Fragment() {
         binding = FragmentPassDetailBinding.inflate(inflater, container, false)
         val view = binding.root
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+
+        binding.viewButton.setOnClickListener{
+            val passInputType = binding.passwordDetailInput.inputType
+            Log.d("inputType", passInputType.toString())
+            Log.d("inputType PASSWORD", InputType.TYPE_TEXT_VARIATION_PASSWORD.toString())
+            Log.d("inputType TEXT", InputType.TYPE_CLASS_TEXT.toString())
+            if(passInputType == InputType.TYPE_TEXT_VARIATION_PASSWORD) {
+                binding.passwordDetailInput.inputType = InputType.TYPE_CLASS_TEXT
+            } else {
+                binding.passwordDetailInput.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
+            }
+        }
+
         return view
     }
 
@@ -60,7 +75,6 @@ class PassDetailFragment : Fragment() {
             passwordViewModel.message.observe(viewLifecycleOwner, object : Observer<Password> {
                 override fun onChanged(o: Password?) {
                     if(o!=null){
-                        Log.d("Mensaje enviado", o.user)
                         insertFields(email, o)
                     }
                 }

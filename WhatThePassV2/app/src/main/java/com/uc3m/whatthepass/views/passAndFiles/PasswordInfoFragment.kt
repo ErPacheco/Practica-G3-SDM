@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -47,7 +48,9 @@ class PasswordInfoFragment : Fragment() {
             return view
         }
 
-        binding.createPassButton.setOnClickListener{
+        binding.createPassButton.setOnClickListener{ v ->
+            val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(v.windowToken, 0)
             insertPassword(email, userLogin.masterPass)
             adapter.notifyDataSetChanged()
         }

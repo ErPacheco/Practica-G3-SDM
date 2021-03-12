@@ -42,4 +42,6 @@
     <string name="passwords">Passwords</string>
     <string name="files">Files</string>
     <string name="input_username">Input username</string>
+    <string name="copybutton">copyButton</string>
+    <string name="viewbutton">viewButton</string>
 </resources>
