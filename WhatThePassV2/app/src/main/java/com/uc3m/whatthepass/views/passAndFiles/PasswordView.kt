@@ -2,6 +2,7 @@ package com.uc3m.whatthepass.views.passAndFiles
 
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -25,6 +26,7 @@ import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentPasswordViewBinding
 import com.uc3m.whatthepass.viewModels.PasswordViewModel
 import androidx.fragment.app.FragmentManager
+import com.uc3m.whatthepass.views.passwordGeneration.PasswordGeneratorActivity
 
 
 class PasswordView : Fragment(){
@@ -66,6 +68,10 @@ class PasswordView : Fragment(){
         }))
         binding.addButton.setOnClickListener{
             findNavController().navigate(R.id.action_passwordView_to_passwordInfoFragment)
+        }
+        binding.floatingActionButton.setOnClickListener {
+            val intent = Intent(this@PasswordView.context, PasswordGeneratorActivity::class.java)
+            activity?.startActivity(intent)
         }
         val itemTouchHelperCallback =
                 object :

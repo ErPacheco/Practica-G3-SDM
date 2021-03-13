@@ -44,4 +44,20 @@
     <string name="input_username">Input username</string>
     <string name="copybutton">copyButton</string>
     <string name="viewbutton">viewButton</string>
+    <string name="title_activity_password_generator">PasswordGeneratorActivity</string>
+    <string name="lengthPasswordGenerated">Length</string>
+    <string name="optionsAZInsert">A-Z</string>
+    <string name="optionsazInsert">a-z</string>
+    <string name="optionsNumericInsert">0-9</string>
+    <string name="optionsSpecialInsert">!@#$%^*</string>
+    <string name="minNumChars">Minimum numeric characters</string>
+    <string name="minSpecialChars">Minimum special characters</string>
+    <string name="generateNewPassword">Generate password</string>
+    <string name="copyPasswordGenerated">Copy password</string>
+
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
 </resources>
