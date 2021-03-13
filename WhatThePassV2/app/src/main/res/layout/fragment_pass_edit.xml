@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="104dp"
-        android:text="@string/password_input_detail"
+        android:text="@string/edit_input_password"
         android:textColor="@color/primary_color"
         android:textSize="24sp"
         android:textStyle="bold"
