@@ -34,8 +34,8 @@ class PasswordInfoFragment : Fragment() {
 
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
-        val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE)
-        val email = sp?.getString("loginEmail", null)
+        val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
+        val email = sp.getString("loginEmail", null)
        // passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
         val adapter = ListAdapter(passwordViewModel)
         lateinit var userLogin: User
@@ -49,7 +49,7 @@ class PasswordInfoFragment : Fragment() {
         }
 
         binding.createPassButton.setOnClickListener{ v ->
-            val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(v.windowToken, 0)
             insertPassword(email, userLogin.masterPass)
             adapter.notifyDataSetChanged()

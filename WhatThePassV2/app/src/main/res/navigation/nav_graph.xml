@@ -33,5 +33,17 @@
         <action
             android:id="@+id/action_passDetailFragment_to_passwordView"
             app:destination="@id/passwordView" />
+        <action
+            android:id="@+id/action_passDetailFragment_to_passEditFragment"
+            app:destination="@id/passEditFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/passEditFragment"
+        android:name="com.uc3m.whatthepass.views.passAndFiles.PassEditFragment"
+        android:label="fragment_pass_edit"
+        tools:layout="@layout/fragment_pass_edit" >
+        <action
+            android:id="@+id/action_passEditFragment_to_passDetailFragment"
+            app:destination="@id/passDetailFragment" />
     </fragment>
 </navigation>

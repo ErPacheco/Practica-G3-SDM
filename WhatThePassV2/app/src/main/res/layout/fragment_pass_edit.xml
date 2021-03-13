@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".views.passAndFiles.PassDetailFragment">
+    tools:context=".views.passAndFiles.PassEditFragment" >
 
     <TextView
-        android:id="@+id/passwordDetailTITLE"
+        android:id="@+id/passwordDetailTITLE2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="104dp"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/inputNameLabel"
+        android:id="@+id/inputNameLabel2"
         android:layout_width="316dp"
         android:layout_height="19dp"
         android:layout_marginTop="24dp"
@@ -31,24 +31,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordDetailTITLE"
-        tools:ignore="SmallSp" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordDetailTITLE2"
+        tools:ignore="SmallSp"
+        android:labelFor="@+id/titleDetail2" />
 
-    <TextView
-        android:id="@+id/usernameDetail"
+    <EditText
+        android:id="@+id/usernameDetail2"
         android:layout_width="316dp"
         android:layout_height="30dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/bottom_border"
-        android:text="@string/default_text"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputUsernameLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/inputUsernameLabel2"
+        android:autofillHints="Default field"
+        android:inputType="text" />
 
     <TextView
-        android:id="@+id/inputURILabel"
+        android:id="@+id/inputURILabel2"
         android:layout_width="316dp"
         android:layout_height="19dp"
         android:layout_marginTop="24dp"
@@ -58,24 +60,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordDetailInput"
-        tools:ignore="SmallSp" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordDetailInput2"
+        tools:ignore="SmallSp"
+        android:labelFor="@+id/URIDetail2" />
 
-    <TextView
-        android:id="@+id/URIDetail"
+    <EditText
+        android:id="@+id/URIDetail2"
         android:layout_width="316dp"
         android:layout_height="30dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/bottom_border"
-        android:text="@string/default_text"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputURILabel" />
+        app:layout_constraintTop_toBottomOf="@+id/inputURILabel2"
+        android:autofillHints="Default field"
+        android:inputType="textUri" />
 
     <TextView
-        android:id="@+id/inputUsernameLabel"
+        android:id="@+id/inputUsernameLabel2"
         android:layout_width="316dp"
         android:layout_height="19dp"
         android:layout_marginTop="24dp"
@@ -85,39 +89,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailDetail"
-        tools:ignore="SmallSp" />
+        app:layout_constraintTop_toBottomOf="@+id/emailDetail2"
+        tools:ignore="SmallSp"
+        android:labelFor="@id/usernameDetail2" />
 
-    <TextView
-        android:id="@+id/titleDetail"
+    <EditText
+        android:id="@+id/titleDetail2"
         android:layout_width="316dp"
         android:layout_height="25dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/bottom_border"
-        android:text="@string/default_text"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputNameLabel" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/editPasswordButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="36dp"
-        android:layout_marginBottom="164dp"
-        android:backgroundTint="@color/third_color"
-        android:clickable="true"
-        android:contentDescription="@string/edit_password_input"
-        android:src="@drawable/ic_baseline_edit_24"
-        android:tint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:rippleColor="#FFFFFF" />
+        app:layout_constraintTop_toBottomOf="@+id/inputNameLabel2"
+        android:autofillHints="Default field"
+        android:inputType="text" />
 
     <TextView
-        android:id="@+id/inputEmailUsernameLabel"
+        android:id="@+id/inputEmailUsernameLabel2"
         android:layout_width="316dp"
         android:layout_height="19dp"
         android:layout_marginTop="24dp"
@@ -127,24 +118,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleDetail"
-        tools:ignore="SmallSp" />
+        app:layout_constraintTop_toBottomOf="@+id/titleDetail2"
+        tools:ignore="SmallSp"
+        android:labelFor="@id/emailDetail2"/>
 
-    <TextView
-        android:id="@+id/emailDetail"
+    <EditText
+        android:id="@+id/emailDetail2"
         android:layout_width="316dp"
         android:layout_height="30dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/bottom_border"
-        android:text="@string/default_text"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputEmailUsernameLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/inputEmailUsernameLabel2"
+        android:autofillHints="Default field"
+        android:inputType="textWebEmailAddress" />
 
     <TextView
-        android:id="@+id/inputPasswordLabel"
+        android:id="@+id/inputPasswordLabel2"
         android:layout_width="316dp"
         android:layout_height="19dp"
         android:layout_marginTop="24dp"
@@ -154,54 +147,38 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameDetail"
-        tools:ignore="SmallSp" />
+        app:layout_constraintTop_toBottomOf="@+id/usernameDetail2"
+        tools:ignore="SmallSp"
+        android:labelFor="@id/passwordDetailInput2" />
 
-    <TextView
-        android:id="@+id/passwordDetailInput"
+    <EditText
+        android:id="@+id/passwordDetailInput2"
         android:layout_width="316dp"
         android:layout_height="30dp"
         android:layout_marginTop="4dp"
+        android:autofillHints="Default field"
         android:background="@drawable/bottom_border"
         android:inputType="textPassword"
-        android:text="@string/default_text"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputPasswordLabel"
-        tools:ignore="TextViewEdits" />
+        app:layout_constraintTop_toBottomOf="@+id/inputPasswordLabel2" />
 
     <ImageButton
-        android:id="@+id/copyButton"
+        android:id="@+id/viewButton3"
         style="@style/Widget.AppCompat.ImageButton"
         android:layout_width="34dp"
         android:layout_height="23dp"
         android:layout_marginTop="425dp"
         android:background="#00FFFFFF"
-        android:outlineProvider="none"
         android:clickable="true"
-        android:src="@drawable/ic_baseline_content_copy_24"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.874"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/copybutton" />
-
-    <ImageButton
-        android:id="@+id/viewButton"
-        style="@style/Widget.AppCompat.ImageButton"
-        android:layout_width="34dp"
-        android:layout_height="23dp"
-        android:layout_marginTop="425dp"
-        android:background="#00FFFFFF"
+        android:contentDescription="@string/viewbutton"
         android:outlineProvider="none"
-        android:clickable="true"
         android:src="@drawable/ic_baseline_remove_red_eye_24"
-        app:layout_constraintEnd_toStartOf="@+id/copyButton"
-        app:layout_constraintHorizontal_bias="0.96"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.891"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/viewbutton" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
