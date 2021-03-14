@@ -8,8 +8,12 @@ object PasswordGenerator {
     private val numeric = "0123456789"
     private val special = "!@#$%^*\\"
 
-    fun generatePassword (isCapital:Boolean,isLower:Boolean,isNumeric:Boolean,
+   suspend fun generatePassword (isCapital:Boolean,isLower:Boolean,isNumeric:Boolean,
                           isSpecial:Boolean,length:Int, minNumNumeric:Int,minNumSpecial:Int):String{
+        if(!isCapital && !isLower && !isNumeric&&
+        !isSpecial){
+            return ""
+        }
         var dictionary= "";
         if(isCapital){
             dictionary+=this.capitalLetter
