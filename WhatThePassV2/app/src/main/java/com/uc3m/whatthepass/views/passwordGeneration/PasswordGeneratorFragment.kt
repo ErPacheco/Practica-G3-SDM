@@ -1,20 +1,20 @@
 package com.uc3m.whatthepass.views.passwordGeneration
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SeekBar
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentPasswordGeneratorBinding
-import com.uc3m.whatthepass.util.PasswordGenerator
 import com.uc3m.whatthepass.util.PasswordGenerator.generatePassword
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class PasswordGeneratorFragment : Fragment() {
@@ -71,12 +71,17 @@ class PasswordGeneratorFragment : Fragment() {
 
         }
 
-
+        binding.copyGeneratedPassword.setOnClickListener {
+            lifecycleScope.launch {
+                val pas= binding.generatedPassword.text.toString()
+                copyPass(pas)
+            }
+        }
 
         return view
     }
-    private suspend fun createPassword(isCapital:Boolean, isLower:Boolean, isNumeric:Boolean,
-                                       isSpecial:Boolean, length:Int, minNumNumeric:Int, minNumSpecial:Int):String{
+    private suspend fun createPassword(isCapital: Boolean, isLower: Boolean, isNumeric: Boolean,
+                                       isSpecial: Boolean, length: Int, minNumNumeric: Int, minNumSpecial: Int):String{
         var password =""
         if(length>0 && ((minNumNumeric<=length || minNumSpecial<=length) || (minNumNumeric+minNumSpecial<=length))){
             password= generatePassword(isCapital, isLower, isNumeric, isSpecial, length, minNumNumeric, minNumSpecial)
@@ -96,4 +101,12 @@ class PasswordGeneratorFragment : Fragment() {
         return password
 
     }
+
+    private suspend fun copyPass(password:String){
+        val clipboardManager = requireContext().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("text", password)
+        clipboardManager.setPrimaryClip(clipData)
+        Toast.makeText(requireContext(), "Contraseña copiada", Toast.LENGTH_LONG).show()
+    }
+
 }
