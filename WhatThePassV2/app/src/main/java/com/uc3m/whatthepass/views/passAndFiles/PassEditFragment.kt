@@ -107,18 +107,25 @@ class PassEditFragment : Fragment() {
 
         val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
         val email = sp.getString("loginEmail", null)
+        lateinit var pass: Password
         if(email != null) {
             passwordViewModel.message.observe(viewLifecycleOwner, object : Observer<Password> {
                 override fun onChanged(o: Password?) {
                     if (o != null) {
+                        pass = o
                         passwordID = o.id
-                        insertFields(email, o)
+                        insertFields(email, pass)
                     }
                 }
             })
         } else {
             Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
             exitProcess(-1)
+        }
+
+        binding.cancelChangesButton.setOnClickListener{
+            passwordViewModel.sentPassword(pass)
+            findNavController().navigate(R.id.action_passEditFragment_to_passDetailFragment)
         }
     }
 

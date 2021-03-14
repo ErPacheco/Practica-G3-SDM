@@ -45,5 +45,8 @@
         <action
             android:id="@+id/action_passEditFragment_to_passwordView"
             app:destination="@id/passwordView" />
+        <action
+            android:id="@+id/action_passEditFragment_to_passDetailFragment"
+            app:destination="@id/passDetailFragment" />
     </fragment>
 </navigation>

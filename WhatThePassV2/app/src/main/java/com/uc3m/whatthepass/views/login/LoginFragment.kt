@@ -59,12 +59,14 @@ class LoginFragment : Fragment() {
                     userViewModel.addUser(email, masterPassword)
                 }
                 if (registerFind) {
-                    Toast.makeText(requireContext(), "User created!", Toast.LENGTH_LONG).show()
                     loginView(email)
+                    Toast.makeText(requireContext(), "User created!", Toast.LENGTH_LONG).show()
                     binding.email.text.clear()
                     binding.password.text.clear()
                 } else {
                     Toast.makeText(requireContext(), "The email is already registered!", Toast.LENGTH_LONG).show()
+                    binding.email.text.clear()
+                    binding.password.text.clear()
                 }
 
             } else {
