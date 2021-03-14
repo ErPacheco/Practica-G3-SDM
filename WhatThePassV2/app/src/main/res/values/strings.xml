@@ -42,6 +42,8 @@
     <string name="passwords">Passwords</string>
     <string name="files">Files</string>
     <string name="input_username">Input username</string>
+    <string name="copybutton">copyButton</string>
+    <string name="viewbutton">viewButton</string>
     <string name="title_activity_password_generator">PasswordGeneratorActivity</string>
     <string name="lengthPasswordGenerated">Length</string>
     <string name="optionsAZInsert">A-Z</string>
@@ -58,4 +60,7 @@
     values-round/strings.xml for round devices.
     -->
     <string name="hello_world">Hello Square World!</string>
+    <string name="edit_input_password">Edit Input Password</string>
+    <string name="save_changes">Save changes</string>
+    <string name="cancel">Cancel</string>
 </resources>

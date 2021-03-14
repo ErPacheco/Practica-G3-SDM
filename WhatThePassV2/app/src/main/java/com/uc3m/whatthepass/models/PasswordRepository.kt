@@ -22,4 +22,9 @@ class PasswordRepository(private val passwordDao: PasswordDao) {
     suspend fun deletePassword (pass:Password){
         passwordDao.deletePassword(pass)
     }
+
+    suspend fun updatePassword (id: Int, name: String, emailUser: String, email: String, user: String, password: String, url: String) {
+        val pass = Password(id, name, emailUser, email, user, password, url)
+        passwordDao.updatePassword(pass)
+    }
 }
