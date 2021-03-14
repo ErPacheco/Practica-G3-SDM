@@ -6,12 +6,15 @@ import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentPassEditBinding
 import com.uc3m.whatthepass.models.Password
 import com.uc3m.whatthepass.models.User
@@ -25,6 +28,7 @@ class PassEditFragment : Fragment() {
     private lateinit var binding: FragmentPassEditBinding
     private lateinit var userViewModel: UserViewModel
     private val passwordViewModel: PasswordViewModel by activityViewModels()
+    private var passwordID: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,6 +37,20 @@ class PassEditFragment : Fragment() {
         binding = FragmentPassEditBinding.inflate(inflater, container, false)
         val view = binding.root
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+
+        val adapter = ListAdapter(passwordViewModel)
+        val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
+        val email = sp.getString("loginEmail", null)
+        lateinit var userLogin: User
+        if(email != null) {
+            lifecycleScope.launch{
+                userLogin = userViewModel.findUserByEmail(email)
+            }
+        } else {
+            Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+            return view
+        }
+
 
         binding.viewButton3.setOnClickListener{
             val passInputType = binding.passwordDetailInput2.inputType
@@ -43,7 +61,32 @@ class PassEditFragment : Fragment() {
             }
         }
 
+        binding.saveChangesButton.setOnClickListener{ v ->
+            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(v.windowToken, 0)
+            editPassword(email, userLogin.masterPass)
+            adapter.notifyDataSetChanged()
+        }
+
         return view
+    }
+
+    private fun editPassword(email: String, masterPass: String) {
+        val inputTitle = binding.titleDetail2.text.toString()
+        val inputEmail = binding.emailDetail2.text.toString()
+        val inputUsername = binding.usernameDetail2.text.toString()
+        val inputPassword = binding.passwordDetailInput2.text.toString()
+        val inputURL = binding.URIDetail2.text.toString()
+
+        when(checkInputs(inputTitle, inputPassword)) {
+            1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
+            2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
+            3 -> {
+                passwordViewModel.updatePassword(passwordID, inputTitle, email, inputEmail, inputUsername, inputPassword, inputURL, masterPass)
+                Toast.makeText(requireContext(), "Password updated!", Toast.LENGTH_LONG).show()
+                findNavController().navigate(R.id.action_passEditFragment_to_passwordView)
+            }
+        }
     }
 
     private fun insertFields(email: String, password: Password) {
@@ -68,6 +111,7 @@ class PassEditFragment : Fragment() {
             passwordViewModel.message.observe(viewLifecycleOwner, object : Observer<Password> {
                 override fun onChanged(o: Password?) {
                     if (o != null) {
+                        passwordID = o.id
                         insertFields(email, o)
                     }
                 }
@@ -75,6 +119,20 @@ class PassEditFragment : Fragment() {
         } else {
             Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
             exitProcess(-1)
+        }
+    }
+
+    private fun checkInputs(title: String, pass: String):Int {
+        return when {
+            title.isEmpty() -> {
+                1
+            }
+            pass.isEmpty() -> {
+                2
+            }
+            else -> {
+                3
+            }
         }
     }
 }

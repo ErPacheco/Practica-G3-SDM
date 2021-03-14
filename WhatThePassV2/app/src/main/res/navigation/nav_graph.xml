@@ -43,7 +43,7 @@
         android:label="fragment_pass_edit"
         tools:layout="@layout/fragment_pass_edit" >
         <action
-            android:id="@+id/action_passEditFragment_to_passDetailFragment"
-            app:destination="@id/passDetailFragment" />
+            android:id="@+id/action_passEditFragment_to_passwordView"
+            app:destination="@id/passwordView" />
     </fragment>
 </navigation>
