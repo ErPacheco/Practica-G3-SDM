@@ -2,9 +2,10 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    //apply plugin: 'com.google.gms.google-services'
 
 }
-apply plugin: 'com.google.gms.google-services'
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -49,13 +50,13 @@ dependencies {
 
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:26.5.0')
-    
+
     //OAuth
-    implementation 'com.google.firebase:firebase-auth-ktx'
-    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+     implementation 'com.google.firebase:firebase-auth-ktx'
+     implementation 'com.google.android.gms:play-services-auth:19.0.0'
 
     //RealTimeDatabase
-    implementation 'com.google.firebase:firebase-database-ktx'
+     implementation 'com.google.firebase:firebase-database-ktx'
 
 
     // Navigation Component
@@ -75,8 +76,8 @@ dependencies {
     // Room components
     implementation 'androidx.room:room-runtime:2.2.6'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.wear:wear:1.0.0'
-    compileOnly 'com.google.android.wearable:wearable:2.6.0'
+    //implementation 'androidx.wear:wear:1.0.0'
+    //compileOnly 'com.google.android.wearable:wearable:2.6.0'
     kapt "androidx.room:room-compiler:2.2.6"
     implementation "androidx.room:room-ktx:2.2.6"
     androidTestImplementation "androidx.room:room-testing:2.2.6"

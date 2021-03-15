@@ -1,8 +1,10 @@
 package com.uc3m.whatthepass.views.login
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,15 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentLoginBinding
 import com.uc3m.whatthepass.viewModels.UserViewModel
 import com.uc3m.whatthepass.views.passAndFiles.PassAndFilesActivity
@@ -18,20 +29,34 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.regex.Pattern
 
-
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
     private lateinit var userViewModel: UserViewModel
     private val EMAILREGEX = "^[A-Za-z0-9._%+\\-]+@[A-Za-z0-9.\\-]+\\.[A-Za-z]{2,4}$"
-
+    private lateinit var auth: FirebaseAuth
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
+
+
+        /**************************************************** OAuth*****************************************************/
+       /* val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+
+        auth = Firebase.auth
+        val currentUser = auth.currentUser*/
+        /***************************************************Fin OAuth***************************************************/
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         val view = binding.root
-
+        binding.signinGoogle.setOnClickListener {
+            //signInWithGoogleOauth()
+        }
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
         binding.signin.setOnClickListener{
@@ -49,6 +74,7 @@ class LoginFragment : Fragment() {
         return view
     }
 
+    /************************************************Inicio de sesión y registro local**************************************/
     private suspend fun insertUser() {
         val email = binding.email.text.toString()
         val masterPassword = binding.password.text.toString()
@@ -151,4 +177,58 @@ class LoginFragment : Fragment() {
 
         return passValid
     }
+    /**********************************************************************************************************************/
+    /************************************************************FUNCIONES OAUTH*******************************************/
+
+   /* override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                val account = task.getResult(ApiException::class.java)!!
+                Log.d(ContentValues.TAG, "firebaseAuthWithGoogle:" + account.id)
+                firebaseAuthWithGoogle(account.idToken!!)
+            } catch (e: ApiException) {
+                // Google Sign In failed, update UI appropriately
+                Log.w(ContentValues.TAG, "Google sign in failed", e)
+                // ...
+            }
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        // [START_EXCLUDE silent]
+
+        // [END_EXCLUDE]
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(requireActivity()) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "signInWithCredential:success")
+                    val user = auth.currentUser
+
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                    // [START_EXCLUDE]
+
+                }
+            }
+    }
+    // [END auth_with_google]
+
+    // [START signin]
+    private fun signInWithGoogleOauth() {
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    companion object {
+        private const val TAG = "GoogleActivity"
+        private const val RC_SIGN_IN = 9001
+    }*/
 }

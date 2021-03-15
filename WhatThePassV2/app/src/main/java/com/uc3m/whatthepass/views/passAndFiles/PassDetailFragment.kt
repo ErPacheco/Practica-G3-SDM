@@ -62,16 +62,16 @@ class PassDetailFragment : Fragment() {
     }
 
     private fun insertFields(email: String, password: Password) {
-        binding.titleDetail.text = password.name
-        binding.emailDetail.text = password.inputEmail
-        binding.usernameDetail.text = password.inputUser
+        binding.titleDetail.setText(password.name)
+        binding.emailDetail.setText(password.inputEmail)
+        binding.usernameDetail.setText( password.inputUser)
         lateinit var userLogin: User
         lifecycleScope.launch{
             userLogin = userViewModel.findUserByEmail(email)
             val realPass = Hash.decrypt(password.hashPassword, userLogin.masterPass)
-            binding.passwordDetailInput.text = realPass
+            binding.passwordDetailInput.setText(realPass)
         }
-        binding.URIDetail.text = password.url
+        binding.URIDetail.setText(password.url)
     }
 
 
