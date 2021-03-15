@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
     //apply plugin: 'com.google.gms.google-services'
 
 }
@@ -52,6 +53,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:26.5.0')
 
     //OAuth
+    implementation 'com.google.firebase:firebase-core'
      implementation 'com.google.firebase:firebase-auth-ktx'
      implementation 'com.google.android.gms:play-services-auth:19.0.0'
 
@@ -76,6 +78,7 @@ dependencies {
     // Room components
     implementation 'androidx.room:room-runtime:2.2.6'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.firebase:firebase-auth:20.0.3'
     //implementation 'androidx.wear:wear:1.0.0'
     //compileOnly 'com.google.android.wearable:wearable:2.6.0'
     kapt "androidx.room:room-compiler:2.2.6"

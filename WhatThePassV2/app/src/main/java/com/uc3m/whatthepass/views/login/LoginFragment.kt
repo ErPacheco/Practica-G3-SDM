@@ -43,19 +43,19 @@ class LoginFragment : Fragment() {
 
 
         /**************************************************** OAuth*****************************************************/
-       /* val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
         googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
 
-        auth = Firebase.auth
-        val currentUser = auth.currentUser*/
+        auth = FirebaseAuth.getInstance()
+        val currentUser = auth.currentUser
         /***************************************************Fin OAuth***************************************************/
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         val view = binding.root
         binding.signinGoogle.setOnClickListener {
-            //signInWithGoogleOauth()
+            signInWithGoogleOauth()
         }
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
@@ -180,7 +180,7 @@ class LoginFragment : Fragment() {
     /**********************************************************************************************************************/
     /************************************************************FUNCIONES OAUTH*******************************************/
 
-   /* override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
@@ -230,5 +230,5 @@ class LoginFragment : Fragment() {
     companion object {
         private const val TAG = "GoogleActivity"
         private const val RC_SIGN_IN = 9001
-    }*/
+    }
 }

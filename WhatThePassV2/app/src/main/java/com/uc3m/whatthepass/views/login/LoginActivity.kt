@@ -18,7 +18,7 @@ import com.uc3m.whatthepass.R
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
-    //private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
