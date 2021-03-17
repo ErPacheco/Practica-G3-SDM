@@ -1,4 +1,9 @@
 package com.uc3m.whatthepass.util
+import android.content.ContentValues
+import android.icu.lang.UCharacter.GraphemeClusterBreak.L
+import android.util.Log
+import java.util.*
+import java.util.stream.Collectors
 import kotlin.random.Random
 
 
@@ -8,8 +13,8 @@ object PasswordGenerator {
     private val numeric = "0123456789"
     private val special = "!@#$%^*\\"
 
-   suspend fun generatePassword (isCapital:Boolean,isLower:Boolean,isNumeric:Boolean,
-                          isSpecial:Boolean,length:Int, minNumNumeric:Int,minNumSpecial:Int):String{
+   suspend fun generatePassword(isCapital: Boolean, isLower: Boolean, isNumeric: Boolean,
+                                isSpecial: Boolean, length: Int, minNumNumeric: Int, minNumSpecial: Int):String{
         if(!isCapital && !isLower && !isNumeric&&
         !isSpecial){
             return ""
@@ -34,11 +39,21 @@ object PasswordGenerator {
             val rIndex = random.nextInt(dictionary.length)
             password.append(dictionary[rIndex])
         }
-        return verify(minNumNumeric,minNumSpecial,password.toString())
+      /*val s = password.toString()
+       val array= s.toCharArray()
+
+       array.shuffle(Random(System.nanoTime()))
+
+       return array.toString()
+      //(ContentValues.TAG, password.toString(), shuffle.toString())*/
+       val array= password.toString().toCharArray()
+       array.shuffle()
+       Log.v("${password.toString()}:  ", array.toString())
+        return password.toString()//verify(minNumNumeric,minNumSpecial,password.toString())
 
     }
 
-    private fun verify (minNumNumeric:Int, minNumSpecial:Int, generatedPassword:String):String{
+    private fun verify(minNumNumeric: Int, minNumSpecial: Int, generatedPassword: String):String{
         val password = StringBuilder()
         for (i in 0 until generatedPassword.length){
             password.append(generatedPassword[i])
@@ -88,4 +103,7 @@ object PasswordGenerator {
         return password.toString()
 
     }
+
+
+
 }
