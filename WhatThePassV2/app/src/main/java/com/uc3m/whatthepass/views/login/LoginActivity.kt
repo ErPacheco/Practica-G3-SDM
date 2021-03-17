@@ -104,10 +104,10 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
-*/
+
     companion object {
         private const val TAG = "GoogleActivity"
         const val RC_SIGN_IN = 9001
-    }
+    }*/
 
 }

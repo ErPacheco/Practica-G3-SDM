@@ -191,10 +191,19 @@ class LoginFragment : Fragment() {
                 val account = task.getResult(ApiException::class.java)!!
                 Log.d(ContentValues.TAG, "firebaseAuthWithGoogle:" + account.id)
                 firebaseAuthWithGoogle(account.idToken!!)
+                val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE) ?: return
+                with(sp.edit()) {
+                    putString("loginEmail", account.email)
+                    commit()
+                }
+
+                val intent = Intent(this@LoginFragment.context, PassAndFilesActivity::class.java)
+                activity?.startActivity(intent)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(ContentValues.TAG, "Google sign in failed", e)
-                // ...
+                Toast.makeText(requireContext(), "Error al iniciar sesión", Toast.LENGTH_LONG).show()
+
             }
         }
     }
@@ -210,6 +219,7 @@ class LoginFragment : Fragment() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
                     val user = auth.currentUser
+
 
                 } else {
                     // If sign in fails, display a message to the user.
@@ -229,6 +239,6 @@ class LoginFragment : Fragment() {
 
     companion object {
         private const val TAG = "GoogleActivity"
-        private const val RC_SIGN_IN = 9001
+        private const val RC_SIGN_IN = 1
     }
 }

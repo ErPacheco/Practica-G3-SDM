@@ -1,34 +1,42 @@
 {
   "project_info": {
-    "project_number": "1045075503912",
-    "firebase_url": "https://whatthepass-default-rtdb.firebaseio.com",
-    "project_id": "whatthepass",
-    "storage_bucket": "whatthepass.appspot.com"
+    "project_number": "380544345776",
+    "firebase_url": "https://whatthepass-307816-default-rtdb.firebaseio.com",
+    "project_id": "whatthepass-307816",
+    "storage_bucket": "whatthepass-307816.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1045075503912:android:932689d682ec23793a7e1d",
+        "mobilesdk_app_id": "1:380544345776:android:9f50cb661d8ef3d60f7d75",
         "android_client_info": {
           "package_name": "com.uc3m.whatthepass"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1045075503912-bj3e708qih47fg0abmjnqgosdijcjok4.apps.googleusercontent.com",
+          "client_id": "380544345776-5k9k5k5faldtnr3q0cfrgr0kseg2iml5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uc3m.whatthepass",
+            "certificate_hash": "0a6c8e58358cce9227fd1bc21ea7d49e782b5fa0"
+          }
+        },
+        {
+          "client_id": "380544345776-80qlrqiepsdvfaocetcrj9v7jk3gdlvr.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAppH9nbGhJEOvdVPP_1-pfkObSSnhrJ2M"
+          "current_key": "AIzaSyCpRof0QbchW6MnoC5-W5KElM4w34N_NuU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1045075503912-bj3e708qih47fg0abmjnqgosdijcjok4.apps.googleusercontent.com",
+              "client_id": "380544345776-80qlrqiepsdvfaocetcrj9v7jk3gdlvr.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
