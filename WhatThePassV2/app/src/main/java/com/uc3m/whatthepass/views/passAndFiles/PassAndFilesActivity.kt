@@ -7,12 +7,13 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.models.Password
+import com.uc3m.whatthepass.viewModels.FilesViewModel
 import com.uc3m.whatthepass.viewModels.PasswordViewModel
 
 
 class PassAndFilesActivity : AppCompatActivity() {
     private val viewModel: PasswordViewModel by viewModels()
-
+    private val viewModelFile : FilesViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pass_and_files)

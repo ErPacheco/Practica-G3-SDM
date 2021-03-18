@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -47,7 +48,7 @@ class LoginFragment : Fragment() {
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
-        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+        googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
 
         auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
@@ -191,14 +192,7 @@ class LoginFragment : Fragment() {
                 val account = task.getResult(ApiException::class.java)!!
                 Log.d(ContentValues.TAG, "firebaseAuthWithGoogle:" + account.id)
                 firebaseAuthWithGoogle(account.idToken!!)
-                val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE) ?: return
-                with(sp.edit()) {
-                    putString("loginEmail", account.email)
-                    commit()
-                }
 
-                val intent = Intent(this@LoginFragment.context, PassAndFilesActivity::class.java)
-                activity?.startActivity(intent)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(ContentValues.TAG, "Google sign in failed", e)
@@ -219,6 +213,16 @@ class LoginFragment : Fragment() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
                     val user = auth.currentUser
+                    if (user != null){
+                        /*val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE) ?: return
+                        with(sp.edit()) {
+                            putString("loginEmail", user.email)
+                            commit()
+                        }*/
+
+                        val intent = Intent(this@LoginFragment.context, PassAndFilesActivity::class.java)
+                        activity?.startActivity(intent)
+                    }
 
 
                 } else {
@@ -239,6 +243,6 @@ class LoginFragment : Fragment() {
 
     companion object {
         private const val TAG = "GoogleActivity"
-        private const val RC_SIGN_IN = 1
+        private const val RC_SIGN_IN = 120
     }
 }

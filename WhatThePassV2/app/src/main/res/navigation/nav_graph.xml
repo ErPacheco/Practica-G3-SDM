@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_passwordView_to_passDetailFragment"
             app:destination="@id/passDetailFragment" />
+        <action
+            android:id="@+id/action_passwordView_to_filesFragment"
+            app:destination="@id/filesFragment" />
     </fragment>
     <fragment
         android:id="@+id/passwordInfoFragment"
@@ -49,4 +52,9 @@
             android:id="@+id/action_passEditFragment_to_passDetailFragment"
             app:destination="@id/passDetailFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/filesFragment"
+        android:name="com.uc3m.whatthepass.views.passAndFiles.FilesFragment"
+        android:label="fragment_files"
+        tools:layout="@layout/fragment_files" />
 </navigation>

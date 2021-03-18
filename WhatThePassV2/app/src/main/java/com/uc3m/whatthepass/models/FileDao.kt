@@ -18,4 +18,10 @@ interface FileDao {
 
     @Delete
     suspend fun deleteFile(file: File)
+
+    @Query("SELECT * FROM File ORDER BY id ASC")
+    fun readAll(): LiveData<List<File>>
+
+    @Query("DELETE FROM Password where user=:email")
+    suspend fun deleteByUser(email:String)
 }

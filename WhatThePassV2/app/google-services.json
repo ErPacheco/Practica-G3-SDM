@@ -1,42 +1,42 @@
 {
   "project_info": {
-    "project_number": "380544345776",
-    "firebase_url": "https://whatthepass-307816-default-rtdb.firebaseio.com",
-    "project_id": "whatthepass-307816",
-    "storage_bucket": "whatthepass-307816.appspot.com"
+    "project_number": "1038618505998",
+    "firebase_url": "https://whatthepass-307916-default-rtdb.firebaseio.com",
+    "project_id": "whatthepass-307916",
+    "storage_bucket": "whatthepass-307916.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:380544345776:android:9f50cb661d8ef3d60f7d75",
+        "mobilesdk_app_id": "1:1038618505998:android:264dc2e7079a8685a05d5f",
         "android_client_info": {
           "package_name": "com.uc3m.whatthepass"
         }
       },
       "oauth_client": [
         {
-          "client_id": "380544345776-5k9k5k5faldtnr3q0cfrgr0kseg2iml5.apps.googleusercontent.com",
+          "client_id": "1038618505998-8vgmrdv8ugslfa6avk947rglues5pt42.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.uc3m.whatthepass",
-            "certificate_hash": "0a6c8e58358cce9227fd1bc21ea7d49e782b5fa0"
+            "certificate_hash": "1bd3e7b0b3cf7af4e93f2f59e058e18ec0d4c46a"
           }
         },
         {
-          "client_id": "380544345776-80qlrqiepsdvfaocetcrj9v7jk3gdlvr.apps.googleusercontent.com",
+          "client_id": "1038618505998-vdih3v51h8605ah32ct8fm11r9as7o5n.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCpRof0QbchW6MnoC5-W5KElM4w34N_NuU"
+          "current_key": "AIzaSyDNDJbKCaDl9o_xKGbCSlF0WiVGccQDuKU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "380544345776-80qlrqiepsdvfaocetcrj9v7jk3gdlvr.apps.googleusercontent.com",
+              "client_id": "1038618505998-vdih3v51h8605ah32ct8fm11r9as7o5n.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
