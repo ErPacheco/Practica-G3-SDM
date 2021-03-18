@@ -15,6 +15,9 @@ object Hash {
         return BCrypt.withDefaults().hashToString(12, str.toCharArray())
     }
 
+    fun kekHashSubstring(str: String): String {
+    }
+
     fun verifyHash(strInput: String, strSaved: String): Boolean {
         val res = BCrypt.verifyer().verify(strInput.toCharArray(), strSaved)
         return res.verified

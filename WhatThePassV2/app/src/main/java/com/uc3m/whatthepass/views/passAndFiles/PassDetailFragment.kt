@@ -20,6 +20,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.models.User
+import com.uc3m.whatthepass.passwordApi.PassInfoViewModel
+import com.uc3m.whatthepass.passwordApi.PassInfoViewModelFactory
+import com.uc3m.whatthepass.passwordApi.repository.Repository
 import com.uc3m.whatthepass.util.Hash
 import com.uc3m.whatthepass.viewModels.UserViewModel
 import kotlinx.coroutines.launch
@@ -39,6 +42,10 @@ class PassDetailFragment : Fragment() {
         val view = binding.root
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
+        val repository = Repository()
+        val passViewModelFactory = PassInfoViewModelFactory(repository)
+        val passViewModel = ViewModelProvider(this, passViewModelFactory).get(PassInfoViewModel::class.java)
+
         binding.viewButton.setOnClickListener{
             val passInputType = binding.passwordDetailInput.inputType
             if(passInputType == 129) {
@@ -56,6 +63,10 @@ class PassDetailFragment : Fragment() {
             clipboardManager.setPrimaryClip(clipData)
 
             Toast.makeText(requireContext(), "Password copied to clipboard!", Toast.LENGTH_LONG).show()
+        }
+
+        binding.passBreaches.setOnClickListener{
+
         }
 
         return view
