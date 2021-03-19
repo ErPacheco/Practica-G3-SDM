@@ -1,6 +1,8 @@
 package com.uc3m.whatthepass.util
 
 import at.favre.lib.crypto.bcrypt.BCrypt
+import org.bouncycastle.jcajce.provider.digest.Keccak
+import java.nio.charset.Charset
 import java.util.*
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
@@ -16,6 +18,12 @@ object Hash {
     }
 
     fun kekHashSubstring(str: String): String {
+        val bArray: ByteArray = str.toByteArray(Charset.defaultCharset())
+        val digest = Keccak.Digest512()
+        digest.update(bArray,0,bArray.size)
+        val newDigest = digest.digest()
+        val keccakHash: String = newDigest.joinToString("") { "%02x".format(it) }
+        return keccakHash.substring(0,10)
     }
 
     fun verifyHash(strInput: String, strSaved: String): Boolean {

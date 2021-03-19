@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,7 @@ import com.uc3m.whatthepass.passwordApi.PassInfoViewModel
 import com.uc3m.whatthepass.passwordApi.PassInfoViewModelFactory
 import com.uc3m.whatthepass.passwordApi.repository.Repository
 import com.uc3m.whatthepass.util.Hash
+import com.uc3m.whatthepass.util.Hash.kekHashSubstring
 import com.uc3m.whatthepass.viewModels.UserViewModel
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
@@ -66,7 +68,18 @@ class PassDetailFragment : Fragment() {
         }
 
         binding.passBreaches.setOnClickListener{
+            val passToInspect = binding.passwordDetailInput.text.toString()
+            val passSubstring = kekHashSubstring(passToInspect)
+            passViewModel.getPasswordInfo(passSubstring)
 
+            passViewModel.myPasswordResponse.observe(viewLifecycleOwner, Observer{response ->
+                if(response.isSuccessful) {
+                    val breachesCount = response.body()?.passData?.count.toString()
+                    Log.d("Count ----->", breachesCount)
+                } else {
+                    Log.d("Response", response.errorBody().toString())
+                }
+            })
         }
 
         return view

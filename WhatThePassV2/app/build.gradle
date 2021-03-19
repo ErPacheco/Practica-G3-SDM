@@ -101,7 +101,7 @@ dependencies {
     implementation group: 'at.favre.lib', name: 'bcrypt', version: '0.9.0'
 
     // KHash Library
-    implementation "com.github.komputing.khash:keccak:1.1.0"
+    implementation group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.68'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
