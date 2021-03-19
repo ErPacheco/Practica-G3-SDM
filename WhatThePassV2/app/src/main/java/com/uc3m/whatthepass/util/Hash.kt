@@ -43,4 +43,8 @@ object Hash {
         val byteStr = decoder.decode(str.toByteArray(Charsets.UTF_8))
         return String(cipher(Cipher.DECRYPT_MODE, secretKey).doFinal(byteStr))
     }
+
+    suspend fun cipherFile(){
+
+    }
 }
