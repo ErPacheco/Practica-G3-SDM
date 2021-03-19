@@ -73,6 +73,9 @@ class PasswordView : Fragment(){
             val intent = Intent(this@PasswordView.context, PasswordGeneratorActivity::class.java)
             activity?.startActivity(intent)
         }
+        binding.filesButtonShow.setOnClickListener {
+            findNavController().navigate(R.id.action_passwordView_to_filesFragment)
+        }
         val itemTouchHelperCallback =
                 object :
                         ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
