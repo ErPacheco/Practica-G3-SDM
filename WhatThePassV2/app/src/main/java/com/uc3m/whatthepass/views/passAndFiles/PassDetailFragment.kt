@@ -68,6 +68,7 @@ class PassDetailFragment : Fragment() {
         }
 
         binding.passBreaches.setOnClickListener{
+            binding.progressBarAPI.visibility = View.VISIBLE
             val passToInspect = binding.passwordDetailInput.text.toString()
             val passSubstring = kekHashSubstring(passToInspect)
             passViewModel.getPasswordInfo(passSubstring)
@@ -75,9 +76,16 @@ class PassDetailFragment : Fragment() {
             passViewModel.myPasswordResponse.observe(viewLifecycleOwner, Observer{response ->
                 if(response.isSuccessful) {
                     val breachesCount = response.body()?.passData?.count.toString()
-                    Log.d("Count ----->", breachesCount)
+                    val countInt = breachesCount.toInt()
+                    binding.progressBarAPI.visibility = View.GONE
+                    if(countInt in 1..99) {
+                        Toast.makeText(requireContext(), "Your password has appeared in some data breaches, it should be improved", Toast.LENGTH_LONG).show()
+                    } else if (countInt >= 100) {
+                        Toast.makeText(requireContext(), "Your password has been seen " + countInt + "times before!! You must change it now!!", Toast.LENGTH_LONG).show()
+                    }
                 } else {
-                    Log.d("Response", response.errorBody().toString())
+                    binding.progressBarAPI.visibility = View.GONE
+                    Toast.makeText(requireContext(), "A password breach was not found in the database!!", Toast.LENGTH_LONG).show()
                 }
             })
         }
