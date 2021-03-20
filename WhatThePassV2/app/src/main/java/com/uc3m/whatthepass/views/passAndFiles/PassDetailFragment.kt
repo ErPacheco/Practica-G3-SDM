@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.models.User
+import com.uc3m.whatthepass.passwordApi.PassInfoViewModel
+import com.uc3m.whatthepass.passwordApi.PassInfoViewModelFactory
+import com.uc3m.whatthepass.passwordApi.repository.Repository
 import com.uc3m.whatthepass.util.Hash
+import com.uc3m.whatthepass.util.Hash.kekHashSubstring
 import com.uc3m.whatthepass.viewModels.UserViewModel
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
@@ -39,6 +44,10 @@ class PassDetailFragment : Fragment() {
         val view = binding.root
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
+        val repository = Repository()
+        val passViewModelFactory = PassInfoViewModelFactory(repository)
+        val passViewModel = ViewModelProvider(this, passViewModelFactory).get(PassInfoViewModel::class.java)
+
         binding.viewButton.setOnClickListener{
             val passInputType = binding.passwordDetailInput.inputType
             if(passInputType == 129) {
@@ -56,6 +65,29 @@ class PassDetailFragment : Fragment() {
             clipboardManager.setPrimaryClip(clipData)
 
             Toast.makeText(requireContext(), "Password copied to clipboard!", Toast.LENGTH_LONG).show()
+        }
+
+        binding.passBreaches.setOnClickListener{
+            binding.progressBarAPI.visibility = View.VISIBLE
+            val passToInspect = binding.passwordDetailInput.text.toString()
+            val passSubstring = kekHashSubstring(passToInspect)
+            passViewModel.getPasswordInfo(passSubstring)
+
+            passViewModel.myPasswordResponse.observe(viewLifecycleOwner, Observer{response ->
+                if(response.isSuccessful) {
+                    val breachesCount = response.body()?.passData?.count.toString()
+                    val countInt = breachesCount.toInt()
+                    binding.progressBarAPI.visibility = View.GONE
+                    if(countInt in 1..99) {
+                        Toast.makeText(requireContext(), "Your password has appeared in some data breaches, it should be improved", Toast.LENGTH_LONG).show()
+                    } else if (countInt >= 100) {
+                        Toast.makeText(requireContext(), "Your password has been seen " + countInt + "times before!! You must change it now!!", Toast.LENGTH_LONG).show()
+                    }
+                } else {
+                    binding.progressBarAPI.visibility = View.GONE
+                    Toast.makeText(requireContext(), "A password breach was not found in the database!!", Toast.LENGTH_LONG).show()
+                }
+            })
         }
 
         return view
