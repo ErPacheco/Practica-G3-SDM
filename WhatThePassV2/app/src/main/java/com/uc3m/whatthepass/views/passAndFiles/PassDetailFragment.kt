@@ -77,15 +77,15 @@ class PassDetailFragment : Fragment() {
                 if(response.isSuccessful) {
                     val breachesCount = response.body()?.passData?.count.toString()
                     val countInt = breachesCount.toInt()
-                    binding.progressBarAPI.visibility = View.GONE
+                    binding.progressBarAPI.visibility = View.INVISIBLE
                     if(countInt in 1..99) {
                         Toast.makeText(requireContext(), "Your password has appeared in some data breaches, it should be improved", Toast.LENGTH_LONG).show()
                     } else if (countInt >= 100) {
-                        Toast.makeText(requireContext(), "Your password has been seen " + countInt + "times before!! You must change it now!!", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), "Your password has been seen $countInt times before!! You must change it now!!", Toast.LENGTH_LONG).show()
                     }
                 } else {
-                    binding.progressBarAPI.visibility = View.GONE
-                    Toast.makeText(requireContext(), "A password breach was not found in the database!!", Toast.LENGTH_LONG).show()
+                    binding.progressBarAPI.visibility = View.INVISIBLE
+                    Toast.makeText(requireContext(), "No password breach has been found in the database!!", Toast.LENGTH_LONG).show()
                 }
             })
         }
