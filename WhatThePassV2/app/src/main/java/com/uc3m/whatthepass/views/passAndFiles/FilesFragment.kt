@@ -1,6 +1,7 @@
 package com.uc3m.whatthepass.views.passAndFiles
 
 import android.app.Activity.RESULT_OK
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
@@ -8,6 +9,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.media.MediaCodec.CryptoException
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
@@ -18,13 +20,28 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.security.crypto.EncryptedFile
+import androidx.security.crypto.MasterKeys
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentFilesBinding
 import com.uc3m.whatthepass.viewModels.FilesViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.*
+import java.security.InvalidKeyException
+import java.security.Key
+import java.security.NoSuchAlgorithmException
+import javax.crypto.BadPaddingException
+import javax.crypto.Cipher
+import javax.crypto.IllegalBlockSizeException
+import javax.crypto.NoSuchPaddingException
+import javax.crypto.spec.SecretKeySpec
 
 
 class FilesFragment : Fragment() {
@@ -72,6 +89,7 @@ class FilesFragment : Fragment() {
                     .setType("*/*")
                     .setAction(Intent.ACTION_GET_CONTENT)
             startActivityForResult(Intent.createChooser(intent, "Select a file"), 111)
+
         }
 
 
@@ -153,10 +171,21 @@ class FilesFragment : Fragment() {
 
         if (requestCode == 111 && resultCode == RESULT_OK) {
             val selectedFile = data?.data //The uri with the location of the file
-            val name = getName(requireContext(),selectedFile)
+            val path= selectedFile?.path
+
+            val name = getName(requireContext(), selectedFile)
             if (name != null) {
                 Log.d("Fichero", name)
             }
+            if (path != null) {
+                  Log.d("Fichero",path )
+            }
+            lifecycleScope.launch(Dispatchers.IO) {
+                if (selectedFile != null) {
+                    cypherFile(selectedFile)
+                }
+            }
+
         }
     }
 
@@ -174,5 +203,39 @@ class FilesFragment : Fragment() {
             }
         }
         return fileName
+    }
+
+    private suspend fun cypherFile(fileInput: Uri){
+        val contentResolver = requireContext().contentResolver
+        val data =readTextFromUri(fileInput,contentResolver)
+        val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+        Log.d("NEW FILES",requireContext().filesDir.toString())
+        val file = File(requireContext().filesDir, getName(requireContext(),fileInput) + ".secret")
+        val encryptedFile = EncryptedFile.Builder(
+                file,
+                requireContext(),
+                masterKeyAlias,
+                EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
+        ).build()
+
+        val encryptedInputStream: FileOutputStream = encryptedFile.openFileOutput()
+        encryptedInputStream.write(data.toByteArray())
+        encryptedInputStream.close()
+
+    }
+    @Throws(IOException::class)
+    private fun readTextFromUri(uri: Uri, contentResolver: ContentResolver): String {
+        val stringBuilder = StringBuilder()
+        contentResolver.openInputStream(uri)?.use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                var line: String? = reader.readLine()
+
+                while (line != null) {
+                    stringBuilder.append(line)
+                    line = reader.readLine()
+                }
+            }
+        }
+        return stringBuilder.toString()
     }
 }
