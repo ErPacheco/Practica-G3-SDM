@@ -71,12 +71,19 @@ class PassDetailFragment : Fragment() {
             binding.progressBarAPI.visibility = View.VISIBLE
             val passToInspect = binding.passwordDetailInput.text.toString()
             val passSubstring = kekHashSubstring(passToInspect)
-            passViewModel.getPasswordInfo(passSubstring)
+            lifecycleScope.launch {
+                passViewModel.getPasswordInfo(passSubstring)
+            }
+
 
             passViewModel.myPasswordResponse.observe(viewLifecycleOwner, Observer{response ->
                 if(response.isSuccessful) {
                     val breachesCount = response.body()?.passData?.count.toString()
                     val countInt = breachesCount.toInt()
+
+                    val passInfo = response.body()?.passData?.char.toString()
+                    passInformation(passInfo)
+
                     binding.progressBarAPI.visibility = View.INVISIBLE
                     if(countInt in 1..99) {
                         Toast.makeText(requireContext(), "Your password has appeared in some data breaches, it should be improved", Toast.LENGTH_LONG).show()
@@ -93,6 +100,30 @@ class PassDetailFragment : Fragment() {
         return view
     }
 
+    private fun passInformation(str: String) {
+        val firstSplit = str.split(';')
+        val info = arrayOfNulls<String>(4)
+        for((index, item) in firstSplit.withIndex()) {
+            val itemDivide = item.split(':')
+            info[index] = itemDivide[1]
+            Log.d("ITERACION: ", index.toString())
+            when(index) {
+                0 -> { // Dígitos
+                    Log.d("DIGITOS DE LA CONTRASEÑA -> ", info[index].toString())
+                }
+                1 -> { // Letras del alfabeto
+                    Log.d("LETRAS DE LA CONTRASEÑA -> ", info[index].toString())
+                }
+                2 -> { // Caracteres especiales
+                    Log.d("CARACTERES ESPECIALES DE LA CONTRASEÑA -> ", info[index].toString())
+                }
+                3 -> { // Longitud de la contraseña
+                    Log.d("LONGITUD DE LA CONTRASEÑA -> ", info[index].toString())
+                }
+            }
+        }
+    }
+
     private fun insertFields(email: String, password: Password) {
         binding.titleDetail.setText(password.name)
         binding.emailDetail.setText(password.inputEmail)
@@ -105,7 +136,6 @@ class PassDetailFragment : Fragment() {
         }
         binding.URIDetail.setText(password.url)
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

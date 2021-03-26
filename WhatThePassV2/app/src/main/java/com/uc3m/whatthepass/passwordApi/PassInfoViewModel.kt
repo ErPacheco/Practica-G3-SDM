@@ -13,12 +13,10 @@ class PassInfoViewModel(private val repository: Repository) : ViewModel() {
 
   val myPasswordResponse: MutableLiveData<Response<PassSearched>> = MutableLiveData()
 
-  fun getPasswordInfo(hash: String){
-    viewModelScope.launch {
-      val response = repository.getPassInfo(hash)
-      Log.d("RESPONSE ------> ", response.toString())
-      myPasswordResponse.value = response
-    }
+  suspend fun getPasswordInfo(hash: String){
+    val response = repository.getPassInfo(hash)
+    Log.d("RESPONSE ------> ", response.toString())
+    myPasswordResponse.value = response
   }
 
 }
