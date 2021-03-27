@@ -1,31 +1,37 @@
 package com.uc3m.whatthepass.views.passAndFiles
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.PopupWindow
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import com.uc3m.whatthepass.databinding.FragmentPassDetailBinding
-import com.uc3m.whatthepass.models.Password
-import com.uc3m.whatthepass.viewModels.PasswordViewModel
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.uc3m.whatthepass.R
+import com.uc3m.whatthepass.databinding.FragmentPassDetailBinding
+import com.uc3m.whatthepass.models.Password
 import com.uc3m.whatthepass.models.User
 import com.uc3m.whatthepass.passwordApi.PassInfoViewModel
 import com.uc3m.whatthepass.passwordApi.PassInfoViewModelFactory
 import com.uc3m.whatthepass.passwordApi.repository.Repository
 import com.uc3m.whatthepass.util.Hash
 import com.uc3m.whatthepass.util.Hash.kekHashSubstring
+import com.uc3m.whatthepass.viewModels.PasswordViewModel
 import com.uc3m.whatthepass.viewModels.UserViewModel
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
@@ -36,9 +42,10 @@ class PassDetailFragment : Fragment() {
     private lateinit var userViewModel: UserViewModel
     private val passwordViewModel: PasswordViewModel by activityViewModels()
 
+    @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+      inflater: LayoutInflater, container: ViewGroup?,
+      savedInstanceState: Bundle?
     ): View {
         binding = FragmentPassDetailBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -47,6 +54,22 @@ class PassDetailFragment : Fragment() {
         val repository = Repository()
         val passViewModelFactory = PassInfoViewModelFactory(repository)
         val passViewModel = ViewModelProvider(this, passViewModelFactory).get(PassInfoViewModel::class.java)
+
+        // Popup
+
+        val viewWindow = layoutInflater.inflate(R.layout.popup_window, null)
+        val popupText: TextView = viewWindow.findViewById<View>(R.id.popup_count_text) as TextView
+        val width = LinearLayout.LayoutParams.WRAP_CONTENT
+        val height = LinearLayout.LayoutParams.WRAP_CONTENT
+        val focusable = true
+        val popupWindow = PopupWindow(viewWindow, width, height, focusable)
+
+        viewWindow.setOnTouchListener(OnTouchListener { _, _ ->
+            popupWindow.dismiss()
+            true
+        })
+
+        popupWindow.elevation = 20F;
 
         binding.viewButton.setOnClickListener{
             val passInputType = binding.passwordDetailInput.inputType
@@ -75,9 +98,9 @@ class PassDetailFragment : Fragment() {
                 passViewModel.getPasswordInfo(passSubstring)
             }
 
+            passViewModel.myPasswordResponse.observe(viewLifecycleOwner, Observer { response ->
+                if (response.isSuccessful) {
 
-            passViewModel.myPasswordResponse.observe(viewLifecycleOwner, Observer{response ->
-                if(response.isSuccessful) {
                     val breachesCount = response.body()?.passData?.count.toString()
                     val countInt = breachesCount.toInt()
 
@@ -85,10 +108,12 @@ class PassDetailFragment : Fragment() {
                     passInformation(passInfo)
 
                     binding.progressBarAPI.visibility = View.INVISIBLE
-                    if(countInt in 1..99) {
+                    if (countInt in 1..99) {
                         Toast.makeText(requireContext(), "Your password has appeared in some data breaches, it should be improved", Toast.LENGTH_LONG).show()
                     } else if (countInt >= 100) {
-                        Toast.makeText(requireContext(), "Your password has been seen $countInt times before!! You must change it now!!", Toast.LENGTH_LONG).show()
+                        /*Toast.makeText(requireContext(), "Your password has been seen $countInt times before!! You must change it now!!", Toast.LENGTH_LONG).show()*/
+                        popupText.text = "Bro, tu contraseña está muy fucked"
+                        popupWindow.showAtLocation(viewWindow, Gravity.CENTER, 0, 0)
                     }
                 } else {
                     binding.progressBarAPI.visibility = View.INVISIBLE
@@ -127,7 +152,7 @@ class PassDetailFragment : Fragment() {
     private fun insertFields(email: String, password: Password) {
         binding.titleDetail.setText(password.name)
         binding.emailDetail.setText(password.inputEmail)
-        binding.usernameDetail.setText( password.inputUser)
+        binding.usernameDetail.setText(password.inputUser)
         lateinit var userLogin: User
         lifecycleScope.launch{
             userLogin = userViewModel.findUserByEmail(email)
@@ -147,7 +172,7 @@ class PassDetailFragment : Fragment() {
         if(email != null) {
             passwordViewModel.message.observe(viewLifecycleOwner, object : Observer<Password> {
                 override fun onChanged(o: Password?) {
-                    if(o!=null){
+                    if (o != null) {
                         actualPassword = o
                         insertFields(email, o)
                     }
