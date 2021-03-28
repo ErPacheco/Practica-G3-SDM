@@ -12,9 +12,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentPasswordInfoBinding
+import com.uc3m.whatthepass.models.Password
 import com.uc3m.whatthepass.models.User
+import com.uc3m.whatthepass.util.Hash
 import com.uc3m.whatthepass.viewModels.PasswordViewModel
 import com.uc3m.whatthepass.viewModels.UserViewModel
 import kotlinx.coroutines.launch
@@ -22,6 +26,8 @@ import kotlinx.coroutines.launch
 class PasswordInfoFragment : Fragment() {
     private lateinit var binding: FragmentPasswordInfoBinding
     private lateinit var userViewModel: UserViewModel
+    private lateinit var database: FirebaseDatabase
+    private lateinit var auth: FirebaseAuth
     private val passwordViewModel: PasswordViewModel by activityViewModels()
 
 
@@ -31,6 +37,7 @@ class PasswordInfoFragment : Fragment() {
     ): View {
         binding = FragmentPasswordInfoBinding.inflate(inflater, container, false)
         val view = binding.root
+        auth= FirebaseAuth.getInstance()
 
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
@@ -51,8 +58,13 @@ class PasswordInfoFragment : Fragment() {
         binding.createPassButton.setOnClickListener{ v ->
             val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(v.windowToken, 0)
-            insertPassword(email, userLogin.masterPass)
-            adapter.notifyDataSetChanged()
+            if(auth.currentUser==null){
+                insertPassword(email, userLogin.masterPass)
+                adapter.notifyDataSetChanged()
+            }else{
+                insertPasswordOnline(email, "hola")
+            }
+
         }
 
         binding.clearCreateInputs.setOnClickListener{
@@ -60,6 +72,28 @@ class PasswordInfoFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun insertPasswordOnline(email: String, masterPass: String) {
+        val inputTitle = binding.titleInput.text.toString()
+        val inputEmail = binding.emailInput.text.toString()
+        val inputUsername = binding.usernameInput.text.toString()
+        val inputPassword = binding.passwordInput.text.toString()
+        val inputUrl = binding.urlInput.text.toString()
+        database= FirebaseDatabase.getInstance()
+        when(checkInputs(inputTitle, inputPassword)) {
+            1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
+            2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
+            3 -> {
+                val myRef = database.getReference("Users/"+auth.currentUser.uid+"/passwords")
+                val en= Hash.encrypt(inputPassword, "masterPass")
+                val p= Password(0,inputTitle,auth.currentUser.email,inputEmail,inputUsername,en,inputUrl)
+                myRef.setValue(p);
+                Toast.makeText(requireContext(), "Password created!", Toast.LENGTH_LONG).show()
+                findNavController().navigate(R.id.action_passwordInfoFragment_to_passwordView)
+            }
+        }
+
     }
 
     private fun insertPassword(email: String, masterPass: String) {

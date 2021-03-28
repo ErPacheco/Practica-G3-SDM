@@ -14,6 +14,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentPassEditBinding
 import com.uc3m.whatthepass.models.Password
@@ -27,6 +29,8 @@ import kotlin.system.exitProcess
 class PassEditFragment : Fragment() {
     private lateinit var binding: FragmentPassEditBinding
     private lateinit var userViewModel: UserViewModel
+    private lateinit var database: FirebaseDatabase
+    private lateinit var auth: FirebaseAuth
     private val passwordViewModel: PasswordViewModel by activityViewModels()
     private var passwordID: Int = 0
 
@@ -37,6 +41,7 @@ class PassEditFragment : Fragment() {
         binding = FragmentPassEditBinding.inflate(inflater, container, false)
         val view = binding.root
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+        auth= FirebaseAuth.getInstance()
 
         val adapter = ListAdapter(passwordViewModel)
         val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
@@ -70,6 +75,29 @@ class PassEditFragment : Fragment() {
 
         return view
     }
+    private fun editPasswordOnline(email: String, masterPass: String) {
+        val inputTitle = binding.titleDetail2.text.toString()
+        val inputEmail = binding.emailDetail2.text.toString()
+        val inputUsername = binding.usernameDetail2.text.toString()
+        val inputPassword = binding.passwordDetailInput2.text.toString()
+        val inputURL = binding.URIDetail2.text.toString()
+        database= FirebaseDatabase.getInstance()
+        when(checkInputs(inputTitle, inputPassword)) {
+            1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
+            2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
+            3 -> {
+                val myRef = database.getReference("Users/"+auth.currentUser.uid+"/passwords")
+                val en= Hash.encrypt(inputPassword, "masterPass")
+                val p= Password(0,inputTitle,auth.currentUser.email,inputEmail,inputUsername,en,inputUrl)
+                myRef.setValue(p);
+                passwordViewModel.updatePassword(passwordID, inputTitle, email, inputEmail, inputUsername, inputPassword, inputURL, masterPass)
+                Toast.makeText(requireContext(), "Password updated!", Toast.LENGTH_LONG).show()
+                findNavController().navigate(R.id.action_passEditFragment_to_passwordView)
+            }
+        }
+    }
+
+
 
     private fun editPassword(email: String, masterPass: String) {
         val inputTitle = binding.titleDetail2.text.toString()

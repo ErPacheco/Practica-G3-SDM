@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 
 class PasswordViewModel(application: Application): AndroidViewModel(application) {
     val message = MutableLiveData<Password>()
+
     private val repository: PasswordRepository
     val readAll: LiveData<List<Password>>
     init {

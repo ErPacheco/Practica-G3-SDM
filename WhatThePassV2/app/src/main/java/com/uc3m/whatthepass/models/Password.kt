@@ -23,6 +23,6 @@ data class Password(
        // @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
         val hashPassword: String,
         val url: String?
-) {
+)
 
-}
+
