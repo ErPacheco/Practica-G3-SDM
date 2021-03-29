@@ -32,7 +32,7 @@ class PassEditFragment : Fragment() {
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
     private val passwordViewModel: PasswordViewModel by activityViewModels()
-    private var passwordID: Int = 0
+    private var passwordID: Long = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

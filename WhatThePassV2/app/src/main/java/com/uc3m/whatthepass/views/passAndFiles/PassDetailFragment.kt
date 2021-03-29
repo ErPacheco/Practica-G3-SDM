@@ -19,6 +19,8 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.models.User
 import com.uc3m.whatthepass.passwordApi.PassInfoViewModel
@@ -34,6 +36,8 @@ import kotlin.system.exitProcess
 class PassDetailFragment : Fragment() {
     private lateinit var binding: FragmentPassDetailBinding
     private lateinit var userViewModel: UserViewModel
+    private lateinit var database: FirebaseDatabase
+    private lateinit var auth: FirebaseAuth
     private val passwordViewModel: PasswordViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -43,6 +47,8 @@ class PassDetailFragment : Fragment() {
         binding = FragmentPassDetailBinding.inflate(inflater, container, false)
         val view = binding.root
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+
+        auth= FirebaseAuth.getInstance()
 
         val repository = Repository()
         val passViewModelFactory = PassInfoViewModelFactory(repository)
@@ -106,6 +112,19 @@ class PassDetailFragment : Fragment() {
         binding.URIDetail.setText(password.url)
     }
 
+    private fun insertFieldsOnline(email: String, password: Password) {
+        binding.titleDetail.setText(password.name)
+        binding.emailDetail.setText(password.inputEmail)
+        binding.usernameDetail.setText( password.inputUser)
+        val database = FirebaseDatabase.getInstance()
+        val myRef = database.getReference("Users/" + auth.currentUser.uid + "/masterPass")
+
+            //val realPass = Hash.decrypt(password.hashPassword, userLogin.masterPass)
+            //binding.passwordDetailInput.setText(realPass)
+
+        binding.URIDetail.setText(password.url)
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -119,7 +138,11 @@ class PassDetailFragment : Fragment() {
                 override fun onChanged(o: Password?) {
                     if(o!=null){
                         actualPassword = o
-                        insertFields(email, o)
+                        if (auth.currentUser == null) {
+                            insertFields(email, o)
+                        }else{
+                            insertFieldsOnline(email,o)
+                        }
                     }
                 }
             })

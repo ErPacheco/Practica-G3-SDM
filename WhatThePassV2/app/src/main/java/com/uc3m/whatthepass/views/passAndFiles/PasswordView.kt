@@ -162,6 +162,7 @@ class PasswordView : Fragment() {
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
         if (auth.currentUser != null) {
+
             val database = FirebaseDatabase.getInstance()
             val myRef = database.getReference("Users/" + auth.currentUser.uid + "/passwords")
 
@@ -195,12 +196,12 @@ class PasswordView : Fragment() {
 
                 override fun onChildRemoved(dataSnapshot: DataSnapshot) {
                     Log.d(TAG, "onChildRemoved:" + dataSnapshot.key!!)
+                    val pass = dataSnapshot!!.getValue(Password::class.java)
+                    if (pass != null) {
+                        adapter.deletePasswordFromFirebase(pass.id)
+                    }
 
-                    // A comment has changed, use the key to determine if we are displaying this
-                    // comment and if so remove it.
-                    val commentKey = dataSnapshot.key
 
-                    // ...
                 }
 
                 override fun onChildMoved(dataSnapshot: DataSnapshot, previousChildName: String?) {
@@ -244,22 +245,7 @@ class PasswordView : Fragment() {
         return view
     }
 
-    private fun getListPasswords(map: Map<String, String>): Password? {
 
-        if (map != null) {
-            return Password(
-                map["id"]?.toInt()!!,
-                map["name"]!!,
-                map["user"]!!,
-                map["inputEmail"],
-                map["inputUser"],
-                map["hashPassword"]!!,
-                map["url"]
-            )
-        }
-        return null
-
-    }
 }
 
 

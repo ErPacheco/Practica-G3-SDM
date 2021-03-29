@@ -9,7 +9,7 @@ import com.google.gson.internal.LinkedTreeMap
         indices = [Index(value = ["name"], unique = true)])
 data class Password(
         @PrimaryKey(autoGenerate = true)
-        val id: Int,
+        val id: Long,
         val name: String,// nombre de entrada
         @ForeignKey
                 (entity = User::class,

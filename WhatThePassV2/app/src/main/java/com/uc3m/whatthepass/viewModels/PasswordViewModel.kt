@@ -42,7 +42,7 @@ class PasswordViewModel(application: Application): AndroidViewModel(application)
         message.value = msg
     }
 
-    fun updatePassword(id: Int, name: String, emailUser: String, email: String, user: String, password: String, url: String, masterPass: String)  {
+    fun updatePassword(id: Long, name: String, emailUser: String, email: String, user: String, password: String, url: String, masterPass: String)  {
         viewModelScope.launch {
             val passwordToChange = Hash.encrypt(password, masterPass)
             repository.updatePassword(id, name, emailUser, email, user, passwordToChange, url)

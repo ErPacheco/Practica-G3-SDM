@@ -58,6 +58,16 @@ class ListAdapter(passwordViewModel: PasswordViewModel): RecyclerView.Adapter<Li
 
     }
 
+    fun deletePasswordFromFirebase(id:Long):Password?{
+
+        for ((ide, elem) in passwordListOnline.withIndex()){
+            if (elem.id==id){
+               return deleteItem(ide)
+            }
+        }
+        return null
+    }
+
     fun getData(index: Int):Password{
         return this.passwordList[index]
     }

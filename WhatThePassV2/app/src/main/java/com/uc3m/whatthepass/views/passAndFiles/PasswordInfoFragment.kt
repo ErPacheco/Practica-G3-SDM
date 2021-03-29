@@ -22,6 +22,7 @@ import com.uc3m.whatthepass.util.Hash
 import com.uc3m.whatthepass.viewModels.PasswordViewModel
 import com.uc3m.whatthepass.viewModels.UserViewModel
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 class PasswordInfoFragment : Fragment() {
     private lateinit var binding: FragmentPasswordInfoBinding
@@ -85,9 +86,11 @@ class PasswordInfoFragment : Fragment() {
             1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
             2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
             3 -> {
-                val myRef = database.getReference("Users/"+auth.currentUser.uid+"/passwords/"+inputTitle)
+                val currentDateTime = System.currentTimeMillis();
+                val myRef = database.getReference("Users/"+auth.currentUser.uid+"/passwords/"+currentDateTime)
                 val en= Hash.encrypt(inputPassword, "masterPass")
-                val p= Password(0,inputTitle,auth.currentUser.email,inputEmail,inputUsername,en,inputUrl)
+
+                val p= Password(currentDateTime,inputTitle,auth.currentUser.email,inputEmail,inputUsername,en,inputUrl)
                 myRef.setValue(p);
                 Toast.makeText(requireContext(), "Password created!", Toast.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_passwordInfoFragment_to_passwordView)
