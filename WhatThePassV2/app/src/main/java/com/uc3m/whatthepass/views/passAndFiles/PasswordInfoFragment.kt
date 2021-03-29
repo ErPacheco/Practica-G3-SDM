@@ -85,7 +85,7 @@ class PasswordInfoFragment : Fragment() {
             1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
             2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
             3 -> {
-                val myRef = database.getReference("Users/"+auth.currentUser.uid+"/passwords")
+                val myRef = database.getReference("Users/"+auth.currentUser.uid+"/passwords/"+inputTitle)
                 val en= Hash.encrypt(inputPassword, "masterPass")
                 val p= Password(0,inputTitle,auth.currentUser.email,inputEmail,inputUsername,en,inputUrl)
                 myRef.setValue(p);

@@ -16,7 +16,7 @@ import com.uc3m.whatthepass.viewModels.PasswordViewModel
 class ListAdapter(passwordViewModel: PasswordViewModel): RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
     private val passwordViewModel= passwordViewModel
     private var passwordList = emptyList<Password>()
-
+    private val passwordListOnline = ArrayList<Password>()
 
     class MyViewHolder(val binding: RecyclerViewItemBinding): RecyclerView.ViewHolder(binding.root)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -45,6 +45,11 @@ class ListAdapter(passwordViewModel: PasswordViewModel): RecyclerView.Adapter<Li
         notifyDataSetChanged()
     }
 
+    fun addData(password: Password){
+        passwordListOnline.add(password)
+        setData(passwordListOnline.toList())
+
+    }
     fun deleteItem(index: Int):Password{
         val pas=this.passwordList[index]
         this.passwordList.drop(index)

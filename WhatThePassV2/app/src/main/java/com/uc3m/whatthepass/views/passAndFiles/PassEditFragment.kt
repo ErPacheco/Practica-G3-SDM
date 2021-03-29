@@ -69,8 +69,14 @@ class PassEditFragment : Fragment() {
         binding.saveChangesButton.setOnClickListener{ v ->
             val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(v.windowToken, 0)
-            editPassword(email, userLogin.masterPass)
-            adapter.notifyDataSetChanged()
+            if(auth.currentUser==null){
+                editPassword(email, userLogin.masterPass)
+                adapter.notifyDataSetChanged()
+            }else{
+                editPasswordOnline(auth.currentUser.email,"hola");
+            }
+
+
         }
 
         return view
@@ -86,9 +92,9 @@ class PassEditFragment : Fragment() {
             1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
             2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
             3 -> {
-                val myRef = database.getReference("Users/"+auth.currentUser.uid+"/passwords")
-                val en= Hash.encrypt(inputPassword, "masterPass")
-                val p= Password(0,inputTitle,auth.currentUser.email,inputEmail,inputUsername,en,inputUrl)
+                val myRef = database.getReference("Users/"+auth.currentUser.uid+"/passwords/"+inputTitle)
+                val en= Hash.encrypt(inputPassword, masterPass)
+                val p= Password(0,inputTitle,auth.currentUser.email,inputEmail,inputUsername,en,inputURL)
                 myRef.setValue(p);
                 passwordViewModel.updatePassword(passwordID, inputTitle, email, inputEmail, inputUsername, inputPassword, inputURL, masterPass)
                 Toast.makeText(requireContext(), "Password updated!", Toast.LENGTH_LONG).show()
@@ -110,6 +116,7 @@ class PassEditFragment : Fragment() {
             1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
             2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
             3 -> {
+
                 passwordViewModel.updatePassword(passwordID, inputTitle, email, inputEmail, inputUsername, inputPassword, inputURL, masterPass)
                 Toast.makeText(requireContext(), "Password updated!", Toast.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_passEditFragment_to_passwordView)

@@ -2,6 +2,7 @@ package com.uc3m.whatthepass.models
 
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
+import com.google.gson.internal.LinkedTreeMap
 
 @Entity(tableName = "Password",
         //foreignKeys = [ForeignKey(entity = User::class, parentColumns = ["email"], childColumns = ["user"], onDelete = ForeignKey.CASCADE, onUpdate = ForeignKey.CASCADE)],
@@ -23,6 +24,11 @@ data class Password(
        // @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
         val hashPassword: String,
         val url: String?
-)
+){
+        constructor() : this(0, "",
+                "", "", "",
+                "", ""
+        )
+}
 
 
