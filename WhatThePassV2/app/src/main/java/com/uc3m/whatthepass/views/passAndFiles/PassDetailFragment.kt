@@ -40,6 +40,7 @@ import kotlin.system.exitProcess
 class PassDetailFragment : Fragment() {
     private lateinit var binding: FragmentPassDetailBinding
     private lateinit var userViewModel: UserViewModel
+    private var popupMsg: String = ""
     private val passwordViewModel: PasswordViewModel by activityViewModels()
 
     @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
@@ -105,19 +106,27 @@ class PassDetailFragment : Fragment() {
                     val countInt = breachesCount.toInt()
 
                     val passInfo = response.body()?.passData?.char.toString()
-                    passInformation(passInfo)
 
-                    binding.progressBarAPI.visibility = View.INVISIBLE
                     if (countInt in 1..99) {
-                        Toast.makeText(requireContext(), "Your password has appeared in some data breaches, it should be improved", Toast.LENGTH_LONG).show()
-                    } else if (countInt >= 100) {
-                        /*Toast.makeText(requireContext(), "Your password has been seen $countInt times before!! You must change it now!!", Toast.LENGTH_LONG).show()*/
-                        popupText.text = "Bro, tu contraseña está muy fucked"
+                        popupMsg += "Your password has appeared in some data breaches, it should be improved. "
+                        passInformation(passInfo)
+                        popupText.text = popupMsg
+                        binding.progressBarAPI.visibility = View.INVISIBLE
                         popupWindow.showAtLocation(viewWindow, Gravity.CENTER, 0, 0)
+                        popupMsg = ""
+                    } else if (countInt >= 100) {
+                        popupMsg += "Your password has been seen $countInt times before!! You must change it now!! "
+                        passInformation(passInfo)
+                        popupText.text = popupMsg
+                        binding.progressBarAPI.visibility = View.INVISIBLE
+                        popupWindow.showAtLocation(viewWindow, Gravity.CENTER, 0, 0)
+                        popupMsg = ""
                     }
                 } else {
+                    popupText.text = "No password breach has been found in the database!!"
                     binding.progressBarAPI.visibility = View.INVISIBLE
-                    Toast.makeText(requireContext(), "No password breach has been found in the database!!", Toast.LENGTH_LONG).show()
+                    popupWindow.showAtLocation(viewWindow, Gravity.CENTER, 0, 0)
+                    popupMsg = ""
                 }
             })
         }
@@ -134,16 +143,24 @@ class PassDetailFragment : Fragment() {
             Log.d("ITERACION: ", index.toString())
             when(index) {
                 0 -> { // Dígitos
-                    Log.d("DIGITOS DE LA CONTRASEÑA -> ", info[index].toString())
+                    if(info[index] == "0") {
+                        popupMsg += "Is it recommended to add at least one digit. "
+                    }
                 }
                 1 -> { // Letras del alfabeto
-                    Log.d("LETRAS DE LA CONTRASEÑA -> ", info[index].toString())
+                    if(info[index] == "0") {
+                        popupMsg += "Is it recommended to add at least one letter. "
+                    }
                 }
                 2 -> { // Caracteres especiales
-                    Log.d("CARACTERES ESPECIALES DE LA CONTRASEÑA -> ", info[index].toString())
+                    if(info[index] == "0") {
+                        popupMsg += "Is it recommended to add at least one special character. "
+                    }
                 }
                 3 -> { // Longitud de la contraseña
-                    Log.d("LONGITUD DE LA CONTRASEÑA -> ", info[index].toString())
+                    if(info[index]?.toInt()!! < 8) {
+                        popupMsg += "The password should be at least 8 characters long. "
+                    }
                 }
             }
         }
