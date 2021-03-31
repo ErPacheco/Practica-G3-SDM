@@ -88,7 +88,7 @@ class PasswordInfoFragment : Fragment() {
             3 -> {
                 val currentDateTime = System.currentTimeMillis();
                 val myRef = database.getReference("Users/"+auth.currentUser.uid+"/passwords/"+currentDateTime)
-                val en= Hash.encrypt(inputPassword, "masterPass")
+                val en= Hash.encrypt(inputPassword, masterPass)
 
                 val p= Password(currentDateTime,inputTitle,auth.currentUser.email,inputEmail,inputUsername,en,inputUrl)
                 myRef.setValue(p);

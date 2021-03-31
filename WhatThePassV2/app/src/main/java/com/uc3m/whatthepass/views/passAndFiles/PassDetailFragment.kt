@@ -3,6 +3,7 @@ package com.uc3m.whatthepass.views.passAndFiles
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Bundle
 import android.text.InputType
@@ -23,7 +24,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentPassDetailBinding
 import com.uc3m.whatthepass.models.Password
@@ -45,6 +49,7 @@ class PassDetailFragment : Fragment() {
     private var popupMsg: String = ""
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
+    private var masterPassOnline :String? =""
     private val passwordViewModel: PasswordViewModel by activityViewModels()
 
     @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
@@ -191,9 +196,24 @@ class PassDetailFragment : Fragment() {
         binding.usernameDetail.setText( password.inputUser)
         val database = FirebaseDatabase.getInstance()
         val myRef = database.getReference("Users/" + auth.currentUser.uid + "/masterPass")
+        val masterPassListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // Get Post object and use the values to update the UI
+                 masterPassOnline = dataSnapshot!!.getValue(String::class.java)
+                if(masterPassOnline!=null){
+                    val realPass = Hash.decrypt(password.hashPassword, masterPassOnline!!)
+                    binding.passwordDetailInput.setText(realPass)
+                }
 
-            //val realPass = Hash.decrypt(password.hashPassword, userLogin.masterPass)
-            //binding.passwordDetailInput.setText(realPass)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+            }
+        }
+        myRef.addValueEventListener(masterPassListener)
+
 
         binding.URIDetail.setText(password.url)
     }

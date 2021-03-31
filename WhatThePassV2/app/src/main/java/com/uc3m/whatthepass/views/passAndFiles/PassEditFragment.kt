@@ -1,8 +1,10 @@
 package com.uc3m.whatthepass.views.passAndFiles
 
+import android.content.ContentValues
 import android.content.Context
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +17,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentPassEditBinding
 import com.uc3m.whatthepass.models.Password
@@ -33,7 +38,7 @@ class PassEditFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private val passwordViewModel: PasswordViewModel by activityViewModels()
     private var passwordID: Long = 0
-
+    private lateinit var userLogin: User
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,7 +51,10 @@ class PassEditFragment : Fragment() {
         val adapter = ListAdapter(passwordViewModel)
         val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
         val email = sp.getString("loginEmail", null)
-        lateinit var userLogin: User
+        if(auth.currentUser==null){
+
+        }
+
         if(email != null) {
             lifecycleScope.launch{
                 userLogin = userViewModel.findUserByEmail(email)
@@ -73,7 +81,28 @@ class PassEditFragment : Fragment() {
                 editPassword(email, userLogin.masterPass)
                 adapter.notifyDataSetChanged()
             }else{
-                editPasswordOnline(auth.currentUser.email,"hola");
+                val database = FirebaseDatabase.getInstance()
+                val myRef = database.getReference("Users/" + auth.currentUser.uid + "/masterPass")
+                val masterPassListener = object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        // Get Post object and use the values to update the UI
+                        val masterPassOnline = dataSnapshot!!.getValue(String::class.java)
+                        if(masterPassOnline!=null){
+                            val passId= passwordViewModel.message.value?.id
+                            if (passId != null) {
+                                editPasswordOnline(auth.currentUser.email,masterPassOnline,passId)
+                            };
+                        }
+
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // Getting Post failed, log a message
+                        Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
+                    }
+                }
+                myRef.addValueEventListener(masterPassListener)
+
             }
 
 
@@ -81,7 +110,7 @@ class PassEditFragment : Fragment() {
 
         return view
     }
-    private fun editPasswordOnline(email: String, masterPass: String) {
+    private fun editPasswordOnline(email: String, masterPass: String, idPass:Long) {
         val inputTitle = binding.titleDetail2.text.toString()
         val inputEmail = binding.emailDetail2.text.toString()
         val inputUsername = binding.usernameDetail2.text.toString()
@@ -92,11 +121,11 @@ class PassEditFragment : Fragment() {
             1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
             2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
             3 -> {
-                val myRef = database.getReference("Users/"+auth.currentUser.uid+"/passwords/"+inputTitle)
+               userLogin = User(email, masterPass)
+                val myRef = database.getReference("Users/"+auth.currentUser.uid+"/passwords/"+idPass)
                 val en= Hash.encrypt(inputPassword, masterPass)
-                val p= Password(0,inputTitle,auth.currentUser.email,inputEmail,inputUsername,en,inputURL)
+                val p= Password(idPass,inputTitle,auth.currentUser.email,inputEmail,inputUsername,en,inputURL)
                 myRef.setValue(p);
-                passwordViewModel.updatePassword(passwordID, inputTitle, email, inputEmail, inputUsername, inputPassword, inputURL, masterPass)
                 Toast.makeText(requireContext(), "Password updated!", Toast.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_passEditFragment_to_passwordView)
             }
@@ -128,14 +157,40 @@ class PassEditFragment : Fragment() {
         binding.titleDetail2.setText(password.name)
         binding.emailDetail2.setText(password.inputEmail)
         binding.usernameDetail2.setText(password.inputUser)
-        lateinit var userLogin: User
-        lifecycleScope.launch{
-            userLogin = userViewModel.findUserByEmail(email)
-            val realPass = Hash.decrypt(password.hashPassword, userLogin.masterPass)
-            binding.passwordDetailInput2.setText(realPass)
+        if(auth.currentUser==null){
+            lifecycleScope.launch{
+                userLogin = userViewModel.findUserByEmail(email)
+                val realPass = Hash.decrypt(password.hashPassword, userLogin.masterPass)
+                binding.passwordDetailInput2.setText(realPass)
+            }
+
+        }else{
+            val database = FirebaseDatabase.getInstance()
+            val myRef = database.getReference("Users/"+auth.currentUser.uid+"/masterPass")
+            val masterPassListener = object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    // Get Post object and use the values to update the UI
+                    val masterPassOnline = dataSnapshot!!.getValue(String::class.java)
+                    if(masterPassOnline!=null){
+                        lifecycleScope.launch{
+                            val realPass = Hash.decrypt(password.hashPassword, masterPassOnline!!)
+                            binding.passwordDetailInput2.setText(realPass)
+                        }
+                    }
+
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Getting Post failed, log a message
+                    Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
+                }
+            }
+            myRef.addValueEventListener(masterPassListener)
         }
         binding.URIDetail2.setText(password.url)
     }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
