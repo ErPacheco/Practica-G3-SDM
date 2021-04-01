@@ -112,10 +112,10 @@ class PassDetailFragment : Fragment() {
 
             passViewModel.myPasswordResponse.observe(viewLifecycleOwner, Observer { response ->
                 if (response.isSuccessful) {
-
+                    // Number of times that the password appears in the database
                     val breachesCount = response.body()?.passData?.count.toString()
                     val countInt = breachesCount.toInt()
-
+                    // Information about the password such as number of digits, letters, special characters and length
                     val passInfo = response.body()?.passData?.char.toString()
 
                     if (countInt in 1..99) {
