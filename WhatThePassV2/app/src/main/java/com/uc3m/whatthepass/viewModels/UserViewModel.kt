@@ -11,7 +11,7 @@ import com.uc3m.whatthepass.util.Hash.verifyHash
 
 class UserViewModel(application: Application): AndroidViewModel(application) {
 
-    val readAll: LiveData<List<User>>
+    private val readAll: LiveData<List<User>>
     private val repository: UserRepository
     private var logged: Boolean = false
     private var register: Boolean = false
@@ -24,24 +24,14 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
 
     suspend fun addUser(email: String, password: String): Boolean {
         val userFind = repository.readUserEmail(email)
-        if (userFind != null) {
-            register = false
-        } else {
-            val masterPass = Hash.bcryptHash(password)
-            repository.addUser(email, masterPass)
-            register = true
-        }
+        register = false
         return register
     }
 
     suspend fun loginUser(email: String, password: String): Boolean {
         val userFind = repository.readUserEmail(email)
-        if(userFind != null) {
-            val res = verifyHash(password, userFind.masterPass)
-            logged = res
-        } else {
-            logged = false
-        }
+        val res = verifyHash(password, userFind.masterPass)
+        logged = res
 
         return logged
     }
