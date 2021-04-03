@@ -66,5 +66,6 @@
     <string name="passwordbreachbutton">passwordBreachButton</string>
     <string name="exposed">Exposed?</string>
     <string name="default_number_one">1</string>
+    <string name="password_info">Password Info</string>
     <!--<string name="default_web_client_id">1045075503912-bj3e708qih47fg0abmjnqgosdijcjok4.apps.googleusercontent.com</string> -->
 </resources>

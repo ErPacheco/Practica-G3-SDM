@@ -13,7 +13,6 @@ class PassInfoViewModel(private val repository: Repository) : ViewModel() {
 
   suspend fun getPasswordInfo(hash: String){
     val response = repository.getPassInfo(hash)
-    Log.d("RESPONSE ------> ", response.toString())
     myPasswordResponse.value = response
   }
 
