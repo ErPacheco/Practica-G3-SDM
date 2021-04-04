@@ -13,11 +13,17 @@ import kotlinx.coroutines.launch
 class PasswordViewModel(application: Application): AndroidViewModel(application) {
     val message = MutableLiveData<Password>()
     private val repository: PasswordRepository
-    val readAll: LiveData<List<Password>>
+    // val readAll: LiveData<List<Password>>
+    lateinit var readUserPasswords: LiveData<List<Password>>
+
+
     init {
         val passwordDao = WhatTheDatabase.getDatabase(application).passwordDao()
         repository = PasswordRepository(passwordDao)
-        readAll = repository.readAll
+    }
+
+    fun findPasswordsByUser(email: String) {
+        readUserPasswords = repository.findPasswordByUser(email)
     }
 
     fun addPassword(name: String, emailUser: String, email: String, user: String, password: String, url: String, masterPass: String){

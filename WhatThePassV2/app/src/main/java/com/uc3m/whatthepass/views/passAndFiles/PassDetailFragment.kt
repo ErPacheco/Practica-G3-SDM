@@ -167,16 +167,21 @@ class PassDetailFragment : Fragment() {
     }
 
     private fun insertFields(email: String, password: Password) {
-        binding.titleDetail.setText(password.name)
-        binding.emailDetail.setText(password.inputEmail)
-        binding.usernameDetail.setText(password.inputUser)
-        lateinit var userLogin: User
+        binding.titleDetail.text = password.name
+        binding.emailDetail.text = password.inputEmail
+        binding.usernameDetail.text = password.inputUser
+
         lifecycleScope.launch{
-            userLogin = userViewModel.findUserByEmail(email)
-            val realPass = Hash.decrypt(password.hashPassword, userLogin.masterPass)
-            binding.passwordDetailInput.setText(realPass)
+            val userLogin: User? = userViewModel.findUserByEmail(email)
+            if(userLogin != null) {
+                val realPass = Hash.decrypt(password.hashPassword, userLogin.masterPass)
+                binding.passwordDetailInput.text = realPass
+            } else {
+                Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+                exitProcess(-1)
+            }
         }
-        binding.URIDetail.setText(password.url)
+        binding.URIDetail.text = password.url
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

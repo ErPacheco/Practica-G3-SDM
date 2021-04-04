@@ -2,6 +2,7 @@ package com.uc3m.whatthepass.views.passAndFiles
 
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
@@ -26,7 +27,9 @@ import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentPasswordViewBinding
 import com.uc3m.whatthepass.viewModels.PasswordViewModel
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import com.uc3m.whatthepass.views.passwordGeneration.PasswordGeneratorActivity
+import kotlinx.coroutines.launch
 
 
 class PasswordView : Fragment(){
@@ -40,10 +43,9 @@ class PasswordView : Fragment(){
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPasswordViewBinding.inflate(inflater, container, false)
         val view = binding.root
-
 
         val adapter = ListAdapter(passwordViewModel)
         deleteIcon=ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_delete_24)!!
@@ -51,10 +53,21 @@ class PasswordView : Fragment(){
         val recyclerView = binding.recyclerView2
         recyclerView.adapter = adapter
 
+        val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
+        val email = sp.getString("loginEmail", null)
+        if (email != null) {
+            lifecycleScope.launch{
+                passwordViewModel.findPasswordsByUser(email)
+            }
+        } else {
+            Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+            return view
+        }
+
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-                passwordViewModel.readAll.observe(viewLifecycleOwner, { password ->
-                    adapter.setData(password)
-                })
+        passwordViewModel.readUserPasswords.observe(viewLifecycleOwner, { password ->
+            adapter.setData(password)
+        })
 
         recyclerView.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), recyclerView, object : RecyclerItemClickListener.OnItemClickListener {
 
@@ -63,7 +76,7 @@ class PasswordView : Fragment(){
                 findNavController().navigate(R.id.action_passwordView_to_passDetailFragment)
             }
             override fun onItemLongClick(view: View?, position: Int) {
-                TODO("do nothing")
+                // Do something
             }
         }))
         binding.addButton.setOnClickListener{

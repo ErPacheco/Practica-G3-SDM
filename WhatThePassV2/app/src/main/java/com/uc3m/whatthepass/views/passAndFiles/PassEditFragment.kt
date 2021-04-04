@@ -41,7 +41,7 @@ class PassEditFragment : Fragment() {
         val adapter = ListAdapter(passwordViewModel)
         val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
         val email = sp.getString("loginEmail", null)
-        lateinit var userLogin: User
+        var userLogin: User? = null
         if(email != null) {
             lifecycleScope.launch{
                 userLogin = userViewModel.findUserByEmail(email)
@@ -51,21 +51,29 @@ class PassEditFragment : Fragment() {
             return view
         }
 
+        // Si no se ha encontrado al usuario logueado, error
+        if(userLogin == null) {
+            Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+            exitProcess(-1)
+        } else {
 
-        binding.viewButton3.setOnClickListener{
-            val passInputType = binding.passwordDetailInput2.inputType
-            if(passInputType == 129) {
-                binding.passwordDetailInput2.inputType = InputType.TYPE_CLASS_TEXT
-            } else {
-                binding.passwordDetailInput2.inputType = 129
+            // Para ver la contraseña o esconderla
+            binding.viewButton3.setOnClickListener{
+                val passInputType = binding.passwordDetailInput2.inputType
+                if(passInputType == 129) {
+                    binding.passwordDetailInput2.inputType = InputType.TYPE_CLASS_TEXT
+                } else {
+                    binding.passwordDetailInput2.inputType = 129
+                }
             }
-        }
 
-        binding.saveChangesButton.setOnClickListener{ v ->
-            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            imm?.hideSoftInputFromWindow(v.windowToken, 0)
-            editPassword(email, userLogin.masterPass)
-            adapter.notifyDataSetChanged()
+            // Guardar los cambios de una entrada
+            binding.saveChangesButton.setOnClickListener{ v ->
+                val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                imm?.hideSoftInputFromWindow(v.windowToken, 0)
+                editPassword(email, userLogin!!.masterPass)
+                adapter.notifyDataSetChanged()
+            }
         }
 
         return view
@@ -93,11 +101,15 @@ class PassEditFragment : Fragment() {
         binding.titleDetail2.setText(password.name)
         binding.emailDetail2.setText(password.inputEmail)
         binding.usernameDetail2.setText(password.inputUser)
-        lateinit var userLogin: User
         lifecycleScope.launch{
-            userLogin = userViewModel.findUserByEmail(email)
-            val realPass = Hash.decrypt(password.hashPassword, userLogin.masterPass)
-            binding.passwordDetailInput2.setText(realPass)
+            val userLogin: User? = userViewModel.findUserByEmail(email)
+            if(userLogin != null) {
+                val realPass = Hash.decrypt(password.hashPassword, userLogin.masterPass)
+                binding.passwordDetailInput2.setText(realPass)
+            } else {
+                Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+                exitProcess(-1)
+            }
         }
         binding.URIDetail2.setText(password.url)
     }

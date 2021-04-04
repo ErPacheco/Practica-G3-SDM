@@ -25,7 +25,4 @@ class PassAndFilesActivity : AppCompatActivity() {
         return navController.navigateUp() ||super.onSupportNavigateUp()
     }
 
-
-
-
 }
