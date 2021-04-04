@@ -3,6 +3,7 @@ package com.uc3m.whatthepass.views.passAndFiles
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import com.uc3m.whatthepass.viewModels.PasswordViewModel
 import com.uc3m.whatthepass.viewModels.UserViewModel
 import com.uc3m.whatthepass.views.passwordGeneration.PasswordGeneratorActivity
 import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
 
 class PasswordInfoFragment : Fragment() {
     private lateinit var binding: FragmentPasswordInfoBinding
@@ -38,32 +40,37 @@ class PasswordInfoFragment : Fragment() {
 
         val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
         val email = sp.getString("loginEmail", null)
-       // passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
+         // passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
         val adapter = ListAdapter(passwordViewModel)
-        lateinit var userLogin: User
+
         if(email != null) {
             lifecycleScope.launch{
-                userLogin = userViewModel.findUserByEmail(email)
+                val userLogin: User? = userViewModel.findUserByEmail(email)
+
+                if(userLogin == null) {
+                    Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+                    exitProcess(-1)
+                } else {
+                    binding.createPassButton.setOnClickListener{ v ->
+                        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                        imm?.hideSoftInputFromWindow(v.windowToken, 0)
+                        insertPassword(email, userLogin.masterPass)
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+            }
+
+            binding.clearCreateInputs.setOnClickListener{
+                clearData()
+            }
+
+            binding.generatePasswordOnCreate.setOnClickListener{
+                val intent = Intent(this@PasswordInfoFragment.context, PasswordGeneratorActivity::class.java)
+                activity?.startActivity(intent)
             }
         } else {
             Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
             return view
-        }
-
-        binding.createPassButton.setOnClickListener{ v ->
-            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            imm?.hideSoftInputFromWindow(v.windowToken, 0)
-            insertPassword(email, userLogin.masterPass)
-            adapter.notifyDataSetChanged()
-        }
-
-        binding.clearCreateInputs.setOnClickListener{
-            clearData()
-        }
-
-        binding.generatePasswordOnCreate.setOnClickListener{
-            val intent = Intent(this@PasswordInfoFragment.context, PasswordGeneratorActivity::class.java)
-            activity?.startActivity(intent)
         }
 
         return view

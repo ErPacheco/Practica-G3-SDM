@@ -12,7 +12,7 @@ interface PasswordDao {
 
     // Busca las contraseñas de un usuario
     @Query("SELECT * from Password where user = :email")
-    suspend fun findByUser(email: String):List<Password>
+    fun findByUser(email: String): LiveData<List<Password>>
 
     @Update(onConflict = OnConflictStrategy.ABORT)
     suspend fun updatePassword(password: Password)
