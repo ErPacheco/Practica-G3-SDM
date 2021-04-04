@@ -47,23 +47,27 @@ class PasswordView : Fragment(){
         binding = FragmentPasswordViewBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        // Adapter para la lista de contraseñas
         val adapter = ListAdapter(passwordViewModel)
         deleteIcon=ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_delete_24)!!
         editIcon=ContextCompat.getDrawable(requireContext(),R.drawable.ic_baseline_edit_24)!!
         val recyclerView = binding.recyclerView2
         recyclerView.adapter = adapter
 
+        // Obtenemos el email del usuario logueado, para crear la lista de sus contraseñas
         val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
         val email = sp.getString("loginEmail", null)
         if (email != null) {
             lifecycleScope.launch{
+                // Ejecutamos la función del viewModel para crear la lista de entradas
                 passwordViewModel.findPasswordsByUser(email)
             }
-        } else {
+        } else { // Si no encuentra el email en el almacenamiento clave/valor, error
             Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
             return view
         }
 
+        // Mostramos en el adaptare la lista de contraseñas del usuario logueado
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         passwordViewModel.readUserPasswords.observe(viewLifecycleOwner, { password ->
             adapter.setData(password)

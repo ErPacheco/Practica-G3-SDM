@@ -10,7 +10,7 @@ class UserRepository(private val userDao: UserDao) {
         return userDao.findUserByEmailAndMasterPass(email, password)
     }
 
-    suspend fun readUserEmail(email: String): User? {
+    suspend fun readUserByEmail(email: String): User? {
         return userDao.findUserByEmail(email)
     }
 

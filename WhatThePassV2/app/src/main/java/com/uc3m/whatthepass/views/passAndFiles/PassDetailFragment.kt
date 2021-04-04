@@ -57,7 +57,6 @@ class PassDetailFragment : Fragment() {
         val passViewModel = ViewModelProvider(this, passViewModelFactory).get(PassInfoViewModel::class.java)
 
         // Popup
-
         val viewWindow = layoutInflater.inflate(R.layout.popup_window, null)
         val popupText: TextView = viewWindow.findViewById<View>(R.id.popup_count_text) as TextView
         val width = LinearLayout.LayoutParams.WRAP_CONTENT
@@ -65,13 +64,16 @@ class PassDetailFragment : Fragment() {
         val focusable = true
         val popupWindow = PopupWindow(viewWindow, width, height, focusable)
 
+        // Cuando toquemos la pantalla, el popup desaparecerá
         viewWindow.setOnTouchListener(OnTouchListener { _, _ ->
             popupWindow.dismiss()
             true
         })
 
+        // Sombra del popup
         popupWindow.elevation = 20F;
 
+        // Cambio de visibilidad de la contraseña
         binding.viewButton.setOnClickListener{
             val passInputType = binding.passwordDetailInput.inputType
             if(passInputType == 129) {
@@ -81,6 +83,7 @@ class PassDetailFragment : Fragment() {
             }
         }
 
+        // Botón de copiar contraseña
         binding.copyButton.setOnClickListener{
             val passToCopy = binding.passwordDetailInput.text
 
@@ -91,6 +94,7 @@ class PassDetailFragment : Fragment() {
             Toast.makeText(requireContext(), "Password copied to clipboard!", Toast.LENGTH_LONG).show()
         }
 
+        // Botón de consumo de la api XposedOrNot
         binding.passBreaches.setOnClickListener{
             binding.progressBarAPI.visibility = View.VISIBLE
             val passToInspect = binding.passwordDetailInput.text.toString()
@@ -166,17 +170,20 @@ class PassDetailFragment : Fragment() {
         }
     }
 
+    // Función para insertar los datos de la contraseña en los campos de la vista
     private fun insertFields(email: String, password: Password) {
         binding.titleDetail.text = password.name
         binding.emailDetail.text = password.inputEmail
         binding.usernameDetail.text = password.inputUser
 
+        // Para mostrar la contraseña de la entrada, necesitamos desencriptarla de la base de datos
         lifecycleScope.launch{
+            // Para ello, buscamos el usuario que está logueado en la base de datos para obtener su contraseña maestra
             val userLogin: User? = userViewModel.findUserByEmail(email)
-            if(userLogin != null) {
+            if(userLogin != null) { // Una vez encontrada la masterPass del usuario logueado, lo desencriptamos para mostrarla en los detalles
                 val realPass = Hash.decrypt(password.hashPassword, userLogin.masterPass)
                 binding.passwordDetailInput.text = realPass
-            } else {
+            } else { // Si por algun casual no encontramos en la base de datos el usuario logueado, error
                 Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
                 exitProcess(-1)
             }
@@ -184,29 +191,37 @@ class PassDetailFragment : Fragment() {
         binding.URIDetail.text = password.url
     }
 
+    // Cuando la view se haya creado
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Obtenemos el email del usuario logueado
         val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
         val email = sp.getString("loginEmail", null)
 
         lateinit var actualPassword: Password
         if(email != null) {
-            passwordViewModel.message.observe(viewLifecycleOwner, object : Observer<Password> {
-                override fun onChanged(o: Password?) {
-                    if (o != null) {
-                        actualPassword = o
-                        insertFields(email, o)
-                    }
+            // A través de un MutableData del viewModel de Password, obtenemos la contraseña que vamos a ver en detalle
+            passwordViewModel.message.observe(viewLifecycleOwner, { o ->
+                if (o != null) {
+                    actualPassword = o
+                    // Procedemos a insertar los datos en los campos de la entrada de la contraseña
+                    insertFields(email, o)
+                } else {
+                    // Si por algún casual no obtuviéramos la contraseña a ver, es que ha ocurrido un error interno
+                    Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+                    exitProcess(-1)
                 }
             })
 
+            // Comportamiento del botón de editar la entrada
             binding.editPasswordButton.setOnClickListener{
                 passwordViewModel.sentPassword(actualPassword)
                 findNavController().navigate(R.id.action_passDetailFragment_to_passEditFragment)
             }
 
         } else {
+            // Si por algún casual no obtuviéramos el email logueado, es que ha ocurrido un error interno
             Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
             exitProcess(-1)
         }

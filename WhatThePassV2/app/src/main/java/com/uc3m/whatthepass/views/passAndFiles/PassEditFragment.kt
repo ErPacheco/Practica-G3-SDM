@@ -38,26 +38,32 @@ class PassEditFragment : Fragment() {
         val view = binding.root
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
+        // Inicializamos el adapter que se va a encargar de notificar que se han hecho cambios en la lista de contraseñas
         val adapter = ListAdapter(passwordViewModel)
+
+        // Obtenemos el email del usuario logueado
         val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
         val email = sp.getString("loginEmail", null)
-        var userLogin: User? = null
         if(email != null) {
             lifecycleScope.launch{
-                userLogin = userViewModel.findUserByEmail(email)
+                val userLogin: User? = userViewModel.findUserByEmail(email)
+                // Si no se ha encontrado al usuario logueado, error
+                if(userLogin == null) {
+                    Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+                    exitProcess(-1)
+                } else {
+
+                    // Guardar los cambios de una entrada
+                    binding.saveChangesButton.setOnClickListener{ v ->
+                        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                        imm?.hideSoftInputFromWindow(v.windowToken, 0)
+                        editPassword(email, userLogin.masterPass)
+                        adapter.notifyDataSetChanged()
+                    }
+                }
             }
-        } else {
-            Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
-            return view
-        }
 
-        // Si no se ha encontrado al usuario logueado, error
-        if(userLogin == null) {
-            Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
-            exitProcess(-1)
-        } else {
-
-            // Para ver la contraseña o esconderla
+            // Función de visibilidad de la contraseña
             binding.viewButton3.setOnClickListener{
                 val passInputType = binding.passwordDetailInput2.inputType
                 if(passInputType == 129) {
@@ -66,14 +72,9 @@ class PassEditFragment : Fragment() {
                     binding.passwordDetailInput2.inputType = 129
                 }
             }
-
-            // Guardar los cambios de una entrada
-            binding.saveChangesButton.setOnClickListener{ v ->
-                val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                imm?.hideSoftInputFromWindow(v.windowToken, 0)
-                editPassword(email, userLogin!!.masterPass)
-                adapter.notifyDataSetChanged()
-            }
+        } else {
+            Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+            return view
         }
 
         return view

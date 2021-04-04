@@ -40,29 +40,24 @@ class PasswordInfoFragment : Fragment() {
 
         val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
         val email = sp.getString("loginEmail", null)
-       // passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
+         // passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
         val adapter = ListAdapter(passwordViewModel)
-        var userLogin: User? = null
-        if(email != null) {
-            Log.d("INFO", "paso a encontrar el usuario")
-            lifecycleScope.launch{
-                userLogin = userViewModel.findUserByEmail(email)
-            }
-        } else {
-            Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
-            return view
-        }
 
-        if(userLogin == null) {
-            Log.d("ERRORRRR ", "ha habido un error en passInfo")
-            Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
-            exitProcess(-1)
-        } else {
-            binding.createPassButton.setOnClickListener{ v ->
-                val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                imm?.hideSoftInputFromWindow(v.windowToken, 0)
-                insertPassword(email, userLogin!!.masterPass)
-                adapter.notifyDataSetChanged()
+        if(email != null) {
+            lifecycleScope.launch{
+                val userLogin: User? = userViewModel.findUserByEmail(email)
+
+                if(userLogin == null) {
+                    Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+                    exitProcess(-1)
+                } else {
+                    binding.createPassButton.setOnClickListener{ v ->
+                        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                        imm?.hideSoftInputFromWindow(v.windowToken, 0)
+                        insertPassword(email, userLogin.masterPass)
+                        adapter.notifyDataSetChanged()
+                    }
+                }
             }
 
             binding.clearCreateInputs.setOnClickListener{
@@ -73,7 +68,11 @@ class PasswordInfoFragment : Fragment() {
                 val intent = Intent(this@PasswordInfoFragment.context, PasswordGeneratorActivity::class.java)
                 activity?.startActivity(intent)
             }
+        } else {
+            Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+            return view
         }
+
         return view
     }
 
