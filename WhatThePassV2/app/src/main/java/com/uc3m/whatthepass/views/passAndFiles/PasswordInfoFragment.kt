@@ -1,6 +1,7 @@
 package com.uc3m.whatthepass.views.passAndFiles
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ import com.uc3m.whatthepass.models.User
 import com.uc3m.whatthepass.util.Hash
 import com.uc3m.whatthepass.viewModels.PasswordViewModel
 import com.uc3m.whatthepass.viewModels.UserViewModel
+import com.uc3m.whatthepass.views.passwordGeneration.PasswordGeneratorActivity
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
@@ -70,6 +72,11 @@ class PasswordInfoFragment : Fragment() {
 
         binding.clearCreateInputs.setOnClickListener{
             clearData()
+        }
+
+        binding.generatePasswordOnCreate.setOnClickListener{
+            val intent = Intent(this@PasswordInfoFragment.context, PasswordGeneratorActivity::class.java)
+            activity?.startActivity(intent)
         }
 
         return view

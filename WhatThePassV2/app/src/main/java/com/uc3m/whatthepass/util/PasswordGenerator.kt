@@ -50,7 +50,7 @@ object PasswordGenerator {
 
         return verify(password.toString())
 
-    }
+   }
 
     private fun verify(generatedPassword: String):String{
 
@@ -65,7 +65,4 @@ object PasswordGenerator {
         }
        return password.toString()
     }
-
-
-
 }
