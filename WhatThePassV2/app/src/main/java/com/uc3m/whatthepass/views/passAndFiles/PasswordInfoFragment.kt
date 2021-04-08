@@ -1,5 +1,6 @@
 package com.uc3m.whatthepass.views.passAndFiles
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -15,7 +16,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentPasswordInfoBinding
 import com.uc3m.whatthepass.models.Password
@@ -82,8 +86,28 @@ class PasswordInfoFragment : Fragment() {
                 val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                 imm?.hideSoftInputFromWindow(v.windowToken, 0)
                 if (email != null) {
-                    insertPasswordOnline(auth.currentUser.email, "hola")
-                    adapter.notifyDataSetChanged()
+                    database = FirebaseDatabase.getInstance()
+                    val myRef = database.getReference("Users/" + auth.currentUser.uid + "/masterPass")
+                    val masterPassListener = object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            // Get Post object and use the values to update the UI
+                            val masterPassOnline = dataSnapshot!!.getValue(String::class.java)
+
+                            if(masterPassOnline!=null){
+                                insertPasswordOnline(auth.currentUser.email, masterPassOnline)
+                                adapter.notifyDataSetChanged()
+
+                            }
+
+                        }
+
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            // Getting Post failed, log a message
+                            Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
+                        }
+                    }
+                    myRef.addValueEventListener(masterPassListener)
+
                 }
                 binding.clearCreateInputs.setOnClickListener{
                     clearData()
