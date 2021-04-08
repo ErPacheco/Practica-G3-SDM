@@ -34,11 +34,12 @@ import kotlin.system.exitProcess
 class PassEditFragment : Fragment() {
     private lateinit var binding: FragmentPassEditBinding
     private lateinit var userViewModel: UserViewModel
-    private lateinit var database: FirebaseDatabase
-    private lateinit var auth: FirebaseAuth
     private val passwordViewModel: PasswordViewModel by activityViewModels()
     private var passwordID: Long = 0
-    private lateinit var userLogin: User
+    private lateinit var database: FirebaseDatabase
+    private lateinit var auth: FirebaseAuth
+    private lateinit var userLoginOn: User
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,80 +49,108 @@ class PassEditFragment : Fragment() {
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
         auth= FirebaseAuth.getInstance()
 
+        // Inicializamos el adapter que se va a encargar de notificar que se han hecho cambios en la lista de contraseñas
         val adapter = ListAdapter(passwordViewModel)
+
+        // Obtenemos el email del usuario logueado
         val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
         val email = sp.getString("loginEmail", null)
-        if(auth.currentUser==null){
-
-        }
-
-        if(email != null) {
+        Log.d("loginEmailEdit",email,null)
+        if(!email.equals("Online")) {
             lifecycleScope.launch{
-                userLogin = userViewModel.findUserByEmail(email)
+                val userLogin: User? = email?.let { userViewModel.findUserByEmail(it) }
+                // Si no se ha encontrado al usuario logueado, error
+                if(userLogin == null) {
+                    Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+                    exitProcess(-1)
+                } else {
+
+                    // Guardar los cambios de una entrada
+                    binding.saveChangesButton.setOnClickListener{ v ->
+                        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                        imm?.hideSoftInputFromWindow(v.windowToken, 0)
+                        if (email != null) {
+                            editPassword(email, userLogin.masterPass)
+                        }
+                        adapter.notifyDataSetChanged()
+                    }
+                }
             }
-        } else {
+
+            // Función de visibilidad de la contraseña
+            binding.viewButton3.setOnClickListener{
+                val passInputType = binding.passwordDetailInput2.inputType
+                if(passInputType == 129) {
+                    binding.passwordDetailInput2.inputType = InputType.TYPE_CLASS_TEXT
+                } else {
+                    binding.passwordDetailInput2.inputType = 129
+                }
+            }
+        } else if(email.equals("Online")){
+             database = FirebaseDatabase.getInstance()
+            val myRef = database.getReference("Users/" + auth.currentUser.uid + "/masterPass")
+            val masterPassListener = object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    // Get Post object and use the values to update the UI
+                    val masterPassOnline = dataSnapshot!!.getValue(String::class.java)
+                    if (masterPassOnline != null) {
+                        Log.d("EditarOnline",masterPassOnline)
+                    }else{
+                        Log.d("EditarOnline","Error en masterPassOnline")
+                    }
+                    if(masterPassOnline!=null){
+                        val passId= passwordViewModel.message.value?.id
+                        if (passId != null) {
+                            binding.saveChangesButton.setOnClickListener{ v ->
+                                val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                                imm?.hideSoftInputFromWindow(v.windowToken, 0)
+                                if (email != null) {
+                                    editPasswordOnline(auth.currentUser.email,masterPassOnline,passId)
+                                }
+                                adapter.notifyDataSetChanged()
+                            }
+
+                        };
+
+                    }
+
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Getting Post failed, log a message
+                    Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
+                }
+            }
+            myRef.addValueEventListener(masterPassListener)
+            // Función de visibilidad de la contraseña
+            binding.viewButton3.setOnClickListener{
+                val passInputType = binding.passwordDetailInput2.inputType
+                if(passInputType == 129) {
+                    binding.passwordDetailInput2.inputType = InputType.TYPE_CLASS_TEXT
+                } else {
+                    binding.passwordDetailInput2.inputType = 129
+                }
+            }
+        }  else{
             Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
             return view
         }
 
-
-        binding.viewButton3.setOnClickListener{
-            val passInputType = binding.passwordDetailInput2.inputType
-            if(passInputType == 129) {
-                binding.passwordDetailInput2.inputType = InputType.TYPE_CLASS_TEXT
-            } else {
-                binding.passwordDetailInput2.inputType = 129
-            }
-        }
-
-        binding.saveChangesButton.setOnClickListener{ v ->
-            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            imm?.hideSoftInputFromWindow(v.windowToken, 0)
-            if(auth.currentUser==null){
-                editPassword(email, userLogin.masterPass)
-                adapter.notifyDataSetChanged()
-            }else{
-                val database = FirebaseDatabase.getInstance()
-                val myRef = database.getReference("Users/" + auth.currentUser.uid + "/masterPass")
-                val masterPassListener = object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        // Get Post object and use the values to update the UI
-                        val masterPassOnline = dataSnapshot!!.getValue(String::class.java)
-                        if(masterPassOnline!=null){
-                            val passId= passwordViewModel.message.value?.id
-                            if (passId != null) {
-                                editPasswordOnline(auth.currentUser.email,masterPassOnline,passId)
-                            };
-                        }
-
-                    }
-
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        // Getting Post failed, log a message
-                        Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
-                    }
-                }
-                myRef.addValueEventListener(masterPassListener)
-
-            }
-
-
-        }
-
         return view
     }
+
     private fun editPasswordOnline(email: String, masterPass: String, idPass:Long) {
         val inputTitle = binding.titleDetail2.text.toString()
         val inputEmail = binding.emailDetail2.text.toString()
         val inputUsername = binding.usernameDetail2.text.toString()
         val inputPassword = binding.passwordDetailInput2.text.toString()
         val inputURL = binding.URIDetail2.text.toString()
-        database= FirebaseDatabase.getInstance()
+        //database= FirebaseDatabase.getInstance()
         when(checkInputs(inputTitle, inputPassword)) {
             1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
             2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
             3 -> {
-               userLogin = User(email, masterPass)
+                userLoginOn = User(email, masterPass)
                 val myRef = database.getReference("Users/"+auth.currentUser.uid+"/passwords/"+idPass)
                 val en= Hash.encrypt(inputPassword, masterPass)
                 val p= Password(idPass,inputTitle,auth.currentUser.email,inputEmail,inputUsername,en,inputURL)
@@ -131,7 +160,6 @@ class PassEditFragment : Fragment() {
             }
         }
     }
-
 
 
     private fun editPassword(email: String, masterPass: String) {
@@ -145,7 +173,6 @@ class PassEditFragment : Fragment() {
             1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
             2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
             3 -> {
-
                 passwordViewModel.updatePassword(passwordID, inputTitle, email, inputEmail, inputUsername, inputPassword, inputURL, masterPass)
                 Toast.makeText(requireContext(), "Password updated!", Toast.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_passEditFragment_to_passwordView)
@@ -157,13 +184,18 @@ class PassEditFragment : Fragment() {
         binding.titleDetail2.setText(password.name)
         binding.emailDetail2.setText(password.inputEmail)
         binding.usernameDetail2.setText(password.inputUser)
-        if(auth.currentUser==null){
-            lifecycleScope.launch{
-                userLogin = userViewModel.findUserByEmail(email)
-                val realPass = Hash.decrypt(password.hashPassword, userLogin.masterPass)
-                binding.passwordDetailInput2.setText(realPass)
+        if(email != "Online") {
+            lifecycleScope.launch {
+                val userLogin: User? = userViewModel.findUserByEmail(email)
+                if (userLogin != null) {
+                    val realPass = Hash.decrypt(password.hashPassword, userLogin.masterPass)
+                    binding.passwordDetailInput2.setText(realPass)
+                } else {
+                    Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG)
+                        .show()
+                    exitProcess(-1)
+                }
             }
-
         }else{
             val database = FirebaseDatabase.getInstance()
             val myRef = database.getReference("Users/"+auth.currentUser.uid+"/masterPass")
@@ -189,8 +221,6 @@ class PassEditFragment : Fragment() {
         }
         binding.URIDetail2.setText(password.url)
     }
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

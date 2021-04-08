@@ -45,11 +45,6 @@ class ListAdapter(passwordViewModel: PasswordViewModel): RecyclerView.Adapter<Li
         notifyDataSetChanged()
     }
 
-    fun addData(password: Password){
-        passwordListOnline.add(password)
-        setData(passwordListOnline.toList())
-
-    }
     fun deleteItem(index: Int):Password{
         val pas=this.passwordList[index]
         this.passwordList.drop(index)
@@ -58,21 +53,27 @@ class ListAdapter(passwordViewModel: PasswordViewModel): RecyclerView.Adapter<Li
 
     }
 
-    fun deletePasswordFromFirebase(id:Long):Password?{
-
-        for ((ide, elem) in passwordListOnline.withIndex()){
-            if (elem.id==id){
-               return deleteItem(ide)
-            }
-        }
-        return null
-    }
-
     fun getData(index: Int):Password{
         return this.passwordList[index]
     }
 
+    fun addData(password: Password){
+        passwordListOnline.add(password)
+        setData(passwordListOnline.toList())
 
+    }
+
+    fun deletePasswordFromFirebase(id:Long):Password?{
+
+        for ((ide, elem) in passwordListOnline.withIndex()){
+            if (elem.id==id){
+                passwordListOnline.remove(elem)
+                setData(passwordListOnline.toList())
+                return elem;
+            }
+        }
+        return null
+    }
 
 }
 

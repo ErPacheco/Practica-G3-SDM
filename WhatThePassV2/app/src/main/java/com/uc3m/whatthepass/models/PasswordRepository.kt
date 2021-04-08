@@ -11,8 +11,8 @@ class PasswordRepository(private val passwordDao: PasswordDao) {
         passwordDao.addPassword(pass)
     }
 
-    suspend fun findPasswordByUser (user: String){
-        passwordDao.findByUser(user)
+    fun findPasswordByUser (user: String): LiveData<List<Password>>{
+        return passwordDao.findByUser(user)
     }
 
     suspend fun deletePasswordByUser (user:String){
