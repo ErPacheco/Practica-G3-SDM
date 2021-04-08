@@ -3,6 +3,7 @@ package com.uc3m.whatthepass.views.passAndFiles
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.ContentValues
 import android.content.Context
 import android.os.Bundle
 import android.text.InputType
@@ -22,6 +23,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentPassDetailBinding
 import com.uc3m.whatthepass.models.Password
@@ -41,7 +47,10 @@ class PassDetailFragment : Fragment() {
     private lateinit var binding: FragmentPassDetailBinding
     private lateinit var userViewModel: UserViewModel
     private var popupMsg: String = ""
+    private var masterPassOnline :String? =""
     private val passwordViewModel: PasswordViewModel by activityViewModels()
+    private lateinit var database: FirebaseDatabase
+    private lateinit var auth: FirebaseAuth
 
     @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     override fun onCreateView(
@@ -52,6 +61,7 @@ class PassDetailFragment : Fragment() {
         val view = binding.root
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
+        auth= FirebaseAuth.getInstance()
         val repository = Repository()
         val passViewModelFactory = PassInfoViewModelFactory(repository)
         val passViewModel = ViewModelProvider(this, passViewModelFactory).get(PassInfoViewModel::class.java)
@@ -191,6 +201,35 @@ class PassDetailFragment : Fragment() {
         binding.URIDetail.text = password.url
     }
 
+    private fun insertFieldsOnline(email: String, password: Password) {
+        binding.titleDetail.setText(password.name)
+        binding.emailDetail.setText(password.inputEmail)
+        binding.usernameDetail.setText( password.inputUser)
+        val database = FirebaseDatabase.getInstance()
+        val myRef = database.getReference("Users/" + auth.currentUser.uid + "/masterPass")
+        val masterPassListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // Get Post object and use the values to update the UI
+                masterPassOnline = dataSnapshot!!.getValue(String::class.java)
+                if(masterPassOnline!=null){
+                    val realPass = Hash.decrypt(password.hashPassword, masterPassOnline!!)
+                    binding.passwordDetailInput.setText(realPass)
+                }
+
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Getting Post failed, log a message
+                Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
+            }
+        }
+        myRef.addValueEventListener(masterPassListener)
+
+
+        binding.URIDetail.setText(password.url)
+    }
+
+
     // Cuando la view se haya creado
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -206,7 +245,12 @@ class PassDetailFragment : Fragment() {
                 if (o != null) {
                     actualPassword = o
                     // Procedemos a insertar los datos en los campos de la entrada de la contraseña
-                    insertFields(email, o)
+                    if(!email.equals("Online")){
+                        insertFields(email, o)
+                    }else{
+                        insertFieldsOnline(auth.currentUser.email,o)
+                    }
+
                 } else {
                     // Si por algún casual no obtuviéramos la contraseña a ver, es que ha ocurrido un error interno
                     Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()

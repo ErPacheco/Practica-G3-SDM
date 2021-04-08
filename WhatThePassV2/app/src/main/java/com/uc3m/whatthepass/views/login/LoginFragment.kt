@@ -219,7 +219,7 @@ class LoginFragment : Fragment() {
                 firebaseAuthWithGoogle(account.idToken!!)
                 val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE) ?: return
                 with(sp.edit()) {
-                    putString("loginEmail", account.email)
+                    putString("loginEmail", "Online")//account.email)
                     commit()
                 }
 

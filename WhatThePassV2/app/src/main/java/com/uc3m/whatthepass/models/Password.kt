@@ -8,7 +8,7 @@ import androidx.room.ForeignKey.CASCADE
         indices = [Index(value = ["name"], unique = true)])
 data class Password(
         @PrimaryKey(autoGenerate = true)
-        val id: Int,
+        val id: Long,
         val name: String,// nombre de entrada
         @ForeignKey
                 (entity = User::class,
@@ -24,5 +24,8 @@ data class Password(
         val hashPassword: String,
         val url: String?
 ) {
-
+        constructor() : this(0, "",
+                "", "", "",
+                "", ""
+        )
 }

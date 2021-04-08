@@ -14,12 +14,13 @@ class PasswordViewModel(application: Application): AndroidViewModel(application)
     val message = MutableLiveData<Password>()
     private val repository: PasswordRepository
     // val readAll: LiveData<List<Password>>
-    lateinit var readUserPasswords: LiveData<List<Password>>
+    var readUserPasswords: LiveData<List<Password>>
 
 
     init {
         val passwordDao = WhatTheDatabase.getDatabase(application).passwordDao()
         repository = PasswordRepository(passwordDao)
+        readUserPasswords= repository.readAll
     }
 
     // Función que crea la lista de contraseñas de un usuario
@@ -54,10 +55,12 @@ class PasswordViewModel(application: Application): AndroidViewModel(application)
     }
 
     // Función para editar una contraseña
-    fun updatePassword(id: Int, name: String, emailUser: String, email: String, user: String, password: String, url: String, masterPass: String)  {
+    fun updatePassword(id: Long, name: String, emailUser: String, email: String, user: String, password: String, url: String, masterPass: String)  {
         viewModelScope.launch {
             val passwordToChange = Hash.encrypt(password, masterPass)
             repository.updatePassword(id, name, emailUser, email, user, passwordToChange, url)
         }
     }
+
+
 }
