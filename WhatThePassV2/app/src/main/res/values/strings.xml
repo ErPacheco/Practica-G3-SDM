@@ -68,5 +68,6 @@
     <string name="password_info">Password Info</string>
     <string name="default_fifteen">15</string>
     <string name="default_zero">0</string>
+    <string name="logout">Log Out</string>
     <!--<string name="default_web_client_id">1045075503912-bj3e708qih47fg0abmjnqgosdijcjok4.apps.googleusercontent.com</string> -->
 </resources>
