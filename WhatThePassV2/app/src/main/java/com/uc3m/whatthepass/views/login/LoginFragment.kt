@@ -55,7 +55,7 @@ class LoginFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
 
-        Log.d("CURRENT USER", auth.currentUser.uid)
+
         /***************************************************Fin OAuth***************************************************/
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         val view = binding.root

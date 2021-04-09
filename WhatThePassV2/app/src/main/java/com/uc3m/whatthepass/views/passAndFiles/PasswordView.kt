@@ -28,7 +28,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.uc3m.whatthepass.models.Password
-import com.uc3m.whatthepass.views.passwordGeneration.PasswordGeneratorActivity
 import kotlinx.coroutines.launch
 
 
@@ -151,10 +150,7 @@ class PasswordView : Fragment(){
         binding.addButton.setOnClickListener{
             findNavController().navigate(R.id.action_passwordView_to_passwordInfoFragment)
         }
-        binding.floatingActionButton.setOnClickListener {
-            val intent = Intent(this@PasswordView.context, PasswordGeneratorActivity::class.java)
-            activity?.startActivity(intent)
-        }
+
         val itemTouchHelperCallback =
                 object :
                         ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
