@@ -1,6 +1,5 @@
 package com.uc3m.whatthepass.models
 
-import android.provider.ContactsContract
 import androidx.lifecycle.LiveData
 import androidx.room.*
 

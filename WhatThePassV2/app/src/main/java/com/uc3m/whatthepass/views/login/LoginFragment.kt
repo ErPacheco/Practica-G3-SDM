@@ -18,10 +18,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentLoginBinding
+import com.uc3m.whatthepass.util.Hash
+import com.uc3m.whatthepass.util.PasswordGenerator
 import com.uc3m.whatthepass.viewModels.UserViewModel
 import com.uc3m.whatthepass.views.passAndFiles.PassAndFilesActivity
 import kotlinx.coroutines.Dispatchers
@@ -39,8 +43,7 @@ class LoginFragment : Fragment() {
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
-
+    ): View {
 
         /**************************************************** OAuth*****************************************************/
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -51,6 +54,8 @@ class LoginFragment : Fragment() {
 
         auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
+
+        Log.d("CURRENT USER", auth.currentUser.uid)
         /***************************************************Fin OAuth***************************************************/
         binding = FragmentLoginBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -217,6 +222,7 @@ class LoginFragment : Fragment() {
                 val account = task.getResult(ApiException::class.java)!!
                 Log.d(ContentValues.TAG, "firebaseAuthWithGoogle:" + account.id)
                 firebaseAuthWithGoogle(account.idToken!!)
+
                 val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE) ?: return
                 with(sp.edit()) {
                     putString("loginEmail", "Online")//account.email)
@@ -228,7 +234,7 @@ class LoginFragment : Fragment() {
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(ContentValues.TAG, "Google sign in failed", e)
-                Toast.makeText(requireContext(), "Error al iniciar sesión", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "Something went wrong when sing in with Google!", Toast.LENGTH_LONG).show()
 
             }
         }
@@ -246,12 +252,33 @@ class LoginFragment : Fragment() {
                     Log.d(TAG, "signInWithCredential:success")
                     val user = auth.currentUser
 
+                    val database = FirebaseDatabase.getInstance()
+                    val myRef = database.getReference("Users/" + user!!.uid + "/masterPass")
 
+                    val masterPassListener = object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            // Get Post object and use the values to update the UI
+                            val masterPassOnline = dataSnapshot.getValue(String::class.java)
+
+                            if (masterPassOnline == null) {
+                                lifecycleScope.launch {
+                                    val masterPass = PasswordGenerator.generatePassword(isCapital = true, isLower = true, isNumeric = true, isSpecial = true, length = 42, minNumNumeric = 1, minNumSpecial = 1)
+                                    val hashPassword = Hash.bcryptHash(masterPass)
+                                    myRef.setValue(hashPassword)
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            // Getting Post failed, log a message
+                            Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
+                        }
+                    }
+                    myRef.addValueEventListener(masterPassListener)
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                     // [START_EXCLUDE]
-
                 }
             }
     }

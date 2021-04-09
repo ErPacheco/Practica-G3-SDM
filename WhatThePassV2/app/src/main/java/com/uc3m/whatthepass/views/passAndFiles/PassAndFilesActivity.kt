@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.uc3m.whatthepass.R
-import com.uc3m.whatthepass.models.Password
 import com.uc3m.whatthepass.viewModels.PasswordViewModel
 
 

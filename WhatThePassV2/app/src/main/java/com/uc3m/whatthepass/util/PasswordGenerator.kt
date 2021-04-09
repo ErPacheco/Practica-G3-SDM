@@ -1,9 +1,4 @@
 package com.uc3m.whatthepass.util
-import android.content.ContentValues
-import android.icu.lang.UCharacter.GraphemeClusterBreak.L
-import android.util.Log
-import java.util.*
-import java.util.stream.Collectors
 import kotlin.random.Random
 
 

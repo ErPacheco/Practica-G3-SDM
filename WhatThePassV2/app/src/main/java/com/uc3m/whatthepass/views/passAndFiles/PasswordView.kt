@@ -15,10 +15,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,14 +24,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentPasswordViewBinding
 import com.uc3m.whatthepass.viewModels.PasswordViewModel
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.uc3m.whatthepass.models.Password
 import com.uc3m.whatthepass.views.passwordGeneration.PasswordGeneratorActivity
@@ -180,8 +174,8 @@ class PasswordView : Fragment(){
 
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                         if (direction == ItemTouchHelper.RIGHT) {
-                            var pos = viewHolder.adapterPosition
-                            var pas = adapter.deleteItem(pos)
+                            val pos = viewHolder.adapterPosition
+                            val pas = adapter.deleteItem(pos)
                             if(!email.equals("Online")){
                                 passwordViewModel.deletePassword(pas)
                             }else{
@@ -190,12 +184,10 @@ class PasswordView : Fragment(){
                                 myRef.removeValue()
                             }
 
-                        }else{
-
+                        } else {
                             passwordViewModel.sentPassword(adapter.getData(viewHolder.adapterPosition))
-                            findNavController().navigate(R.id.action_passwordView_to_passDetailFragment)
+                            findNavController().navigate(R.id.action_passwordView_to_passEditFragment)
                         }
-
                     }
                     override fun onChildDraw(
                             c: Canvas,

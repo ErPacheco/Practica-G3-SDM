@@ -1,6 +1,5 @@
 package com.uc3m.whatthepass.models
 
-import android.app.admin.DevicePolicyManager
 import androidx.lifecycle.LiveData
 import androidx.room.*
 

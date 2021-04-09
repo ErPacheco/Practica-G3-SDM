@@ -64,25 +64,14 @@ class PasswordInfoFragment : Fragment() {
                     binding.createPassButton.setOnClickListener{ v ->
                         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                         imm?.hideSoftInputFromWindow(v.windowToken, 0)
-                        if (email != null) {
-                            insertPassword(email, userLogin.masterPass)
-                            adapter.notifyDataSetChanged()
-                        }
-
+                        insertPassword(email, userLogin.masterPass)
+                        adapter.notifyDataSetChanged()
                     }
                 }
             }
-
-            binding.clearCreateInputs.setOnClickListener{
-                clearData()
-            }
-
-            binding.generatePasswordOnCreate.setOnClickListener{
-                val intent = Intent(this@PasswordInfoFragment.context, PasswordGeneratorActivity::class.java)
-                activity?.startActivity(intent)
-            }
         } else if(email.equals("Online")) {
             binding.createPassButton.setOnClickListener{ v ->
+                Log.d("1", "clicko password")
                 val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                 imm?.hideSoftInputFromWindow(v.windowToken, 0)
                 if (email != null) {
@@ -91,9 +80,9 @@ class PasswordInfoFragment : Fragment() {
                     val masterPassListener = object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             // Get Post object and use the values to update the UI
-                            val masterPassOnline = dataSnapshot!!.getValue(String::class.java)
+                            val masterPassOnline = dataSnapshot.getValue(String::class.java)
 
-                            if(masterPassOnline!=null){
+                            if (masterPassOnline != null) {
                                 insertPasswordOnline(auth.currentUser.email, masterPassOnline)
                                 adapter.notifyDataSetChanged()
 
@@ -107,22 +96,17 @@ class PasswordInfoFragment : Fragment() {
                         }
                     }
                     myRef.addValueEventListener(masterPassListener)
-
-                }
-                binding.clearCreateInputs.setOnClickListener{
-                    clearData()
-                }
-
-                binding.generatePasswordOnCreate.setOnClickListener{
-                    val intent = Intent(this@PasswordInfoFragment.context, PasswordGeneratorActivity::class.java)
-                    activity?.startActivity(intent)
                 }
             }
+        }
 
-        }else
-         {
-            Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
-            return view
+        binding.clearCreateInputs.setOnClickListener{
+            clearData()
+        }
+
+        binding.generatePasswordOnCreate.setOnClickListener{
+            val intent = Intent(this@PasswordInfoFragment.context, PasswordGeneratorActivity::class.java)
+            activity?.startActivity(intent)
         }
 
         return view

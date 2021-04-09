@@ -1,13 +1,11 @@
 package com.uc3m.whatthepass.viewModels
 
 import android.app.Application
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.uc3m.whatthepass.models.User
 import com.uc3m.whatthepass.models.UserRepository
 import com.uc3m.whatthepass.models.WhatTheDatabase
-import com.uc3m.whatthepass.util.Hash
 import com.uc3m.whatthepass.util.Hash.bcryptHash
 import com.uc3m.whatthepass.util.Hash.verifyHash
 

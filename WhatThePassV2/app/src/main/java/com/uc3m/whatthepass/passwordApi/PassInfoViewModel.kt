@@ -1,6 +1,5 @@
 package com.uc3m.whatthepass.passwordApi
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.uc3m.whatthepass.passwordApi.model.PassSearched

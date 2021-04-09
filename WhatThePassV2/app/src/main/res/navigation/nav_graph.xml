@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_passwordView_to_passDetailFragment"
             app:destination="@id/passDetailFragment" />
+        <action
+            android:id="@+id/action_passwordView_to_passEditFragment"
+            app:destination="@id/passEditFragment" />
     </fragment>
     <fragment
         android:id="@+id/passwordInfoFragment"

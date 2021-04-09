@@ -1,20 +1,14 @@
 package com.uc3m.whatthepass.views.passAndFiles
 
-import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.NavHostFragment.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.RecyclerViewItemBinding
 import com.uc3m.whatthepass.models.Password
 import com.uc3m.whatthepass.viewModels.PasswordViewModel
 
 
 class ListAdapter(passwordViewModel: PasswordViewModel): RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
-    private val passwordViewModel= passwordViewModel
     private var passwordList = emptyList<Password>()
     private val passwordListOnline = ArrayList<Password>()
 
@@ -65,7 +59,7 @@ class ListAdapter(passwordViewModel: PasswordViewModel): RecyclerView.Adapter<Li
 
     fun deletePasswordFromFirebase(id:Long):Password?{
 
-        for ((ide, elem) in passwordListOnline.withIndex()){
+        for (elem in passwordListOnline){
             if (elem.id==id){
                 passwordListOnline.remove(elem)
                 setData(passwordListOnline.toList())
