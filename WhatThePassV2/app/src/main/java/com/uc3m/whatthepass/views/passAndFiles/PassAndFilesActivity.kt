@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -51,14 +53,15 @@ class PassAndFilesActivity : AppCompatActivity() {
                 val email = sp.getString("loginEmail", null)
                 if(email.equals("Online")){
                     sp.edit().remove("loginEmail").commit()
-                    Firebase.auth.signOut()
+                    FirebaseAuth.getInstance().signOut()
+
 
 
                 }
 
                 val intent = Intent(this, LoginActivity::class.java)
-                finish()
                 startActivity(intent)
+                finish();
 
                 return true
             }

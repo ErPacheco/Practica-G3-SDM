@@ -61,6 +61,8 @@ class PasswordView : Fragment(){
         // Obtenemos el email del usuario logueado, para crear la lista de sus contraseñas
         val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
         val email = sp.getString("loginEmail", null)
+
+
         if (!email.equals("Online")) {
             lifecycleScope.launch{
                 // Ejecutamos la función del viewModel para crear la lista de entradas
@@ -73,16 +75,6 @@ class PasswordView : Fragment(){
 
                 val database = FirebaseDatabase.getInstance()
                 val myRef = database.getReference("Users/" + user?.uid + "/passwords")
-                /*myRef.get().addOnSuccessListener {
-                val pass = it!!.getValue(Password::class.java)
-                if (pass != null) {
-                    adapter.addData(pass)
-                }
-
-            }.addOnFailureListener{
-                Log.e("firebase", "Error getting data", it)
-            }*/
-
                 childEventListener = object : ChildEventListener {
                     override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                         Log.d(TAG, "onChildAdded:" + dataSnapshot.key!!)
