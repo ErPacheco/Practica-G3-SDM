@@ -163,6 +163,7 @@ class LoginFragment : Fragment() {
 
         val intent = Intent(this@LoginFragment.context, PassAndFilesActivity::class.java)
         activity?.startActivity(intent)
+        activity?.finish()
     }
 
     // Función que comprueba el campo email
@@ -231,6 +232,7 @@ class LoginFragment : Fragment() {
 
                 val intent = Intent(this@LoginFragment.context, PassAndFilesActivity::class.java)
                 activity?.startActivity(intent)
+                activity?.finish()
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(ContentValues.TAG, "Google sign in failed", e)

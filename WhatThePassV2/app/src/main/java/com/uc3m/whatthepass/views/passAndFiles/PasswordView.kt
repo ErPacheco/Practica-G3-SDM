@@ -26,6 +26,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.uc3m.whatthepass.models.Password
 import kotlinx.coroutines.launch
@@ -38,6 +39,7 @@ class PasswordView : Fragment(){
     private lateinit var deleteIcon: Drawable
     private lateinit var  editIcon: Drawable
     private lateinit var auth: FirebaseAuth
+    private lateinit var childEventListener: ChildEventListener
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -47,7 +49,8 @@ class PasswordView : Fragment(){
         val view = binding.root
         // Usuario de Firebase si se ha conectado Online
         auth = FirebaseAuth.getInstance()
-        val user = Firebase.auth.currentUser
+        var user = Firebase.auth.currentUser
+
         // Adapter para la lista de contraseñas
         val adapter = ListAdapter(passwordViewModel)
         deleteIcon=ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_delete_24)!!
@@ -66,64 +69,76 @@ class PasswordView : Fragment(){
                 }
             }
         } else if(email.equals("Online")) {
-            val database = FirebaseDatabase.getInstance()
-            val myRef = database.getReference("Users/" + user.uid + "/passwords")
+            if (user!=null) {
 
-            val childEventListener = object : ChildEventListener {
-                override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
-                    Log.d(TAG, "onChildAdded:" + dataSnapshot.key!!)
+                val database = FirebaseDatabase.getInstance()
+                val myRef = database.getReference("Users/" + user?.uid + "/passwords")
+                /*myRef.get().addOnSuccessListener {
+                val pass = it!!.getValue(Password::class.java)
+                if (pass != null) {
+                    adapter.addData(pass)
+                }
 
-                    // A new comment has been added, add it to the displayed list
-                    val pass = dataSnapshot!!.getValue(Password::class.java)
+            }.addOnFailureListener{
+                Log.e("firebase", "Error getting data", it)
+            }*/
 
-                    if (pass != null) {
-                        Log.d(TAG, "QUE SALIO:" + pass.toString())
-                        adapter.addData(pass)
+                childEventListener = object : ChildEventListener {
+                    override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                        Log.d(TAG, "onChildAdded:" + dataSnapshot.key!!)
+
+                        // A new comment has been added, add it to the displayed list
+                        val pass = dataSnapshot!!.getValue(Password::class.java)
+
+                        if (pass != null) {
+                            Log.d(TAG, "QUE SALIO:" + pass.toString())
+                            adapter.addData(pass)
+                        }
+
                     }
 
-                }
+                    override fun onChildChanged(
+                            dataSnapshot: DataSnapshot,
+                            previousChildName: String?
+                    ) {
+                        Log.d(TAG, "onChildChanged: ${dataSnapshot.key}")
 
-                override fun onChildChanged(
-                    dataSnapshot: DataSnapshot,
-                    previousChildName: String?
-                ) {
-                    Log.d(TAG, "onChildChanged: ${dataSnapshot.key}")
+                        // A comment has changed, use the key to determine if we are displaying this
+                        // comment and if so displayed the changed comment.
+                        // val newComment = dataSnapshot.getValue<Password>()
+                        //val commentKey = dataSnapshot.key
 
-                    // A comment has changed, use the key to determine if we are displaying this
-                    // comment and if so displayed the changed comment.
-                    // val newComment = dataSnapshot.getValue<Password>()
-                    //val commentKey = dataSnapshot.key
-
-                    // ...
-                }
-
-                override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-                    Log.d(TAG, "onChildRemoved:" + dataSnapshot.key!!)
-                    val pass = dataSnapshot!!.getValue(Password::class.java)
-                    if (pass != null) {
-                        adapter.deletePasswordFromFirebase(pass.id)
+                        // ...
                     }
 
+                    override fun onChildRemoved(dataSnapshot: DataSnapshot) {
+                        Log.d(TAG, "onChildRemoved:" + dataSnapshot.key!!)
+                        val pass = dataSnapshot!!.getValue(Password::class.java)
+                        if (pass != null) {
+                            adapter.deletePasswordFromFirebase(pass.id)
+                        }
 
+
+                    }
+
+                    override fun onChildMoved(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                        Log.d(TAG, "onChildMoved:" + dataSnapshot.key!!)
+
+                        // A comment has changed position, use the key to determine if we are
+                        // displaying this comment and if so move it.
+                        //val movedComment = dataSnapshot.getValue<Password>()
+                        //val commentKey = dataSnapshot.key
+
+                        // ...
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        Log.w(TAG, "postComments:onCancelled", databaseError.toException())
+
+                    }
                 }
-
-                override fun onChildMoved(dataSnapshot: DataSnapshot, previousChildName: String?) {
-                    Log.d(TAG, "onChildMoved:" + dataSnapshot.key!!)
-
-                    // A comment has changed position, use the key to determine if we are
-                    // displaying this comment and if so move it.
-                    //val movedComment = dataSnapshot.getValue<Password>()
-                    //val commentKey = dataSnapshot.key
-
-                    // ...
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Log.w(TAG, "postComments:onCancelled", databaseError.toException())
-
-                }
+                myRef.addChildEventListener(childEventListener)
             }
-            myRef.addChildEventListener(childEventListener)
         }
         else
         { // Si no encuentra el email en el almacenamiento clave/valor, error
@@ -173,9 +188,11 @@ class PasswordView : Fragment(){
                             if(!email.equals("Online")){
                                 passwordViewModel.deletePassword(pas)
                             }else{
-                                val database = FirebaseDatabase.getInstance()
-                                val myRef = database.getReference("Users/" + user.uid + "/passwords/"+pas.id)
-                                myRef.removeValue()
+                                if(user!=null) {
+                                    val database = FirebaseDatabase.getInstance()
+                                    val myRef = database.getReference("Users/" + user?.uid + "/passwords/" + pas.id)
+                                    myRef.removeValue()
+                                }
                             }
 
                         } else {
@@ -223,4 +240,6 @@ class PasswordView : Fragment(){
 
         return view
     }
+
+
 }

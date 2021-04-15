@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.views.login.LoginActivity
 
@@ -28,11 +30,13 @@ class PasswordGeneratorActivity : AppCompatActivity() {
             R.id.logout -> {
                 val sp = getSharedPreferences("Preferences", Context.MODE_PRIVATE)
                 val email = sp.getString("loginEmail", null)
-                /*if(email.equals("Online")){
+                if(email.equals("Online")){
+                    sp.edit().remove("loginEmail").commit()
                     Firebase.auth.signOut()
-                }*/
+                }
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
+                finish()
                 return true
             }
             R.id.PasswordGenerator -> {
