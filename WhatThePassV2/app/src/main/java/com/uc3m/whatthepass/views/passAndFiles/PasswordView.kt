@@ -47,9 +47,10 @@ class PasswordView : Fragment(){
     ): View {
         binding = FragmentPasswordViewBinding.inflate(inflater, container, false)
         val view = binding.root
+        binding.progressBar.visibility = View.VISIBLE
         // Usuario de Firebase si se ha conectado Online
         auth = FirebaseAuth.getInstance()
-        var user = Firebase.auth.currentUser
+        val user = Firebase.auth.currentUser
 
         // Adapter para la lista de contraseñas
         val adapter = ListAdapter(passwordViewModel)
@@ -228,7 +229,7 @@ class PasswordView : Fragment(){
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
-
+        binding.progressBar.visibility = View.GONE
 
         return view
     }
