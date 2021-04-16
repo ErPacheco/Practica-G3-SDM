@@ -16,6 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.DataSnapshot
@@ -50,7 +51,9 @@ class LoginFragment : Fragment() {
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
-        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+
+        googleSignInClient = GoogleSignIn.getClient(this.requireActivity(), gso)
+        googleSignInClient.revokeAccess()
 
         auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
@@ -163,6 +166,7 @@ class LoginFragment : Fragment() {
 
         val intent = Intent(this@LoginFragment.context, PassAndFilesActivity::class.java)
         activity?.startActivity(intent)
+        activity?.finish()
     }
 
     // Función que comprueba el campo email
@@ -222,20 +226,10 @@ class LoginFragment : Fragment() {
                 val account = task.getResult(ApiException::class.java)!!
                 Log.d(ContentValues.TAG, "firebaseAuthWithGoogle:" + account.id)
                 firebaseAuthWithGoogle(account.idToken!!)
-
-                val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE) ?: return
-                with(sp.edit()) {
-                    putString("loginEmail", "Online")//account.email)
-                    commit()
-                }
-
-                val intent = Intent(this@LoginFragment.context, PassAndFilesActivity::class.java)
-                activity?.startActivity(intent)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(ContentValues.TAG, "Google sign in failed", e)
                 Toast.makeText(requireContext(), "Something went wrong when sing in with Google!", Toast.LENGTH_LONG).show()
-
             }
         }
     }
@@ -245,12 +239,12 @@ class LoginFragment : Fragment() {
 
         // [END_EXCLUDE]
         val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(requireActivity()) { task ->
+        FirebaseAuth.getInstance().signInWithCredential(credential)
+            .addOnCompleteListener(this.requireActivity()) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
-                    val user = auth.currentUser
+                    val user = FirebaseAuth.getInstance().currentUser
 
                     val database = FirebaseDatabase.getInstance()
                     val myRef = database.getReference("Users/" + user!!.uid + "/masterPass")
@@ -275,6 +269,19 @@ class LoginFragment : Fragment() {
                         }
                     }
                     myRef.addValueEventListener(masterPassListener)
+
+                    // En caso de que se haya logueado con éxito, cambiamos a la vista de contraseñas
+                    val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE)
+                    if (sp != null) {
+                        with(sp.edit()) {
+                            putString("loginEmail", "Online")//account.email)
+                            commit()
+                        }
+                    }
+
+                    val intent = Intent(this@LoginFragment.context, PassAndFilesActivity::class.java)
+                    activity?.startActivity(intent)
+                    activity?.finish()
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
@@ -287,6 +294,7 @@ class LoginFragment : Fragment() {
     // [START signin]
     private fun signInWithGoogleOauth() {
         val signInIntent = googleSignInClient.signInIntent
+
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 

@@ -2,6 +2,7 @@ package com.uc3m.whatthepass.views.passAndFiles
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.*
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -11,9 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.uc3m.whatthepass.R
+import com.uc3m.whatthepass.databinding.FragmentPasswordViewBinding
 import com.uc3m.whatthepass.viewModels.PasswordViewModel
 import com.uc3m.whatthepass.views.login.LoginActivity
 import com.uc3m.whatthepass.views.passwordGeneration.PasswordGeneratorActivity
@@ -48,10 +53,16 @@ class PassAndFilesActivity : AppCompatActivity() {
                 val email = sp.getString("loginEmail", null)
                 if(email.equals("Online")){
                     sp.edit().remove("loginEmail").commit()
+                    FirebaseAuth.getInstance().signOut()
+
+
 
                 }
+
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
+                finish();
+
                 return true
             }
             R.id.PasswordGenerator -> {
@@ -65,4 +76,6 @@ class PassAndFilesActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+
 }
