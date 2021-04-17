@@ -30,11 +30,12 @@ class PasswordGeneratorActivity : AppCompatActivity() {
             R.id.logout -> {
                 val sp = getSharedPreferences("Preferences", Context.MODE_PRIVATE)
                 val email = sp.getString("loginEmail", null)
-                if(email.equals("Online")){
+                if (email.equals("Online")) {
                     sp.edit().remove("loginEmail").commit()
                     Firebase.auth.signOut()
                 }
                 val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
                 return true
@@ -42,7 +43,6 @@ class PasswordGeneratorActivity : AppCompatActivity() {
             R.id.PasswordGenerator -> {
                 return true
             }
-
         }
         return super.onOptionsItemSelected(item)
     }

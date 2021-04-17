@@ -39,29 +39,30 @@ class PasswordInfoFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         binding = FragmentPasswordInfoBinding.inflate(inflater, container, false)
         val view = binding.root
-        auth= FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance()
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
         val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
         val email = sp.getString("loginEmail", null)
-         // passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
+        // passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
         val adapter = ListAdapter(passwordViewModel)
 
-        if(!email.equals("Online")) {
-            lifecycleScope.launch{
+        if (!email.equals("Online")) {
+            lifecycleScope.launch {
 
                 val userLogin: User? = email?.let { userViewModel.findUserByEmail(it) }
 
-                if(userLogin == null) {
+                if (userLogin == null) {
                     Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
                     exitProcess(-1)
                 } else {
-                    binding.createPassButton.setOnClickListener{ v ->
+                    binding.createPassButton.setOnClickListener { v ->
                         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                         imm?.hideSoftInputFromWindow(v.windowToken, 0)
                         insertPassword(email, userLogin.masterPass)
@@ -69,9 +70,8 @@ class PasswordInfoFragment : Fragment() {
                     }
                 }
             }
-        } else if(email.equals("Online")) {
-            binding.createPassButton.setOnClickListener{ v ->
-                Log.d("1", "clicko password")
+        } else if (email.equals("Online")) {
+            binding.createPassButton.setOnClickListener { v ->
                 val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                 imm?.hideSoftInputFromWindow(v.windowToken, 0)
                 if (email != null) {
@@ -83,11 +83,9 @@ class PasswordInfoFragment : Fragment() {
                             val masterPassOnline = dataSnapshot.getValue(String::class.java)
 
                             if (masterPassOnline != null) {
-                                insertPasswordOnline(auth.currentUser.email, masterPassOnline)
+                                insertPasswordOnline(masterPassOnline)
                                 adapter.notifyDataSetChanged()
-
                             }
-
                         }
 
                         override fun onCancelled(databaseError: DatabaseError) {
@@ -100,11 +98,11 @@ class PasswordInfoFragment : Fragment() {
             }
         }
 
-        binding.clearCreateInputs.setOnClickListener{
+        binding.clearCreateInputs.setOnClickListener {
             clearData()
         }
 
-        binding.generatePasswordOnCreate.setOnClickListener{
+        binding.generatePasswordOnCreate.setOnClickListener {
             val intent = Intent(this@PasswordInfoFragment.context, PasswordGeneratorActivity::class.java)
             activity?.startActivity(intent)
         }
@@ -112,28 +110,28 @@ class PasswordInfoFragment : Fragment() {
         return view
     }
 
-    private fun insertPasswordOnline(email: String, masterPass: String) {
+    private fun insertPasswordOnline(masterPass: String) {
         val inputTitle = binding.titleInput.text.toString()
         val inputEmail = binding.emailInput.text.toString()
         val inputUsername = binding.usernameInput.text.toString()
         val inputPassword = binding.passwordInput.text.toString()
         val inputUrl = binding.urlInput.text.toString()
-        database= FirebaseDatabase.getInstance()
-        when(checkInputs(inputTitle, inputPassword)) {
+        database = FirebaseDatabase.getInstance()
+        when (checkInputs(inputTitle, inputPassword, inputEmail)) {
             1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
             2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
-            3 -> {
-                val currentDateTime = System.currentTimeMillis();
-                val myRef = database.getReference("Users/"+auth.currentUser.uid+"/passwords/"+currentDateTime)
-                val en= Hash.encrypt(inputPassword, masterPass)
+            3 -> Toast.makeText(requireContext(), "It is not an email!", Toast.LENGTH_LONG).show()
+            4 -> {
+                val currentDateTime = System.currentTimeMillis()
+                val myRef = database.getReference("Users/" + auth.currentUser.uid + "/passwords/" + currentDateTime)
+                val en = Hash.encrypt(inputPassword, masterPass)
 
-                val p= Password(currentDateTime,inputTitle,auth.currentUser.email,inputEmail,inputUsername,en,inputUrl)
-                myRef.setValue(p);
+                val p = Password(currentDateTime, inputTitle, auth.currentUser.email, inputEmail, inputUsername, en, inputUrl)
+                myRef.setValue(p)
                 Toast.makeText(requireContext(), "Password created!", Toast.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_passwordInfoFragment_to_passwordView)
             }
         }
-
     }
 
     private fun insertPassword(email: String, masterPass: String) {
@@ -143,16 +141,16 @@ class PasswordInfoFragment : Fragment() {
         val inputPassword = binding.passwordInput.text.toString()
         val inputUrl = binding.urlInput.text.toString()
 
-        when(checkInputs(inputTitle, inputPassword)) {
+        when (checkInputs(inputTitle, inputPassword, inputEmail)) {
             1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
             2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
-            3 -> {
+            3 -> Toast.makeText(requireContext(), "It is not an email!", Toast.LENGTH_LONG).show()
+            4 -> {
                 passwordViewModel.addPassword(inputTitle, email, inputEmail, inputUsername, inputPassword, inputUrl, masterPass)
                 Toast.makeText(requireContext(), "Password created!", Toast.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_passwordInfoFragment_to_passwordView)
             }
         }
-
     }
 
     private fun clearData() {
@@ -161,7 +159,7 @@ class PasswordInfoFragment : Fragment() {
         binding.urlInput.text.clear()
     }
 
-    private fun checkInputs(title: String, pass: String):Int {
+    private fun checkInputs(title: String, pass: String, email: String): Int {
         return when {
             title.isEmpty() -> {
                 1
@@ -169,8 +167,11 @@ class PasswordInfoFragment : Fragment() {
             pass.isEmpty() -> {
                 2
             }
-            else -> {
+            email.isNotEmpty() && !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
                 3
+            }
+            else -> {
+                4
             }
         }
     }

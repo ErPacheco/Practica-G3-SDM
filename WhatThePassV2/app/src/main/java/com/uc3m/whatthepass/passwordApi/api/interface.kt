@@ -7,6 +7,6 @@ import retrofit2.http.Path
 
 interface PasswordApi {
 
-  @GET("api/v1/pass/anon/{hash}")
-  suspend fun getPassBreach(@Path("hash") hash: String): Response<PassSearched>
+    @GET("api/v1/pass/anon/{hash}")
+    suspend fun getPassBreach(@Path("hash") hash: String): Response<PassSearched>
 }

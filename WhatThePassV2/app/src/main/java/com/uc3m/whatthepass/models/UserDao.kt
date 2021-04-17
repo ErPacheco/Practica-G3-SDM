@@ -25,6 +25,4 @@ interface UserDao {
 
     @Delete
     suspend fun deleteUser(vararg user: User)
-
-
 }

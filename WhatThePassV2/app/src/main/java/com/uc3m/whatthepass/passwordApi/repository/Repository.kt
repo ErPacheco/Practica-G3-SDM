@@ -6,7 +6,7 @@ import retrofit2.Response
 
 class Repository {
 
-  suspend fun getPassInfo(hash: String): Response<PassSearched> {
-    return RetrofitInstance.passAPI.getPassBreach(hash)
-  }
+    suspend fun getPassInfo(hash: String): Response<PassSearched> {
+        return RetrofitInstance.passAPI.getPassBreach(hash)
+    }
 }
