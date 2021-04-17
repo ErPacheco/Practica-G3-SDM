@@ -8,17 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 class RecyclerItemClickListener(context: Context, recyclerView: RecyclerView, private val mListener: OnItemClickListener?) : RecyclerView.OnItemTouchListener {
 
-    private val mGestureDetector: GestureDetector
-
-    interface OnItemClickListener {
-        fun onItemClick(view: View, position: Int)
-
-        fun onItemLongClick(view: View?, position: Int)
-    }
-
-    init {
-
-        mGestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
+    private val mGestureDetector: GestureDetector = GestureDetector(
+        context,
+        object : GestureDetector.SimpleOnGestureListener() {
             override fun onSingleTapUp(e: MotionEvent): Boolean {
                 return true
             }
@@ -30,7 +22,13 @@ class RecyclerItemClickListener(context: Context, recyclerView: RecyclerView, pr
                     mListener.onItemLongClick(childView, recyclerView.getChildAdapterPosition(childView))
                 }
             }
-        })
+        }
+    )
+
+    interface OnItemClickListener {
+        fun onItemClick(view: View, position: Int)
+
+        fun onItemLongClick(view: View?, position: Int)
     }
 
     override fun onInterceptTouchEvent(view: RecyclerView, e: MotionEvent): Boolean {
@@ -45,4 +43,5 @@ class RecyclerItemClickListener(context: Context, recyclerView: RecyclerView, pr
 
     override fun onTouchEvent(view: RecyclerView, motionEvent: MotionEvent) {}
 
-    override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}}
+    override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {} 
+}

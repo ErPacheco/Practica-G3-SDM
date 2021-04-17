@@ -6,10 +6,6 @@ class UserRepository(private val userDao: UserDao) {
 
     val readAll: LiveData<List<User>> = userDao.readAll()
 
-    suspend fun readUser(email: String, password: String): User? {
-        return userDao.findUserByEmailAndMasterPass(email, password)
-    }
-
     suspend fun readUserByEmail(email: String): User? {
         return userDao.findUserByEmail(email)
     }
@@ -19,15 +15,4 @@ class UserRepository(private val userDao: UserDao) {
         userDao.addUser(user)
     }
 
-    /*suspend fun updateUser(email: String, password: Blob) {
-        val user = User(email = email, masterPass = password)
-        userDao.updateUser(user)
-    }*/
-
-    suspend fun deleteUser(email: String) {
-        val user = userDao.findUserByEmail(email)
-        if(user != null) {
-            userDao.deleteUser(user)
-        }
-    }
 }

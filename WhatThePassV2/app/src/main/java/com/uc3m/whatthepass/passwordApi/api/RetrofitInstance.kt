@@ -8,20 +8,20 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
 
-  private val retrofitPass by lazy {
-    val certificatePinner = CertificatePinner.Builder()
-      .add("passwords.xposedornot.com", "sha256/PcIiExMyjUj9Dt9n0LFGwIzVwwoxcMryiWILZhUZ6as=").build()
+    private val retrofitPass by lazy {
+        val certificatePinner = CertificatePinner.Builder()
+            .add("passwords.xposedornot.com", "sha256/PcIiExMyjUj9Dt9n0LFGwIzVwwoxcMryiWILZhUZ6as=").build()
 
-    val okHttpClient = OkHttpClient.Builder().certificatePinner(certificatePinner).build()
+        val okHttpClient = OkHttpClient.Builder().certificatePinner(certificatePinner).build()
 
-    Retrofit.Builder()
-      .baseUrl(PASS_URL)
-      .addConverterFactory(GsonConverterFactory.create())
-      .client(okHttpClient)
-      .build()
-  }
+        Retrofit.Builder()
+            .baseUrl(PASS_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .build()
+    }
 
-  val passAPI: PasswordApi by lazy {
-    retrofitPass.create(PasswordApi::class.java)
-  }
+    val passAPI: PasswordApi by lazy {
+        retrofitPass.create(PasswordApi::class.java)
+    }
 }

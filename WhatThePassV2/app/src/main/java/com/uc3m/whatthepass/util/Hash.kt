@@ -20,10 +20,10 @@ object Hash {
     fun kekHashSubstring(str: String): String {
         val bArray: ByteArray = str.toByteArray(Charset.defaultCharset())
         val digest = Keccak.Digest512()
-        digest.update(bArray,0,bArray.size)
+        digest.update(bArray, 0, bArray.size)
         val newDigest = digest.digest()
         val keccakHash: String = newDigest.joinToString("") { "%02x".format(it) }
-        return keccakHash.substring(0,10)
+        return keccakHash.substring(0, 10)
     }
 
     fun verifyHash(strInput: String, strSaved: String): Boolean {
@@ -31,12 +31,12 @@ object Hash {
         return res.verified
     }
 
-    private fun cipher(opmode:Int, secretKey:String):Cipher{
-        var pad = "";
+    private fun cipher(opmode: Int, secretKey: String): Cipher {
+        var pad = ""
         if (secretKey.length < 32) {
-            pad = secretKey.padEnd(32, '0');
-        } else if (secretKey.length > 32){
-            pad = secretKey.substring(0,32)
+            pad = secretKey.padEnd(32, '0')
+        } else if (secretKey.length > 32) {
+            pad = secretKey.substring(0, 32)
         }
         val c = Cipher.getInstance("AES/CBC/PKCS5Padding")
         val sk = SecretKeySpec(pad.toByteArray(Charsets.UTF_8), "AES")
@@ -45,12 +45,12 @@ object Hash {
         return c
     }
 
-    fun encrypt(str:String, secretKey:String):String{
+    fun encrypt(str: String, secretKey: String): String {
         val encrypted = cipher(Cipher.ENCRYPT_MODE, secretKey).doFinal(str.toByteArray(Charsets.UTF_8))
         return String(encoder.encode(encrypted))
     }
 
-    fun decrypt(str:String, secretKey:String):String{
+    fun decrypt(str: String, secretKey: String): String {
         val byteStr = decoder.decode(str.toByteArray(Charsets.UTF_8))
         return String(cipher(Cipher.DECRYPT_MODE, secretKey).doFinal(byteStr))
     }

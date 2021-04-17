@@ -23,5 +23,5 @@ interface PasswordDao {
     fun readAll(): LiveData<List<Password>>
 
     @Query("DELETE FROM Password where user=:email")
-    suspend fun deleteByUser(email:String)
+    suspend fun deleteByUser(email: String)
 }

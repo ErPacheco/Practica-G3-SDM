@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +17,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.DataSnapshot
@@ -42,8 +42,9 @@ class LoginFragment : Fragment() {
     private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
 
         /**************************************************** OAuth*****************************************************/
@@ -56,8 +57,6 @@ class LoginFragment : Fragment() {
         googleSignInClient.revokeAccess()
 
         auth = FirebaseAuth.getInstance()
-        val currentUser = auth.currentUser
-
 
         /***************************************************Fin OAuth***************************************************/
         binding = FragmentLoginBinding.inflate(inflater, container, false)
@@ -72,15 +71,15 @@ class LoginFragment : Fragment() {
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
 
         // Comportamiento del botón de registro
-        binding.signin.setOnClickListener{
-            lifecycleScope.launch{
+        binding.signin.setOnClickListener {
+            lifecycleScope.launch {
                 insertUser()
             }
         }
 
         // Comportamiento del botón de inicio de sesión
-        binding.login.setOnClickListener{
-            lifecycleScope.launch{
+        binding.login.setOnClickListener {
+            lifecycleScope.launch {
                 loginUser()
             }
         }
@@ -95,14 +94,14 @@ class LoginFragment : Fragment() {
         val masterPassword = binding.password.text.toString()
 
         // Comprobamos si el campo introducido es un email
-        if(emailCheck(email)) {
+        if (emailCheck(email)) {
             // Comprobamos si la contraseña cumple con los requisitos
-            if(passwordCheck(masterPassword)) {
+            if (passwordCheck(masterPassword)) {
                 /* Registramos al usuario con la función addUser:
                 *  Esta función devuelve true si ha conseguido registrarlo.
                 *  Devolverá false si el usuario ya existe en la base de datos
                 *  */
-                val registerFind = withContext(Dispatchers.IO){
+                val registerFind = withContext(Dispatchers.IO) {
                     userViewModel.addUser(email, masterPassword)
                 }
 
@@ -117,8 +116,12 @@ class LoginFragment : Fragment() {
                 binding.email.text.clear()
                 binding.password.text.clear()
             } else { // Si no cumple con los requisitos
-                Toast.makeText(requireContext(), "Invalid password! It must include lower case and upper case letters, " +
-                        "numbers and at least 8 characters long", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Invalid password! It must include lower case and upper case letters, " +
+                        "numbers and at least 8 characters long",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         } else { // Si el campo email no es un email
             Toast.makeText(requireContext(), "The input must be an email", Toast.LENGTH_LONG).show()
@@ -129,29 +132,36 @@ class LoginFragment : Fragment() {
     private suspend fun loginUser() {
         val email = binding.email.text.toString()
         val masterPassword = binding.password.text.toString()
+        if (!TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 
-        // Comprobamos si los campos introducidos coinciden con el de un usuario de la base de datos
-        val loginFind = withContext(Dispatchers.IO){
-            userViewModel.loginUser(email, masterPassword)
-        }
-
-        when (loginFind) {
-            0 -> { // Si el email existe y la contraseña es correcta
-              loginView(email)
-              Toast.makeText(requireContext(), "Successful login!", Toast.LENGTH_LONG).show()
-              binding.email.text.clear()
-              binding.password.text.clear()
-            }
-            1 -> { // Si el email existe pero la contraseña no es correcta
-                Toast.makeText(requireContext(), "The password is incorrect!", Toast.LENGTH_LONG).show()
-                binding.password.text.clear()
-            }
-            2 -> { // Si el email no existe en la base de datos
-              Toast.makeText(requireContext(), "User not registered!", Toast.LENGTH_LONG).show()
-              binding.email.text.clear()
-              binding.password.text.clear()
+            // Comprobamos si los campos introducidos coinciden con el de un usuario de la base de datos
+            val loginFind = withContext(Dispatchers.IO) {
+                userViewModel.loginUser(email, masterPassword)
             }
 
+            when (loginFind) {
+                0 -> { // Si el email existe y la contraseña es correcta
+                    loginView(email)
+                    Toast.makeText(requireContext(), "Successful login!", Toast.LENGTH_LONG).show()
+                    binding.email.text.clear()
+                    binding.password.text.clear()
+                }
+                1 -> { // Si el email existe pero la contraseña no es correcta
+                    lifecycleScope.launch {
+                        Toast.makeText(requireContext(), "The password is incorrect!", Toast.LENGTH_LONG).show()
+                    }
+                    binding.password.text.clear()
+                }
+                2 -> { // Si el email no existe en la base de datos
+                    lifecycleScope.launch {
+                        Toast.makeText(requireContext(), "User not registered!", Toast.LENGTH_LONG).show()
+                    }
+                    binding.email.text.clear()
+                    binding.password.text.clear()
+                }
+            }
+        } else {
+            Toast.makeText(requireContext(), "This is not an email!", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -178,35 +188,35 @@ class LoginFragment : Fragment() {
     private fun passwordCheck(password: String): Boolean {
         var passValid = true
 
-        if(password.length < 8) {
+        if (password.length < 8) {
             passValid = false
         }
 
         var reg = ".*[0-9].*"
         var pattern = Pattern.compile(reg, Pattern.CASE_INSENSITIVE)
         var matcher = pattern.matcher(reg)
-        if(!matcher.matches()) {
+        if (!matcher.matches()) {
             passValid = false
         }
 
         reg = ".*[A-Z].*"
         pattern = Pattern.compile(reg)
         matcher = pattern.matcher(reg)
-        if(!matcher.matches()) {
+        if (!matcher.matches()) {
             passValid = false
         }
 
         reg = ".*[a-z].*"
         pattern = Pattern.compile(reg)
         matcher = pattern.matcher(reg)
-        if(!matcher.matches()) {
+        if (!matcher.matches()) {
             passValid = false
         }
 
         reg = ".*[~!@#\$%\\^&*()\\-_=+\\|\\[{\\]};:'\",<.>/?].*"
         pattern = Pattern.compile(reg)
         matcher = pattern.matcher(reg)
-        if(!matcher.matches()) {
+        if (!matcher.matches()) {
             passValid = false
         }
 
@@ -274,7 +284,7 @@ class LoginFragment : Fragment() {
                     val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE)
                     if (sp != null) {
                         with(sp.edit()) {
-                            putString("loginEmail", "Online")//account.email)
+                            putString("loginEmail", "Online") // account.email)
                             commit()
                         }
                     }

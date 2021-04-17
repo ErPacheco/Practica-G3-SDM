@@ -11,19 +11,15 @@ class PasswordRepository(private val passwordDao: PasswordDao) {
         passwordDao.addPassword(pass)
     }
 
-    fun findPasswordByUser (user: String): LiveData<List<Password>>{
+    fun findPasswordByUser(user: String): LiveData<List<Password>> {
         return passwordDao.findByUser(user)
     }
 
-    suspend fun deletePasswordByUser (user:String){
-        passwordDao.deleteByUser(user)
-    }
-
-    suspend fun deletePassword (pass:Password){
+    suspend fun deletePassword(pass: Password) {
         passwordDao.deletePassword(pass)
     }
 
-    suspend fun updatePassword (id: Long, name: String, emailUser: String, email: String, user: String, password: String, url: String) {
+    suspend fun updatePassword(id: Long, name: String, emailUser: String, email: String, user: String, password: String, url: String) {
         val pass = Password(id, name, emailUser, email, user, password, url)
         passwordDao.updatePassword(pass)
     }

@@ -9,11 +9,10 @@ import com.uc3m.whatthepass.models.WhatTheDatabase
 import com.uc3m.whatthepass.util.Hash.bcryptHash
 import com.uc3m.whatthepass.util.Hash.verifyHash
 
-class UserViewModel(application: Application): AndroidViewModel(application) {
+class UserViewModel(application: Application) : AndroidViewModel(application) {
 
     private val readAll: LiveData<List<User>>
     private val repository: UserRepository
-    private var logged: Boolean = false
     private var register: Boolean = false
 
     init {
@@ -28,7 +27,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
         val userFind = repository.readUserByEmail(email)
 
         // En caso de no existir, procedemos a registrar al usuario y devolvemos true
-        if(userFind == null) {
+        if (userFind == null) {
             val hashPassword = bcryptHash(password)
             repository.addUser(email, hashPassword)
             register = true
@@ -48,9 +47,9 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
 
         val res: Int
         // Si existe un usuario con dicho email y comprobamos si la contraseña es correcta
-        if(userFind != null) {
+        if (userFind != null) {
             // Si la contraseña es correcta
-            if(verifyHash(password, userFind.masterPass)) {
+            if (verifyHash(password, userFind.masterPass)) {
                 res = 0
             } else {
                 // Si la contraseña no es correcta
