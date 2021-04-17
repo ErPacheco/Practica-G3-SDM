@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -103,7 +104,7 @@ class PasswordInfoFragment : Fragment() {
         }
 
         binding.generatePasswordOnCreate.setOnClickListener {
-            val intent = Intent(this@PasswordInfoFragment.context, PasswordGeneratorActivity::class.java)
+            val intent = Intent(requireContext(), PasswordGeneratorActivity::class.java)
             activity?.startActivity(intent)
         }
 
@@ -117,11 +118,12 @@ class PasswordInfoFragment : Fragment() {
         val inputPassword = binding.passwordInput.text.toString()
         val inputUrl = binding.urlInput.text.toString()
         database = FirebaseDatabase.getInstance()
-        when (checkInputs(inputTitle, inputPassword, inputEmail)) {
+        when (checkInputs(inputTitle, inputPassword, inputEmail, inputUrl)) {
             1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
             2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
             3 -> Toast.makeText(requireContext(), "It is not an email!", Toast.LENGTH_LONG).show()
-            4 -> {
+            4 -> Toast.makeText(requireContext(), "Url field must be a valid url", Toast.LENGTH_LONG).show()
+            5 -> {
                 val currentDateTime = System.currentTimeMillis()
                 val myRef = database.getReference("Users/" + auth.currentUser.uid + "/passwords/" + currentDateTime)
                 val en = Hash.encrypt(inputPassword, masterPass)
@@ -141,11 +143,12 @@ class PasswordInfoFragment : Fragment() {
         val inputPassword = binding.passwordInput.text.toString()
         val inputUrl = binding.urlInput.text.toString()
 
-        when (checkInputs(inputTitle, inputPassword, inputEmail)) {
+        when (checkInputs(inputTitle, inputPassword, inputEmail, inputUrl)) {
             1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
             2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
-            3 -> Toast.makeText(requireContext(), "It is not an email!", Toast.LENGTH_LONG).show()
-            4 -> {
+            3 -> Toast.makeText(requireContext(), "Email field must be an email", Toast.LENGTH_LONG).show()
+            4 -> Toast.makeText(requireContext(), "Url field must be a valid url", Toast.LENGTH_LONG).show()
+            5 -> {
                 passwordViewModel.addPassword(inputTitle, email, inputEmail, inputUsername, inputPassword, inputUrl, masterPass)
                 Toast.makeText(requireContext(), "Password created!", Toast.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_passwordInfoFragment_to_passwordView)
@@ -159,7 +162,7 @@ class PasswordInfoFragment : Fragment() {
         binding.urlInput.text.clear()
     }
 
-    private fun checkInputs(title: String, pass: String, email: String): Int {
+    private fun checkInputs(title: String, pass: String, email: String, url: String): Int {
         return when {
             title.isEmpty() -> {
                 1
@@ -167,11 +170,14 @@ class PasswordInfoFragment : Fragment() {
             pass.isEmpty() -> {
                 2
             }
-            email.isNotEmpty() && !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+            email.isNotEmpty() && !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
                 3
             }
-            else -> {
+            url.isNotEmpty() && !Patterns.WEB_URL.matcher(url).matches() -> {
                 4
+            }
+            else -> {
+                5
             }
         }
     }

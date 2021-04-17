@@ -9,7 +9,8 @@
         android:id="@+id/passwordView"
         android:name="com.uc3m.whatthepass.views.passAndFiles.PasswordView"
         android:label="Password List"
-        tools:layout="@layout/fragment_password_view">
+        tools:layout="@layout/fragment_password_view"
+        android:background="@color/primary_color">
         <action
             android:id="@+id/action_passwordView_to_passwordInfoFragment"
             app:destination="@id/passwordInfoFragment" />
@@ -23,7 +24,8 @@
     <fragment
         android:id="@+id/passwordInfoFragment"
         android:name="com.uc3m.whatthepass.views.passAndFiles.PasswordInfoFragment"
-        android:label="Password Create">
+        android:label="Create Password"
+        android:background="@color/primary_color">
         <action
             android:id="@+id/action_passwordInfoFragment_to_passwordView"
             app:destination="@id/passwordView" />
@@ -32,7 +34,8 @@
         android:id="@+id/passDetailFragment"
         android:name="com.uc3m.whatthepass.views.passAndFiles.PassDetailFragment"
         android:label="Password Detail"
-        tools:layout="@layout/fragment_pass_detail">
+        tools:layout="@layout/fragment_pass_detail"
+        android:background="@color/primary_color">
         <action
             android:id="@+id/action_passDetailFragment_to_passwordView"
             app:destination="@id/passwordView" />
@@ -43,8 +46,9 @@
     <fragment
         android:id="@+id/passEditFragment"
         android:name="com.uc3m.whatthepass.views.passAndFiles.PassEditFragment"
-        android:label="fragment_pass_edit"
-        tools:layout="@layout/fragment_pass_edit" >
+        android:label="Edit Password"
+        tools:layout="@layout/fragment_pass_edit"
+        android:background="@color/primary_color">
         <action
             android:id="@+id/action_passEditFragment_to_passwordView"
             app:destination="@id/passwordView" />

@@ -37,8 +37,6 @@ class PasswordView : Fragment() {
 
     private lateinit var binding: FragmentPasswordViewBinding
     private val passwordViewModel: PasswordViewModel by activityViewModels()
-    private lateinit var deleteIcon: Drawable
-    private lateinit var editIcon: Drawable
     private lateinit var auth: FirebaseAuth
     private lateinit var childEventListener: ChildEventListener
 
@@ -56,8 +54,6 @@ class PasswordView : Fragment() {
 
         // Adapter para la lista de contraseñas
         val adapter = ListAdapter(passwordViewModel)
-        deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_delete_24)!!
-        editIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_edit_24)!!
         val recyclerView = binding.recyclerView2
         recyclerView.adapter = adapter
 
@@ -153,6 +149,9 @@ class PasswordView : Fragment() {
                 private var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
                 private var swipeBackgroundEdit: ColorDrawable = ColorDrawable(Color.parseColor("#0000FF"))
 
+                private var deleteIcon: Drawable? = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_delete_24)
+                private var editIcon: Drawable? = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_edit_24)
+
                 override fun onMove(
                     recyclerView: RecyclerView,
                     viewHolder: RecyclerView.ViewHolder,
@@ -190,23 +189,26 @@ class PasswordView : Fragment() {
                     isCurrentlyActive: Boolean
                 ) {
                     val itemView = viewHolder.itemView
-                    val iconMarginVertical = (viewHolder.itemView.height - deleteIcon.intrinsicHeight) / 2
-                    val iconMarginVerticalEdit = (viewHolder.itemView.height - editIcon.intrinsicHeight) / 2
+                    val iconMarginVertical = (viewHolder.itemView.height - deleteIcon!!.intrinsicHeight) / 2
+                    val iconMarginVerticalEdit = (viewHolder.itemView.height - editIcon!!.intrinsicHeight) / 2
                     if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
                         if (dX > 0) {
                             swipeBackground.setBounds(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
-                            deleteIcon.setBounds(
-                                itemView.left + iconMarginVertical, itemView.top + iconMarginVertical,
-                                itemView.left + iconMarginVertical + deleteIcon.intrinsicWidth, itemView.bottom - iconMarginVertical
+                            deleteIcon?.setBounds(
+                              itemView.left + iconMarginVertical, itemView.top + iconMarginVertical,
+                              itemView.left + iconMarginVertical + deleteIcon!!.intrinsicWidth,
+                              itemView.bottom - iconMarginVertical
                             )
                             swipeBackground.draw(c)
+                            deleteIcon?.draw(c)
                         } else {
                             swipeBackgroundEdit.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
-                            editIcon.setBounds(
-                                itemView.right - iconMarginVerticalEdit - editIcon.intrinsicWidth, itemView.top + iconMarginVerticalEdit,
+                            editIcon?.setBounds(
+                                itemView.right - iconMarginVerticalEdit - editIcon!!.intrinsicWidth, itemView.top + iconMarginVerticalEdit,
                                 itemView.right - iconMarginVerticalEdit, itemView.bottom - iconMarginVerticalEdit
                             )
                             swipeBackgroundEdit.draw(c)
+                            editIcon?.draw(c)
                         }
                     }
 

@@ -3,23 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/shadow_card"
+    android:orientation="horizontal"
+    android:paddingLeft="7dp"
+    android:paddingTop="3dp"
+    android:paddingRight="7dp"
+    android:paddingBottom="7dp">
 
-    >
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="397dp"
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="PasswordName"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="396dp"
-        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="6dp"
+        android:layout_marginTop="8.5dp"
+        android:layout_marginBottom="6.5dp"
         android:layout_weight="1"
-        android:text="PasswordURL" />
+        android:background="#00FF0000"
+        android:contentDescription="@string/default_text"
+        app:srcCompat="@drawable/ic_baseline_vpn_key_24"
+        app:tint="@color/primary_color" />
 
+    <LinearLayout
+        android:layout_width="310dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="308dp"
+            android:layout_height="30dp"
+            android:text="@string/passwordname"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="308dp"
+            android:layout_height="20dp"
+            android:text="@string/passwordurl" />
+    </LinearLayout>
 </LinearLayout>
