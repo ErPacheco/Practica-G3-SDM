@@ -28,7 +28,7 @@ import com.uc3m.whatthepass.databinding.FragmentLoginBinding
 import com.uc3m.whatthepass.util.Hash
 import com.uc3m.whatthepass.util.PasswordGenerator
 import com.uc3m.whatthepass.viewModels.UserViewModel
-import com.uc3m.whatthepass.views.passAndFiles.PassAndFilesActivity
+import com.uc3m.whatthepass.views.splashScreen.SplashScreenActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -174,7 +174,7 @@ class LoginFragment : Fragment() {
             commit()
         }
 
-        val intent = Intent(this@LoginFragment.context, PassAndFilesActivity::class.java)
+        val intent = Intent(this@LoginFragment.context, SplashScreenActivity::class.java)
         activity?.startActivity(intent)
         activity?.finish()
     }
@@ -289,7 +289,7 @@ class LoginFragment : Fragment() {
                         }
                     }
 
-                    val intent = Intent(this@LoginFragment.context, PassAndFilesActivity::class.java)
+                    val intent = Intent(this@LoginFragment.context, SplashScreenActivity::class.java)
                     activity?.startActivity(intent)
                     activity?.finish()
                 } else {
