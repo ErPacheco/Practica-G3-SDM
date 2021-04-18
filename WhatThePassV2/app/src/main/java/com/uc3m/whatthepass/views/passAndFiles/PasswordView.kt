@@ -195,9 +195,9 @@ class PasswordView : Fragment() {
                         if (dX > 0) {
                             swipeBackground.setBounds(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
                             deleteIcon?.setBounds(
-                              itemView.left + iconMarginVertical, itemView.top + iconMarginVertical,
-                              itemView.left + iconMarginVertical + deleteIcon!!.intrinsicWidth,
-                              itemView.bottom - iconMarginVertical
+                                itemView.left + iconMarginVertical, itemView.top + iconMarginVertical,
+                                itemView.left + iconMarginVertical + deleteIcon!!.intrinsicWidth,
+                                itemView.bottom - iconMarginVertical
                             )
                             swipeBackground.draw(c)
                             deleteIcon?.draw(c)
