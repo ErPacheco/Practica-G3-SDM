@@ -2,11 +2,9 @@ package com.uc3m.whatthepass.views.passAndFiles
 
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.content.ContentValues
 import android.content.Context
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -21,10 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentPassDetailBinding
 import com.uc3m.whatthepass.models.Password
@@ -208,23 +203,14 @@ class PassDetailFragment : Fragment() {
         val uid = auth.currentUser?.uid
         if (uid != null) {
             val myRef = database.getReference("Users/" + auth.currentUser?.uid + "/masterPass")
-            val masterPassListener = object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    // Get Post object and use the values to update the UI
-                    masterPassOnline = dataSnapshot.getValue(String::class.java)
-                    if (masterPassOnline != null) {
-                        val realPass = Hash.decrypt(password.hashPassword, masterPassOnline)
-                        binding.passwordDetailInput.text = realPass
-                        masterPassOnline = ""
-                    }
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
+            myRef.get().addOnSuccessListener {
+                masterPassOnline = it.getValue(String::class.java)
+                if (masterPassOnline != null) {
+                    val realPass = Hash.decrypt(password.hashPassword, masterPassOnline)
+                    binding.passwordDetailInput.text = realPass
+                    masterPassOnline = ""
                 }
             }
-            myRef.addValueEventListener(masterPassListener)
-            myRef.removeEventListener(masterPassListener)
         }
         binding.URIDetail.text = password.url
     }

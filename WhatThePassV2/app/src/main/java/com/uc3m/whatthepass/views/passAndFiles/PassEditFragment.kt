@@ -88,31 +88,24 @@ class PassEditFragment : Fragment() {
         } else if (email.equals("Online")) {
             database = FirebaseDatabase.getInstance()
             val myRef = database.getReference("Users/" + auth.currentUser?.uid + "/masterPass")
-            val masterPassListener = object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    // Get Post object and use the values to update the UI
-                    val masterPassOnline = dataSnapshot.getValue(String::class.java)
-                    if (masterPassOnline != null) {
-                        val passId = passwordViewModel.message.value?.id
-                        if (passId != null) {
-                            binding.saveChangesButton.setOnClickListener { v ->
-                                val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                                imm?.hideSoftInputFromWindow(v.windowToken, 0)
-                                if (email != null) {
-                                    auth.currentUser?.email?.let { editPasswordOnline(it, masterPassOnline, passId) }
-                                }
-                                adapter.notifyDataSetChanged()
+            myRef.get().addOnSuccessListener {
+                // Get Post object and use the values to update the UI
+                val masterPassOnline = it.getValue(String::class.java)
+                if (masterPassOnline != null) {
+                    val passId = passwordViewModel.message.value?.id
+                    if (passId != null) {
+                        binding.saveChangesButton.setOnClickListener { v ->
+                            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                            imm?.hideSoftInputFromWindow(v.windowToken, 0)
+                            if (email != null) {
+                                auth.currentUser?.email?.let { editPasswordOnline(it, masterPassOnline, passId) }
                             }
+                            adapter.notifyDataSetChanged()
                         }
                     }
                 }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    // Getting Post failed, log a message
-                    Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
-                }
             }
-            myRef.addValueEventListener(masterPassListener)
+
             // Función de visibilidad de la contraseña
             binding.viewButton3.setOnClickListener {
                 val passInputType = binding.passwordDetailInput2.inputType
