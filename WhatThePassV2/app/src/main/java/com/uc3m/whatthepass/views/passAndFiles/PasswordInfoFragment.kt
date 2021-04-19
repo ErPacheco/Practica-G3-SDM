@@ -77,7 +77,7 @@ class PasswordInfoFragment : Fragment() {
                 imm?.hideSoftInputFromWindow(v.windowToken, 0)
                 if (email != null) {
                     database = FirebaseDatabase.getInstance()
-                    val myRef = database.getReference("Users/" + auth.currentUser.uid + "/masterPass")
+                    val myRef = database.getReference("Users/" + auth.currentUser?.uid + "/masterPass")
                     val masterPassListener = object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             // Get Post object and use the values to update the UI
@@ -124,14 +124,16 @@ class PasswordInfoFragment : Fragment() {
             3 -> Toast.makeText(requireContext(), "It is not an email!", Toast.LENGTH_LONG).show()
             4 -> Toast.makeText(requireContext(), "Url field must be a valid url", Toast.LENGTH_LONG).show()
             5 -> {
-                val currentDateTime = System.currentTimeMillis()
-                val myRef = database.getReference("Users/" + auth.currentUser.uid + "/passwords/" + currentDateTime)
-                val en = Hash.encrypt(inputPassword, masterPass)
+                if (auth.currentUser != null) {
+                    val currentDateTime = System.currentTimeMillis()
+                    val myRef = database.getReference("Users/" + auth.currentUser?.uid + "/passwords/" + currentDateTime)
+                    val en = Hash.encrypt(inputPassword, masterPass)
 
-                val p = Password(currentDateTime, inputTitle, auth.currentUser.email, inputEmail, inputUsername, en, inputUrl)
-                myRef.setValue(p)
-                Toast.makeText(requireContext(), "Password created!", Toast.LENGTH_LONG).show()
-                findNavController().navigate(R.id.action_passwordInfoFragment_to_passwordView)
+                    val p = auth.currentUser?.email?.let { Password(currentDateTime, inputTitle, it, inputEmail, inputUsername, en, inputUrl) }
+                    myRef.setValue(p)
+                    Toast.makeText(requireContext(), "Password created!", Toast.LENGTH_LONG).show()
+                    findNavController().navigate(R.id.action_passwordInfoFragment_to_passwordView)
+                }
             }
         }
     }

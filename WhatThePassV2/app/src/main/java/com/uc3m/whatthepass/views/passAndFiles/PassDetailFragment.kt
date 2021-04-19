@@ -205,25 +205,27 @@ class PassDetailFragment : Fragment() {
         binding.emailDetail.text = password.inputEmail
         binding.usernameDetail.text = password.inputUser
         database = FirebaseDatabase.getInstance()
-        var uid = auth.currentUser.uid
-        val myRef = database.getReference("Users/$uid/masterPass")
-        val masterPassListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Get Post object and use the values to update the UI
-                masterPassOnline = dataSnapshot.getValue(String::class.java)
-                if (masterPassOnline != null) {
-                    val realPass = Hash.decrypt(password.hashPassword, masterPassOnline!!)
-                    binding.passwordDetailInput.text = realPass
+        val uid = auth.currentUser?.uid
+        if (uid != null) {
+            val myRef = database.getReference("Users/" + auth.currentUser?.uid + "/masterPass")
+            val masterPassListener = object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    // Get Post object and use the values to update the UI
+                    masterPassOnline = dataSnapshot.getValue(String::class.java)
+                    if (masterPassOnline != null) {
+                        val realPass = Hash.decrypt(password.hashPassword, masterPassOnline)
+                        binding.passwordDetailInput.text = realPass
+                        masterPassOnline = ""
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
                 }
             }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
-            }
+            myRef.addValueEventListener(masterPassListener)
+            myRef.removeEventListener(masterPassListener)
         }
-        myRef.addValueEventListener(masterPassListener)
-
         binding.URIDetail.text = password.url
     }
 

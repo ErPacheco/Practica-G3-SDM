@@ -55,4 +55,10 @@ class PasswordViewModel(application: Application) : AndroidViewModel(application
             repository.updatePassword(id, name, emailUser, email, user, passwordToChange, url)
         }
     }
+    // Función para borrar todas las contraseñas de un usuario
+    fun deletePasswordByUser(user: String) {
+        viewModelScope.launch {
+            repository.deletePasswordByUser(user)
+        }
+    }
 }
