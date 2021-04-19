@@ -67,4 +67,9 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     suspend fun findUserByEmail(email: String): User? {
         return repository.readUserByEmail(email)
     }
+
+    suspend fun deleteUser(email: String){
+        repository.deleteUserByEmail(email)
+    }
+
 }

@@ -87,32 +87,25 @@ class PassEditFragment : Fragment() {
             }
         } else if (email.equals("Online")) {
             database = FirebaseDatabase.getInstance()
-            val myRef = database.getReference("Users/" + auth.currentUser.uid + "/masterPass")
-            val masterPassListener = object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    // Get Post object and use the values to update the UI
-                    val masterPassOnline = dataSnapshot.getValue(String::class.java)
-                    if (masterPassOnline != null) {
-                        val passId = passwordViewModel.message.value?.id
-                        if (passId != null) {
-                            binding.saveChangesButton.setOnClickListener { v ->
-                                val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                                imm?.hideSoftInputFromWindow(v.windowToken, 0)
-                                if (email != null) {
-                                    editPasswordOnline(auth.currentUser.email, masterPassOnline, passId)
-                                }
-                                adapter.notifyDataSetChanged()
+            val myRef = database.getReference("Users/" + auth.currentUser?.uid + "/masterPass")
+            myRef.get().addOnSuccessListener {
+                // Get Post object and use the values to update the UI
+                val masterPassOnline = it.getValue(String::class.java)
+                if (masterPassOnline != null) {
+                    val passId = passwordViewModel.message.value?.id
+                    if (passId != null) {
+                        binding.saveChangesButton.setOnClickListener { v ->
+                            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                            imm?.hideSoftInputFromWindow(v.windowToken, 0)
+                            if (email != null) {
+                                auth.currentUser?.email?.let { editPasswordOnline(it, masterPassOnline, passId) }
                             }
+                            adapter.notifyDataSetChanged()
                         }
                     }
                 }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    // Getting Post failed, log a message
-                    Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
-                }
             }
-            myRef.addValueEventListener(masterPassListener)
+
             // Función de visibilidad de la contraseña
             binding.viewButton3.setOnClickListener {
                 val passInputType = binding.passwordDetailInput2.inputType
@@ -144,9 +137,9 @@ class PassEditFragment : Fragment() {
             4 -> Toast.makeText(requireContext(), "Url field must be a valid url", Toast.LENGTH_LONG).show()
             5 -> {
                 userLoginOn = User(email, masterPass)
-                val myRef = database.getReference("Users/" + auth.currentUser.uid + "/passwords/" + idPass)
+                val myRef = database.getReference("Users/" + auth.currentUser?.uid + "/passwords/" + idPass)
                 val en = Hash.encrypt(inputPassword, masterPass)
-                val p = Password(idPass, inputTitle, auth.currentUser.email, inputEmail, inputUsername, en, inputURL)
+                val p = auth.currentUser?.email?.let { Password(idPass, inputTitle, it, inputEmail, inputUsername, en, inputURL) }
                 myRef.setValue(p)
                 Toast.makeText(requireContext(), "Password updated!", Toast.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_passEditFragment_to_passwordView)
@@ -192,7 +185,7 @@ class PassEditFragment : Fragment() {
             }
         } else {
             val database = FirebaseDatabase.getInstance()
-            val myRef = database.getReference("Users/" + auth.currentUser.uid + "/masterPass")
+            val myRef = database.getReference("Users/" + auth.currentUser?.uid + "/masterPass")
             val masterPassListener = object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     // Get Post object and use the values to update the UI
@@ -211,6 +204,7 @@ class PassEditFragment : Fragment() {
                 }
             }
             myRef.addValueEventListener(masterPassListener)
+            myRef.removeEventListener(masterPassListener)
         }
         binding.URIDetail2.setText(password.url)
     }

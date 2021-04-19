@@ -50,8 +50,12 @@ object Hash {
         return String(encoder.encode(encrypted))
     }
 
-    fun decrypt(str: String, secretKey: String): String {
-        val byteStr = decoder.decode(str.toByteArray(Charsets.UTF_8))
-        return String(cipher(Cipher.DECRYPT_MODE, secretKey).doFinal(byteStr))
+    fun decrypt(str: String, secretKey: String?): String {
+        return if (secretKey.isNullOrBlank()) {
+            ""
+        } else {
+            val byteStr = decoder.decode(str.toByteArray(Charsets.UTF_8))
+            String(cipher(Cipher.DECRYPT_MODE, secretKey).doFinal(byteStr))
+        }
     }
 }

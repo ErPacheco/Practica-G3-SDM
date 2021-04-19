@@ -1,10 +1,8 @@
 package com.uc3m.whatthepass.views.passAndFiles
 
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -17,10 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentPasswordInfoBinding
 import com.uc3m.whatthepass.models.Password
@@ -81,22 +76,15 @@ class PasswordInfoFragment : Fragment() {
             binding.createPassButton.setOnClickListener { v ->
                 val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                 imm?.hideSoftInputFromWindow(v.windowToken, 0)
-                database = FirebaseDatabase.getInstance()
-                val myRef = database.getReference("Users/" + auth.currentUser.uid + "/masterPass")
-                val masterPassListener = object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        // Get Post object and use the values to update the UI
-                        val masterPassOnline = dataSnapshot.getValue(String::class.java)
-
+                if (email != null) {
+                    database = FirebaseDatabase.getInstance()
+                    val myRef = database.getReference("Users/" + auth.currentUser?.uid + "/masterPass")
+                    myRef.get().addOnSuccessListener {
+                        val masterPassOnline = it.getValue(String::class.java)
                         if (masterPassOnline != null) {
                             insertPasswordOnline(masterPassOnline)
                             adapter.notifyDataSetChanged()
                         }
-                    }
-
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        // Getting Post failed, log a message
-                        Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
                     }
                 }
                 myRef.addValueEventListener(masterPassListener)
@@ -128,14 +116,16 @@ class PasswordInfoFragment : Fragment() {
             3 -> Toast.makeText(requireContext(), "It is not an email!", Toast.LENGTH_LONG).show()
             4 -> Toast.makeText(requireContext(), "Url field must be a valid url", Toast.LENGTH_LONG).show()
             5 -> {
-                val currentDateTime = System.currentTimeMillis()
-                val myRef = database.getReference("Users/" + auth.currentUser.uid + "/passwords/" + currentDateTime)
-                val en = Hash.encrypt(inputPassword, masterPass)
+                if (auth.currentUser != null) {
+                    val currentDateTime = System.currentTimeMillis()
+                    val myRef = database.getReference("Users/" + auth.currentUser?.uid + "/passwords/" + currentDateTime)
+                    val en = Hash.encrypt(inputPassword, masterPass)
 
-                val p = Password(currentDateTime, inputTitle, auth.currentUser.email, inputEmail, inputUsername, en, inputUrl)
-                myRef.setValue(p)
-                Toast.makeText(requireContext(), "Password created!", Toast.LENGTH_LONG).show()
-                findNavController().navigate(R.id.action_passwordInfoFragment_to_passwordView)
+                    val p = auth.currentUser?.email?.let { Password(currentDateTime, inputTitle, it, inputEmail, inputUsername, en, inputUrl) }
+                    myRef.setValue(p)
+                    Toast.makeText(requireContext(), "Password created!", Toast.LENGTH_LONG).show()
+                    findNavController().navigate(R.id.action_passwordInfoFragment_to_passwordView)
+                }
             }
         }
     }
