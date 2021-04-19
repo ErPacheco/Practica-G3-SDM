@@ -1,10 +1,8 @@
 package com.uc3m.whatthepass.views.passAndFiles
 
-import android.content.ContentValues
 import android.content.Context
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -18,10 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.databinding.FragmentPassEditBinding
 import com.uc3m.whatthepass.models.Password
@@ -186,25 +181,15 @@ class PassEditFragment : Fragment() {
         } else {
             val database = FirebaseDatabase.getInstance()
             val myRef = database.getReference("Users/" + auth.currentUser?.uid + "/masterPass")
-            val masterPassListener = object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    // Get Post object and use the values to update the UI
-                    val masterPassOnline = dataSnapshot.getValue(String::class.java)
-                    if (masterPassOnline != null) {
-                        lifecycleScope.launch {
-                            val realPass = Hash.decrypt(password.hashPassword, masterPassOnline)
-                            binding.passwordDetailInput2.setText(realPass)
-                        }
+            myRef.get().addOnSuccessListener {
+                val masterPassOnline = it.getValue(String::class.java)
+                if (masterPassOnline != null) {
+                    lifecycleScope.launch {
+                        val realPass = Hash.decrypt(password.hashPassword, masterPassOnline)
+                        binding.passwordDetailInput2.setText(realPass)
                     }
                 }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    // Getting Post failed, log a message
-                    Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
-                }
             }
-            myRef.addValueEventListener(masterPassListener)
-            myRef.removeEventListener(masterPassListener)
         }
         binding.URIDetail2.setText(password.url)
     }
