@@ -76,18 +76,15 @@ class PasswordInfoFragment : Fragment() {
             binding.createPassButton.setOnClickListener { v ->
                 val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                 imm?.hideSoftInputFromWindow(v.windowToken, 0)
-                if (email != null) {
-                    database = FirebaseDatabase.getInstance()
-                    val myRef = database.getReference("Users/" + auth.currentUser?.uid + "/masterPass")
-                    myRef.get().addOnSuccessListener {
-                        val masterPassOnline = it.getValue(String::class.java)
-                        if (masterPassOnline != null) {
-                            insertPasswordOnline(masterPassOnline)
-                            adapter.notifyDataSetChanged()
-                        }
+                database = FirebaseDatabase.getInstance()
+                val myRef = database.getReference("Users/" + auth.currentUser?.uid + "/masterPass")
+                myRef.get().addOnSuccessListener {
+                    val masterPassOnline = it.getValue(String::class.java)
+                    if (masterPassOnline != null) {
+                        insertPasswordOnline(masterPassOnline)
+                        adapter.notifyDataSetChanged()
                     }
                 }
-                myRef.addValueEventListener(masterPassListener)
             }
         }
 
