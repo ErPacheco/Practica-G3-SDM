@@ -1,11 +1,12 @@
 package com.uc3m.whatthepass.models
 
-import androidx.room.*
+import androidx.room.* // ktlint-disable no-wildcard-imports
+// ktlint-disable no-wildcard-imports
 import androidx.room.ForeignKey.CASCADE
 
 @Entity(
     tableName = "Password",
-    indices = [Index(value = ["name"], unique = true)]
+    indices = [Index(value = ["name"])]
 )
 data class Password(
     @PrimaryKey(autoGenerate = true)
@@ -22,7 +23,6 @@ data class Password(
     val user: String, // Usuario al que pertenece esta entrada
     val inputEmail: String?, // Email de la entrada de la contraseña
     val inputUser: String?, // Nombre de usuario de la entrada de la contraseña
-    // @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     val hashPassword: String,
     val url: String?
 ) {

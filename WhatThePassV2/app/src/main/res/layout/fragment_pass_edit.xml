@@ -10,50 +10,22 @@
         android:id="@+id/passwordDetailTITLE2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="104dp"
+        android:layout_marginTop="60dp"
         android:text="@string/edit_input_password"
         android:textColor="@color/primary_color"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/inputNameLabel2"
-        android:layout_width="316dp"
-        android:layout_height="19dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/input_name_label"
-        android:textColor="@color/third_color"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordDetailTITLE2"
-        tools:ignore="SmallSp"
-        android:labelFor="@+id/titleDetail2" />
-
-    <EditText
-        android:id="@+id/usernameDetail2"
-        android:layout_width="316dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bottom_border"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputUsernameLabel2"
-        android:autofillHints="Default field"
-        android:inputType="text" />
 
     <TextView
         android:id="@+id/inputURILabel2"
         android:layout_width="316dp"
         android:layout_height="19dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
+        android:labelFor="@+id/URIDetail2"
         android:text="@string/uri"
         android:textColor="@color/third_color"
         android:textSize="14sp"
@@ -61,28 +33,14 @@
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordDetailInput2"
-        tools:ignore="SmallSp"
-        android:labelFor="@+id/URIDetail2" />
-
-    <EditText
-        android:id="@+id/URIDetail2"
-        android:layout_width="316dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bottom_border"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputURILabel2"
-        android:autofillHints="Default field"
-        android:inputType="textUri" />
+        tools:ignore="SmallSp" />
 
     <TextView
         android:id="@+id/inputUsernameLabel2"
         android:layout_width="316dp"
         android:layout_height="19dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
+        android:labelFor="@id/usernameDetail2"
         android:text="@string/input_username"
         android:textColor="@color/third_color"
         android:textSize="14sp"
@@ -90,72 +48,27 @@
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailDetail2"
-        tools:ignore="SmallSp"
-        android:labelFor="@id/usernameDetail2" />
-
-    <EditText
-        android:id="@+id/titleDetail2"
-        android:layout_width="316dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bottom_border"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputNameLabel2"
-        android:autofillHints="Default field"
-        android:inputType="text" />
-
-    <TextView
-        android:id="@+id/inputEmailUsernameLabel2"
-        android:layout_width="316dp"
-        android:layout_height="19dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/input_email"
-        android:textColor="@color/third_color"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleDetail2"
-        tools:ignore="SmallSp"
-        android:labelFor="@id/emailDetail2"/>
+        tools:ignore="SmallSp" />
 
     <EditText
         android:id="@+id/emailDetail2"
         android:layout_width="316dp"
         android:layout_height="30dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
+        android:autofillHints="Default field"
         android:background="@drawable/bottom_border"
+        android:inputType="textWebEmailAddress"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputEmailUsernameLabel2"
-        android:autofillHints="Default field"
-        android:inputType="textWebEmailAddress" />
-
-    <TextView
-        android:id="@+id/inputPasswordLabel2"
-        android:layout_width="316dp"
-        android:layout_height="19dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/input_password"
-        android:textColor="@color/third_color"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameDetail2"
-        tools:ignore="SmallSp"
-        android:labelFor="@id/passwordDetailInput2" />
+        app:layout_constraintTop_toBottomOf="@+id/inputEmailUsernameLabel2" />
 
     <EditText
         android:id="@+id/passwordDetailInput2"
         android:layout_width="316dp"
         android:layout_height="30dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:autofillHints="Default field"
         android:background="@drawable/bottom_border"
         android:inputType="textPassword"
@@ -165,12 +78,109 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputPasswordLabel2" />
 
+    <Button
+        android:id="@+id/saveChangesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/primary_color"
+        android:text="@string/save_changes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.225"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/URIDetail2" />
+
+    <Button
+        android:id="@+id/cancelChangesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="56dp"
+        android:backgroundTint="@color/third_color"
+        android:text="@string/cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.948"
+        app:layout_constraintStart_toEndOf="@+id/saveChangesButton"
+        app:layout_constraintTop_toBottomOf="@+id/URIDetail2" />
+
+    <EditText
+        android:id="@+id/titleDetail2"
+        android:layout_width="316dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="12dp"
+        android:autofillHints="Default field"
+        android:background="@drawable/bottom_border"
+        android:inputType="text"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputNameLabel2" />
+
+    <TextView
+        android:id="@+id/inputEmailUsernameLabel2"
+        android:layout_width="316dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="20dp"
+        android:labelFor="@id/emailDetail2"
+        android:text="@string/input_email"
+        android:textColor="@color/third_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleDetail2"
+        tools:ignore="SmallSp" />
+
+    <EditText
+        android:id="@+id/URIDetail2"
+        android:layout_width="316dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="12dp"
+        android:autofillHints="Default field"
+        android:background="@drawable/bottom_border"
+        android:inputType="textUri"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputURILabel2" />
+
+    <EditText
+        android:id="@+id/usernameDetail2"
+        android:layout_width="316dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="12dp"
+        android:autofillHints="Default field"
+        android:background="@drawable/bottom_border"
+        android:inputType="text"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputUsernameLabel2" />
+
+    <TextView
+        android:id="@+id/inputPasswordLabel2"
+        android:layout_width="316dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="20dp"
+        android:labelFor="@id/passwordDetailInput2"
+        android:text="@string/input_password"
+        android:textColor="@color/third_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameDetail2"
+        tools:ignore="SmallSp" />
+
     <ImageButton
         android:id="@+id/viewButton3"
         style="@style/Widget.AppCompat.ImageButton"
         android:layout_width="34dp"
         android:layout_height="23dp"
-        android:layout_marginTop="425dp"
+        android:layout_marginTop="372dp"
         android:background="#00FFFFFF"
         android:clickable="true"
         android:contentDescription="@string/viewbutton"
@@ -181,29 +191,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/saveChangesButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="176dp"
-        android:text="@string/save_changes"
-        android:backgroundTint="@color/primary_color"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <TextView
+        android:id="@+id/inputNameLabel2"
+        android:layout_width="316dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="20dp"
+        android:labelFor="@+id/titleDetail2"
+        android:text="@string/input_name_label"
+        android:textColor="@color/third_color"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.244"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/cancelChangesButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="56dp"
-        android:layout_marginBottom="176dp"
-        android:text="@string/cancel"
-        android:backgroundTint="@color/third_color"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/saveChangesButton" />
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordDetailTITLE2"
+        tools:ignore="SmallSp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

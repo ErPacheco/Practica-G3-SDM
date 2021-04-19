@@ -49,10 +49,16 @@ class PasswordInfoFragment : Fragment() {
         // passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
         val adapter = ListAdapter(passwordViewModel)
 
-        if (!email.equals("Online")) {
+        if (email == null) {
+            Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+            exitProcess(-1)
+        }
+
+        if (email != "Online") {
+            var userLogin: User?
             lifecycleScope.launch {
 
-                val userLogin: User? = email?.let { userViewModel.findUserByEmail(it) }
+                userLogin = email.let { userViewModel.findUserByEmail(it) }
 
                 if (userLogin == null) {
                     Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
@@ -61,12 +67,12 @@ class PasswordInfoFragment : Fragment() {
                     binding.createPassButton.setOnClickListener { v ->
                         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                         imm?.hideSoftInputFromWindow(v.windowToken, 0)
-                        insertPassword(email, userLogin.masterPass)
+                        insertPassword(email, userLogin!!.masterPass)
                         adapter.notifyDataSetChanged()
                     }
                 }
             }
-        } else if (email.equals("Online")) {
+        } else if (email == "Online") {
             binding.createPassButton.setOnClickListener { v ->
                 val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                 imm?.hideSoftInputFromWindow(v.windowToken, 0)
@@ -81,6 +87,7 @@ class PasswordInfoFragment : Fragment() {
                         }
                     }
                 }
+                myRef.addValueEventListener(masterPassListener)
             }
         }
 

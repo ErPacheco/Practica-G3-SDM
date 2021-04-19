@@ -34,7 +34,7 @@
     <string name="input_email">Input email</string>
     <string name="input_name_label">Input name</string>
     <string name="input_password">Input password</string>
-    <string name="uri">URI</string>
+    <string name="uri">URL</string>
     <string name="edit_password_input">Edit password input</string>
     <string name="email">Email</string>
     <string name="username">Username</string>

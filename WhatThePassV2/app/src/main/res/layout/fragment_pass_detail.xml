@@ -10,7 +10,7 @@
         android:id="@+id/passwordDetailTITLE"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="104dp"
+        android:layout_marginTop="60dp"
         android:text="@string/password_input_detail"
         android:textColor="@color/primary_color"
         android:textSize="24sp"
@@ -20,65 +20,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/inputNameLabel"
-        android:layout_width="316dp"
-        android:layout_height="19dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/input_name_label"
-        android:textColor="@color/third_color"
-        android:textSize="14sp"
+    <ImageButton
+        android:id="@+id/passBreaches"
+        android:layout_width="35dp"
+        android:layout_height="23dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="416dp"
+        android:backgroundTint="#00FFFFFF"
+        android:contentDescription="@string/passwordbreachbutton"
+        android:src="@drawable/ic_baseline_vpn_lock_24"
+        android:tint="@color/primary_color"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordDetailTITLE"
-        tools:ignore="SmallSp" />
-
-    <TextView
-        android:id="@+id/usernameDetail"
-        android:layout_width="316dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bottom_border"
-        android:text="@string/default_text"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputUsernameLabel" />
-
-    <TextView
-        android:id="@+id/inputURILabel"
-        android:layout_width="316dp"
-        android:layout_height="19dp"
-        android:layout_marginTop="60dp"
-        android:text="@string/uri"
-        android:textColor="@color/third_color"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordDetailInput"
-        tools:ignore="SmallSp" />
-
-    <TextView
-        android:id="@+id/URIDetail"
-        android:layout_width="316dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/bottom_border"
-        android:text="@string/default_text"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputURILabel" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/copyButton"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/inputUsernameLabel"
         android:layout_width="316dp"
         android:layout_height="19dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:text="@string/input_username"
         android:textColor="@color/third_color"
         android:textSize="14sp"
@@ -89,24 +50,38 @@
         tools:ignore="SmallSp" />
 
     <TextView
-        android:id="@+id/titleDetail"
+        android:id="@+id/emailDetail"
         android:layout_width="316dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/bottom_border"
         android:text="@string/default_text"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputNameLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/inputEmailUsernameLabel" />
+
+    <TextView
+        android:id="@+id/inputEmailUsernameLabel"
+        android:layout_width="316dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/input_email"
+        android:textColor="@color/third_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleDetail"
+        tools:ignore="SmallSp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/editPasswordButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="48dp"
-        android:layout_marginBottom="92dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="28dp"
         android:backgroundTint="@color/third_color"
         android:clickable="true"
         android:contentDescription="@string/edit_password_input"
@@ -117,51 +92,23 @@
         app:rippleColor="#FFFFFF" />
 
     <TextView
-        android:id="@+id/inputEmailUsernameLabel"
-        android:layout_width="316dp"
-        android:layout_height="19dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/input_email"
-        android:textColor="@color/third_color"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleDetail"
-        tools:ignore="SmallSp" />
-
-    <TextView
-        android:id="@+id/emailDetail"
+        android:id="@+id/URIDetail"
         android:layout_width="316dp"
         android:layout_height="30dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/bottom_border"
         android:text="@string/default_text"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputEmailUsernameLabel" />
-
-    <TextView
-        android:id="@+id/inputPasswordLabel"
-        android:layout_width="316dp"
-        android:layout_height="19dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/input_password"
-        android:textColor="@color/third_color"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameDetail"
-        tools:ignore="SmallSp" />
+        app:layout_constraintTop_toBottomOf="@+id/inputURILabel" />
 
     <TextView
         android:id="@+id/passwordDetailInput"
         android:layout_width="316dp"
         android:layout_height="30dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/bottom_border"
         android:inputType="textPassword"
         android:text="@string/default_text"
@@ -173,27 +120,11 @@
         tools:ignore="TextViewEdits" />
 
     <ImageButton
-        android:id="@+id/viewButton"
-        style="@style/Widget.AppCompat.ImageButton"
-        android:layout_width="34dp"
-        android:layout_height="23dp"
-        android:layout_marginTop="460dp"
-        android:background="#00FFFFFF"
-        android:clickable="true"
-        android:contentDescription="@string/viewbutton"
-        android:outlineProvider="none"
-        android:src="@drawable/ic_baseline_remove_red_eye_24"
-        app:layout_constraintEnd_toStartOf="@+id/copyButton"
-        app:layout_constraintHorizontal_bias="0.8"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
         android:id="@+id/copyButton"
         style="@style/Widget.AppCompat.ImageButton"
         android:layout_width="34dp"
         android:layout_height="23dp"
-        android:layout_marginTop="460dp"
+        android:layout_marginTop="416dp"
         android:background="#00FFFFFF"
         android:clickable="true"
         android:contentDescription="@string/copybutton"
@@ -204,20 +135,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/passBreaches"
-        android:layout_width="35dp"
-        android:layout_height="23dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="460dp"
-        android:backgroundTint="#00FFFFFF"
-        android:src="@drawable/ic_baseline_vpn_lock_24"
-        android:tint="@color/primary_color"
+    <TextView
+        android:id="@+id/usernameDetail"
+        android:layout_width="316dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bottom_border"
+        android:text="@string/default_text"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/copyButton"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/passwordbreachbutton" />
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputUsernameLabel" />
+
+    <TextView
+        android:id="@+id/titleDetail"
+        android:layout_width="316dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bottom_border"
+        android:text="@string/default_text"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputNameLabel" />
 
     <ProgressBar
         android:id="@+id/progressBarAPI"
@@ -226,12 +168,70 @@
         android:layout_height="31dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="188dp"
-        android:layout_marginBottom="300dp"
+        android:layout_marginBottom="340dp"
         android:indeterminateTint="@color/secondary_color"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/passBreaches" />
+
+    <TextView
+        android:id="@+id/inputURILabel"
+        android:layout_width="316dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="56dp"
+        android:text="@string/uri"
+        android:textColor="@color/third_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordDetailInput"
+        tools:ignore="SmallSp" />
+
+    <TextView
+        android:id="@+id/inputPasswordLabel"
+        android:layout_width="316dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/input_password"
+        android:textColor="@color/third_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameDetail"
+        tools:ignore="SmallSp" />
+
+    <TextView
+        android:id="@+id/inputNameLabel"
+        android:layout_width="316dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/input_name_label"
+        android:textColor="@color/third_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordDetailTITLE"
+        tools:ignore="SmallSp" />
+
+    <ImageButton
+        android:id="@+id/viewButton"
+        style="@style/Widget.AppCompat.ImageButton"
+        android:layout_width="34dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="416dp"
+        android:background="#00FFFFFF"
+        android:clickable="true"
+        android:contentDescription="@string/viewbutton"
+        android:outlineProvider="none"
+        android:src="@drawable/ic_baseline_remove_red_eye_24"
+        app:layout_constraintEnd_toStartOf="@+id/copyButton"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
