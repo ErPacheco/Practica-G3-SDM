@@ -71,14 +71,14 @@ class PassAndFilesActivity : AppCompatActivity() {
                     online = true
                 }
 
-                val intent = Intent(this, LoginActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 lifecycleScope.launch {
                     if (email != null) {
                         deleteUser(online, email)
                     }
                 }
                 FirebaseAuth.getInstance().signOut()
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
                 return true
