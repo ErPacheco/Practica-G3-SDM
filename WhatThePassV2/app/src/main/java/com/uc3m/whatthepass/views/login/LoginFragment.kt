@@ -279,7 +279,7 @@ class LoginFragment : Fragment() {
                         }
                     }
                     myRef.addValueEventListener(masterPassListener)
-                    myRef.removeEventListener(masterPassListener)
+                    //myRef.removeEventListener(masterPassListener)
                     // En caso de que se haya logueado con éxito, cambiamos a la vista de contraseñas
                     val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE)
                     if (sp != null) {

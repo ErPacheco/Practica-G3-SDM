@@ -95,6 +95,7 @@ class PasswordInfoFragment : Fragment() {
                         }
                     }
                     myRef.addValueEventListener(masterPassListener)
+
                 }
             }
         }
