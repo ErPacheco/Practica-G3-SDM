@@ -54,10 +54,16 @@ class PasswordInfoFragment : Fragment() {
         // passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
         val adapter = ListAdapter(passwordViewModel)
 
-        if (!email.equals("Online")) {
+        if (email == null) {
+            Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
+            exitProcess(-1)
+        }
+
+        if (email != "Online") {
+            var userLogin: User?
             lifecycleScope.launch {
 
-                val userLogin: User? = email?.let { userViewModel.findUserByEmail(it) }
+                userLogin = email.let { userViewModel.findUserByEmail(it) }
 
                 if (userLogin == null) {
                     Toast.makeText(requireContext(), "An error has occurred!", Toast.LENGTH_LONG).show()
@@ -66,36 +72,34 @@ class PasswordInfoFragment : Fragment() {
                     binding.createPassButton.setOnClickListener { v ->
                         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                         imm?.hideSoftInputFromWindow(v.windowToken, 0)
-                        insertPassword(email, userLogin.masterPass)
+                        insertPassword(email, userLogin!!.masterPass)
                         adapter.notifyDataSetChanged()
                     }
                 }
             }
-        } else if (email.equals("Online")) {
+        } else if (email == "Online") {
             binding.createPassButton.setOnClickListener { v ->
                 val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                 imm?.hideSoftInputFromWindow(v.windowToken, 0)
-                if (email != null) {
-                    database = FirebaseDatabase.getInstance()
-                    val myRef = database.getReference("Users/" + auth.currentUser.uid + "/masterPass")
-                    val masterPassListener = object : ValueEventListener {
-                        override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            // Get Post object and use the values to update the UI
-                            val masterPassOnline = dataSnapshot.getValue(String::class.java)
+                database = FirebaseDatabase.getInstance()
+                val myRef = database.getReference("Users/" + auth.currentUser.uid + "/masterPass")
+                val masterPassListener = object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        // Get Post object and use the values to update the UI
+                        val masterPassOnline = dataSnapshot.getValue(String::class.java)
 
-                            if (masterPassOnline != null) {
-                                insertPasswordOnline(masterPassOnline)
-                                adapter.notifyDataSetChanged()
-                            }
-                        }
-
-                        override fun onCancelled(databaseError: DatabaseError) {
-                            // Getting Post failed, log a message
-                            Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
+                        if (masterPassOnline != null) {
+                            insertPasswordOnline(masterPassOnline)
+                            adapter.notifyDataSetChanged()
                         }
                     }
-                    myRef.addValueEventListener(masterPassListener)
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // Getting Post failed, log a message
+                        Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
+                    }
                 }
+                myRef.addValueEventListener(masterPassListener)
             }
         }
 
