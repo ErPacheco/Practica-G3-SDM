@@ -43,24 +43,28 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
      * Devuelve 2 si el email no existe en la base de datos */
     suspend fun loginUser(email: String, password: String): Int {
         // Comprobamos si existe el email en la base de datos
-        val userFind = repository.readUserByEmail(email)
-
-        val res: Int
-        // Si existe un usuario con dicho email y comprobamos si la contraseña es correcta
-        if (userFind != null) {
-            // Si la contraseña es correcta
-            if (verifyHash(password, userFind.masterPass)) {
-                res = 0
-            } else {
-                // Si la contraseña no es correcta
-                res = 1
-            }
+        if (email == "" || password == "") {
+            return 3
         } else {
-            // Si no existe el usuario con dicho email
-            res = 2
-        }
+            val userFind = repository.readUserByEmail(email)
 
-        return res
+            val res: Int
+            // Si existe un usuario con dicho email y comprobamos si la contraseña es correcta
+            if (userFind != null) {
+                // Si la contraseña es correcta
+                if (verifyHash(password, userFind.masterPass)) {
+                    res = 0
+                } else {
+                    // Si la contraseña no es correcta
+                    res = 1
+                }
+            } else {
+                // Si no existe el usuario con dicho email
+                res = 2
+            }
+
+            return res
+        }
     }
 
     // Función que devuelve el usuario con dicho email
@@ -68,8 +72,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         return repository.readUserByEmail(email)
     }
 
-    suspend fun deleteUser(email: String){
+    suspend fun deleteUser(email: String) {
         repository.deleteUserByEmail(email)
     }
-
 }

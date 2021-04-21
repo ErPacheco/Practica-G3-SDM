@@ -156,6 +156,13 @@ class LoginFragment : Fragment() {
                     binding.email.text.clear()
                     binding.password.text.clear()
                 }
+                3 -> { // Si el email no existe en la base de datos
+                    lifecycleScope.launch {
+                        Toast.makeText(requireContext(), "Fill all the fields", Toast.LENGTH_LONG).show()
+                    }
+                    binding.email.text.clear()
+                    binding.password.text.clear()
+                }
             }
         } else {
             Toast.makeText(requireContext(), "This is not an email!", Toast.LENGTH_LONG).show()
