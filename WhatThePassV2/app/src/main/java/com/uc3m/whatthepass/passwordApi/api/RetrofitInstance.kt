@@ -9,6 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitInstance {
 
     private val retrofitPass by lazy {
+        // Certificado para proceso SSL Pinner
         val certificatePinner = CertificatePinner.Builder()
             .add("passwords.xposedornot.com", "sha256/PcIiExMyjUj9Dt9n0LFGwIzVwwoxcMryiWILZhUZ6as=").build()
 

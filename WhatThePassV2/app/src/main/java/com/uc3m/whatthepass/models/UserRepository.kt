@@ -15,7 +15,7 @@ class UserRepository(private val userDao: UserDao) {
         userDao.addUser(user)
     }
     suspend fun deleteUserByEmail(email: String){
-        val user =userDao.findUserByEmail(email)
+        val user = userDao.findUserByEmail(email)
         if (user != null) {
             userDao.deleteUser(user)
         }

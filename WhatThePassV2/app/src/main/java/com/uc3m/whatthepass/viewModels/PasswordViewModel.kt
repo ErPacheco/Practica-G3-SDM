@@ -13,14 +13,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class PasswordViewModel(application: Application) : AndroidViewModel(application) {
+    // Contraseña compartida entre los diferentes fragmentos
     val message = MutableLiveData<Password>()
     private val repository: PasswordRepository
+    // Lista de contraseñas de un usuario
     var readUserPasswords: LiveData<List<Password>>
 
     init {
         val passwordDao = WhatTheDatabase.getDatabase(application).passwordDao()
         repository = PasswordRepository(passwordDao)
-        readUserPasswords = MutableLiveData(emptyList())
+        readUserPasswords = MutableLiveData(emptyList()) // Inicialización vacía de la lista
     }
 
     // Función que crea la lista de contraseñas de un usuario

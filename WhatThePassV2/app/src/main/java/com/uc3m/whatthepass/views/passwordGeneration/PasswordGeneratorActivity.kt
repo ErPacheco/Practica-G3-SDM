@@ -26,6 +26,7 @@ class PasswordGeneratorActivity : AppCompatActivity() {
         setContentView(R.layout.activity_password_generator)
     }
 
+    // Funciones que habilitan el menu de opciones del navegador
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.toolbar_menu, menu)
@@ -39,7 +40,7 @@ class PasswordGeneratorActivity : AppCompatActivity() {
                 val sp = getSharedPreferences("Preferences", Context.MODE_PRIVATE)
                 val email = sp.getString("loginEmail", null)
                 if (email.equals("Online")) {
-                    sp.edit().remove("loginEmail").commit()
+                    sp.edit().remove("loginEmail").apply()
                     Firebase.auth.signOut()
                 }
                 val intent = Intent(this, LoginActivity::class.java)
@@ -75,6 +76,8 @@ class PasswordGeneratorActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    // Función que elimina el usuario por completo de cualquiera de las BBDD (local u online)
     private suspend fun deleteUser(online: Boolean, email: String) {
         if (online) {
             val auth = FirebaseAuth.getInstance().currentUser?.uid

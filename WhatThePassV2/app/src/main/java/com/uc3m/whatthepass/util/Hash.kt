@@ -13,10 +13,12 @@ object Hash {
     private val encoder = Base64.getEncoder()
     private val decoder = Base64.getDecoder()
 
+    // Hash bcrypt
     fun bcryptHash(str: String): String {
         return BCrypt.withDefaults().hashToString(12, str.toCharArray())
     }
 
+    // Hash keccak (es el tipo de hash que admite la API Web)
     fun kekHashSubstring(str: String): String {
         val bArray: ByteArray = str.toByteArray(Charset.defaultCharset())
         val digest = Keccak.Digest512()
@@ -26,11 +28,13 @@ object Hash {
         return keccakHash.substring(0, 10)
     }
 
+    // Verificación de las contraseñas maestras por la libreria BCrypt
     fun verifyHash(strInput: String, strSaved: String): Boolean {
         val res = BCrypt.verifyer().verify(strInput.toCharArray(), strSaved)
         return res.verified
     }
 
+    // Método de cifrado de la contraseña por AES
     private fun cipher(opmode: Int, secretKey: String): Cipher {
         var pad = ""
         if (secretKey.length < 32) {
@@ -45,11 +49,13 @@ object Hash {
         return c
     }
 
+    // Cifrado con clave maestra con el método "cipher"
     fun encrypt(str: String, secretKey: String): String {
         val encrypted = cipher(Cipher.ENCRYPT_MODE, secretKey).doFinal(str.toByteArray(Charsets.UTF_8))
         return String(encoder.encode(encrypted))
     }
 
+    // Descifrado con la clave maestras con el método "cipher"
     fun decrypt(str: String, secretKey: String?): String {
         return if (secretKey.isNullOrBlank()) {
             ""

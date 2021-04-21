@@ -18,8 +18,6 @@ interface UserDao {
     @Query("SELECT * from User where email = :email")
     suspend fun findUserByEmail(email: String): User?
 
-    // Preguntar al profesor, sobre como identificar al usuario que va a ser actualizado
-    // si modificamos su clave primaria, en este caso el email
     @Update(onConflict = OnConflictStrategy.ABORT)
     suspend fun updateUser(vararg user: User)
 

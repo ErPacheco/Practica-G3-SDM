@@ -40,7 +40,8 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     /* Función que comprueba si un usuario está ya registrado en la base de datos o no
      * Devuelve 0 si el email existe y la contraseña es correcta
      * Devuelve 1 si el email existe y la contraseña no es correcta
-     * Devuelve 2 si el email no existe en la base de datos */
+     * Devuelve 2 si el email no existe en la base de datos
+     * Devuelve 3 si alguno de los dos campos está vacío */
     suspend fun loginUser(email: String, password: String): Int {
         // Comprobamos si existe el email en la base de datos
         if (email == "" || password == "") {
@@ -72,6 +73,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         return repository.readUserByEmail(email)
     }
 
+    // Función que elimina un usuario con dicho email
     suspend fun deleteUser(email: String) {
         repository.deleteUserByEmail(email)
     }

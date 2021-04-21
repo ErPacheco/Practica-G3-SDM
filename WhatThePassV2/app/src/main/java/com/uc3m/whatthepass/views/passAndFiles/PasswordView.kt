@@ -70,14 +70,12 @@ class PasswordView : Fragment() {
             }
         } else if (email.equals("Online")) {
             if (user != null) {
-
                 val database = FirebaseDatabase.getInstance()
                 val myRef = database.getReference("Users/" + user.uid + "/passwords")
                 childEventListener = object : ChildEventListener {
                     override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                         Log.d(TAG, "onChildAdded:" + dataSnapshot.key!!)
 
-                        // A new comment has been added, add it to the displayed list
                         val pass = dataSnapshot.getValue(Password::class.java)
 
                         if (pass != null) {
@@ -143,11 +141,12 @@ class PasswordView : Fragment() {
             findNavController().navigate(R.id.action_passwordView_to_passwordInfoFragment)
         }
 
+        // Objeto que habilita las funciones de deslizar en cada uno de los items de la recycler view
         val itemTouchHelperCallback =
             object :
                 ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-                private var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF0000"))
-                private var swipeBackgroundEdit: ColorDrawable = ColorDrawable(Color.parseColor("#0000FF"))
+                private var swipeBackground: ColorDrawable = ColorDrawable(Color.parseColor("#FF6666"))
+                private var swipeBackgroundEdit: ColorDrawable = ColorDrawable(Color.parseColor("#598BFF"))
 
                 private var deleteIcon: Drawable? = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_delete_24)
                 private var editIcon: Drawable? = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_edit_24)

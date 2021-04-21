@@ -34,6 +34,7 @@ class PassAndFilesActivity : AppCompatActivity() {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
+    // Funciones que habilitan el menu de opciones del navegador
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.toolbar_menu, menu)
@@ -47,7 +48,7 @@ class PassAndFilesActivity : AppCompatActivity() {
                 val sp = getSharedPreferences("Preferences", Context.MODE_PRIVATE)
                 val email = sp.getString("loginEmail", null)
                 if (email.equals("Online")) {
-                    sp.edit().remove("loginEmail").commit()
+                    sp.edit().remove("loginEmail").apply()
                     FirebaseAuth.getInstance().signOut()
                 }
 
@@ -87,6 +88,7 @@ class PassAndFilesActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    // Función que elimina el usuario por completo de cualquiera de las BBDD (local u online)
     private suspend fun deleteUser(online: Boolean, email: String) {
         if (online) {
             val auth = FirebaseAuth.getInstance().currentUser?.uid

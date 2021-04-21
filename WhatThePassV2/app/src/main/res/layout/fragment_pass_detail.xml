@@ -111,7 +111,7 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/bottom_border"
         android:inputType="textPassword"
-        android:text="@string/default_text"
+        android:text=""
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"

@@ -46,7 +46,6 @@ class PasswordInfoFragment : Fragment() {
 
         val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
         val email = sp.getString("loginEmail", null)
-        // passwordViewModel = ViewModelProvider(this).get(PasswordViewModel::class.java)
         val adapter = ListAdapter(passwordViewModel)
 
         if (email == null) {
@@ -100,6 +99,7 @@ class PasswordInfoFragment : Fragment() {
         return view
     }
 
+    // Función para crear la contraseña y guardarla en Firebase
     private fun insertPasswordOnline(masterPass: String) {
         val inputTitle = binding.titleInput.text.toString()
         val inputEmail = binding.emailInput.text.toString()
@@ -127,6 +127,7 @@ class PasswordInfoFragment : Fragment() {
         }
     }
 
+    // Función para crear la contraseña y guardarla en Room
     private fun insertPassword(email: String, masterPass: String) {
         val inputTitle = binding.titleInput.text.toString()
         val inputEmail = binding.emailInput.text.toString()
@@ -147,12 +148,16 @@ class PasswordInfoFragment : Fragment() {
         }
     }
 
+    // Función que limpia los inputs
     private fun clearData() {
         binding.titleInput.text.clear()
+        binding.emailInput.text.clear()
+        binding.usernameInput.text.clear()
         binding.passwordInput.text.clear()
         binding.urlInput.text.clear()
     }
 
+    // Función que se encarga de la lógica de los inputs a la hora de crear una contraseña
     private fun checkInputs(title: String, pass: String, email: String, url: String): Int {
         return when {
             title.isEmpty() -> {

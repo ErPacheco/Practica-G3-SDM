@@ -53,6 +53,7 @@ object PasswordGenerator {
         return verify(password.toString())
     }
 
+    // Desordena los caracteres generados
     private fun verify(generatedPassword: String): String {
 
         val list = generatedPassword.toMutableList()

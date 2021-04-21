@@ -1,5 +1,6 @@
 package com.uc3m.whatthepass.views.passAndFiles
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -43,6 +44,7 @@ class PassDetailFragment : Fragment() {
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
 
+    @SuppressLint("ClickableViewAccessibility", "SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,10 +68,10 @@ class PassDetailFragment : Fragment() {
         val popupWindow = PopupWindow(viewWindow, width, height, focusable)
 
         // Cuando toquemos la pantalla, el popup desaparecerá
-        viewWindow.setOnTouchListener({ _, _ ->
+        viewWindow.setOnTouchListener { _, _ ->
             popupWindow.dismiss()
             true
-        })
+        }
 
         // Sombra del popup
         popupWindow.elevation = 20F
@@ -142,6 +144,7 @@ class PassDetailFragment : Fragment() {
         return view
     }
 
+    // Lógica para dar recomendaciones según los resultados devueltos por la API Web
     private fun passInformation(str: String) {
         val firstSplit = str.split(';')
         val info = arrayOfNulls<String>(4)
@@ -195,6 +198,7 @@ class PassDetailFragment : Fragment() {
         binding.URIDetail.text = password.url
     }
 
+    // Función para insertar los datos de la contraseña en los campos de la vista (online)
     private fun insertFieldsOnline(password: Password) {
         binding.titleDetail.text = password.name
         binding.emailDetail.text = password.inputEmail

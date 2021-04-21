@@ -8,8 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.uc3m.whatthepass.R
 import com.uc3m.whatthepass.views.passAndFiles.PassAndFilesActivity
 
+// Splash Screen que se ve después de iniciar sesión
 class SplashScreenActivity : AppCompatActivity() {
-    private val SPLASH_TIME_OUT = 2000L
+    private val SPLASH_TIME_OUT = 2000L // 2 segundos
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

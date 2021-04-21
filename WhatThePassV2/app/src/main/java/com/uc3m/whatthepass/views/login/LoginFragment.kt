@@ -93,32 +93,36 @@ class LoginFragment : Fragment() {
         // Comprobamos si el campo introducido es un email
         if (emailCheck(email)) {
             // Comprobamos si la contraseña cumple con los requisitos
-            if (passwordCheck(masterPassword)) {
-                /* Registramos al usuario con la función addUser:
-                *  Esta función devuelve true si ha conseguido registrarlo.
-                *  Devolverá false si el usuario ya existe en la base de datos
-                *  */
-                val registerFind = withContext(Dispatchers.IO) {
-                    userViewModel.addUser(email, masterPassword)
-                }
+            if (masterPassword.isEmpty()) {
+                Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
+            } else {
+                if (passwordCheck(masterPassword)) {
+                    /* Registramos al usuario con la función addUser:
+                    *  Esta función devuelve true si ha conseguido registrarlo.
+                    *  Devolverá false si el usuario ya existe en la base de datos
+                    *  */
+                    val registerFind = withContext(Dispatchers.IO) {
+                        userViewModel.addUser(email, masterPassword)
+                    }
 
-                // Si el usuario se ha registrado correctamente
-                if (registerFind) {
-                    loginView(email)
-                    Toast.makeText(requireContext(), "User created!", Toast.LENGTH_LONG).show()
-                } else { // Si el usuario ya existe en la base de datos, es decir, no se ha registrado correctamente
-                    Toast.makeText(requireContext(), "The email is already registered!", Toast.LENGTH_LONG).show()
-                }
+                    // Si el usuario se ha registrado correctamente
+                    if (registerFind) {
+                        loginView(email)
+                        Toast.makeText(requireContext(), "User created!", Toast.LENGTH_LONG).show()
+                    } else { // Si el usuario ya existe en la base de datos, es decir, no se ha registrado correctamente
+                        Toast.makeText(requireContext(), "The email is already registered!", Toast.LENGTH_LONG).show()
+                    }
 
-                binding.email.text.clear()
-                binding.password.text.clear()
-            } else { // Si no cumple con los requisitos
-                Toast.makeText(
-                    requireContext(),
-                    "Invalid password! It must include lower case and upper case letters, " +
-                        "numbers and at least 8 characters long",
-                    Toast.LENGTH_LONG
-                ).show()
+                    binding.email.text.clear()
+                    binding.password.text.clear()
+                } else { // Si no cumple con los requisitos
+                    Toast.makeText(
+                        requireContext(),
+                        "Invalid password! It must include lower case and upper case letters, " +
+                            "numbers and at least 8 characters long",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         } else { // Si el campo email no es un email
             Toast.makeText(requireContext(), "The input must be an email", Toast.LENGTH_LONG).show()
@@ -196,31 +200,23 @@ class LoginFragment : Fragment() {
             passValid = false
         }
 
-        var reg = ".*[0-9].*"
-        var pattern = Pattern.compile(reg, Pattern.CASE_INSENSITIVE)
-        var matcher = pattern.matcher(reg)
-        if (!matcher.matches()) {
+        var reg = ".*[0-9].*".toRegex()
+        if (!password.matches(reg)) {
             passValid = false
         }
 
-        reg = ".*[A-Z].*"
-        pattern = Pattern.compile(reg)
-        matcher = pattern.matcher(reg)
-        if (!matcher.matches()) {
+        reg = ".*[A-Z].*".toRegex()
+        if (!password.matches(reg)) {
             passValid = false
         }
 
-        reg = ".*[a-z].*"
-        pattern = Pattern.compile(reg)
-        matcher = pattern.matcher(reg)
-        if (!matcher.matches()) {
+        reg = ".*[a-z].*".toRegex()
+        if (!password.matches(reg)) {
             passValid = false
         }
 
-        reg = ".*[~!@#\$%\\^&*()\\-_=+\\|\\[{\\]};:'\",<.>/?].*"
-        pattern = Pattern.compile(reg)
-        matcher = pattern.matcher(reg)
-        if (!matcher.matches()) {
+        reg = ".*[~!@#\$%^&*()\\-_=+|\\[{\\]};:'\",<.>/?].*".toRegex()
+        if (!password.matches(reg)) {
             passValid = false
         }
 
@@ -232,37 +228,39 @@ class LoginFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        // Resultado devuelto por el Intent ejecutado de GoogleSignInApi.getSignInIntent(...)
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
-                // Google Sign In was successful, authenticate with Firebase
+                // El proceso de google sigin ha sido satisfactorio, por lo que nos autenticamos con Firebase
                 val account = task.getResult(ApiException::class.java)!!
-                Log.d(ContentValues.TAG, "firebaseAuthWithGoogle:" + account.id)
+                Log.d(ContentValues.TAG, "firebaseAuthWithGoogle")
                 firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
-                // Google Sign In failed, update UI appropriately
+                // El proceso de google sigin ha fallado
                 Log.w(ContentValues.TAG, "Google sign in failed", e)
                 Toast.makeText(requireContext(), "Something went wrong when sing in with Google!", Toast.LENGTH_LONG).show()
             }
         }
     }
 
+    // Función para el proceso de autenticacion por Firebase
     private fun firebaseAuthWithGoogle(idToken: String) {
-        // [START_EXCLUDE silent]
-
-        // [END_EXCLUDE]
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         FirebaseAuth.getInstance().signInWithCredential(credential)
             .addOnCompleteListener(this.requireActivity()) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
+                    // Ha ido bien el registro/inicio de sesion
                     Log.d(TAG, "signInWithCredential:success")
+                    // Inicio en Firebase
                     val user = FirebaseAuth.getInstance().currentUser
+                    val database = FirebaseDatabase.getInstance() // Instancia de la BBDD de Firebase
 
-                    val database = FirebaseDatabase.getInstance()
+                    // Referencia de la contraseña maestra del usuario
                     val myRef = database.getReference("Users/" + user!!.uid + "/masterPass")
                     myRef.get().addOnSuccessListener {
+                        // Si existe contraseña maestra, no hace nada
+                        // Sin embargo, si no existe se crea una contraseña maestra
                         val masterPassOnline = it.getValue(String::class.java)
                         if (masterPassOnline == null) {
                             lifecycleScope.launch {
@@ -273,29 +271,26 @@ class LoginFragment : Fragment() {
                         }
                     }
 
-                    // myRef.removeEventListener(masterPassListener)
                     // En caso de que se haya logueado con éxito, cambiamos a la vista de contraseñas
                     val sp = activity?.getSharedPreferences("Preferences", Context.MODE_PRIVATE)
                     if (sp != null) {
                         with(sp.edit()) {
-                            putString("loginEmail", "Online") // account.email)
+                            putString("loginEmail", "Online")
                             commit()
                         }
                     }
 
-                    val intent = Intent(this@LoginFragment.context, SplashScreenActivity::class.java)
+                    val intent = Intent(requireContext(), SplashScreenActivity::class.java)
                     activity?.startActivity(intent)
                     activity?.finish()
                 } else {
-                    // If sign in fails, display a message to the user.
+                    // Si el proceso de registro/inicio sesion falla, mostramos un mensaje
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
-                    // [START_EXCLUDE]
                 }
             }
     }
-    // [END auth_with_google]
 
-    // [START signin]
+    // Comienzo del inicio de sesión por Google
     private fun signInWithGoogleOauth() {
         val signInIntent = googleSignInClient.signInIntent
 

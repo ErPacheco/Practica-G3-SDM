@@ -24,7 +24,7 @@ class PasswordRepository(private val passwordDao: PasswordDao) {
         passwordDao.updatePassword(pass)
     }
 
-    suspend fun deletePasswordByUser(user: String){
+    suspend fun deletePasswordByUser(user: String) {
         passwordDao.deleteByUser(user)
     }
 }

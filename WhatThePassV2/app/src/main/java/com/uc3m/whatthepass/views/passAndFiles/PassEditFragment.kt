@@ -52,6 +52,7 @@ class PassEditFragment : Fragment() {
         // Obtenemos el email del usuario logueado
         val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
         val email = sp.getString("loginEmail", null)
+        // Local
         if (!email.equals("Online")) {
             lifecycleScope.launch {
                 val userLogin: User? = email?.let { userViewModel.findUserByEmail(it) }
@@ -80,11 +81,10 @@ class PassEditFragment : Fragment() {
                     binding.passwordDetailInput2.inputType = 129
                 }
             }
-        } else if (email.equals("Online")) {
+        } else if (email.equals("Online")) { // Online
             database = FirebaseDatabase.getInstance()
             val myRef = database.getReference("Users/" + auth.currentUser?.uid + "/masterPass")
             myRef.get().addOnSuccessListener {
-                // Get Post object and use the values to update the UI
                 val masterPassOnline = it.getValue(String::class.java)
                 if (masterPassOnline != null) {
                     val passId = passwordViewModel.message.value?.id
@@ -118,13 +118,14 @@ class PassEditFragment : Fragment() {
         return view
     }
 
+    // Función/logica que se encarga de guardar la contraseña editada en la base de datos (online)
     private fun editPasswordOnline(email: String, masterPass: String, idPass: Long) {
         val inputTitle = binding.titleDetail2.text.toString()
         val inputEmail = binding.emailDetail2.text.toString()
         val inputUsername = binding.usernameDetail2.text.toString()
         val inputPassword = binding.passwordDetailInput2.text.toString()
         val inputURL = binding.URIDetail2.text.toString()
-        // database= FirebaseDatabase.getInstance()
+
         when (checkInputs(inputTitle, inputPassword, inputEmail, inputURL)) {
             1 -> Toast.makeText(requireContext(), "Title field must be filled", Toast.LENGTH_LONG).show()
             2 -> Toast.makeText(requireContext(), "Password field must be filled", Toast.LENGTH_LONG).show()
@@ -142,6 +143,7 @@ class PassEditFragment : Fragment() {
         }
     }
 
+    // Función/logica que se encarga de guardar la contraseña editada en la base de datos (local)
     private fun editPassword(email: String, masterPass: String) {
         val inputTitle = binding.titleDetail2.text.toString()
         val inputEmail = binding.emailDetail2.text.toString()
@@ -162,6 +164,7 @@ class PassEditFragment : Fragment() {
         }
     }
 
+    // Función que se encarga de obtener los datos de la contraseña que se va a editar, así como insertarlos en los campos correspondientes
     private fun insertFields(email: String, password: Password) {
         binding.titleDetail2.setText(password.name)
         binding.emailDetail2.setText(password.inputEmail)
@@ -194,9 +197,11 @@ class PassEditFragment : Fragment() {
         binding.URIDetail2.setText(password.url)
     }
 
+    // Cuando la view se haya creado
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Obtenemos el email del usuario logueado
         val sp = requireActivity().getSharedPreferences("Preferences", Context.MODE_PRIVATE)
         val email = sp.getString("loginEmail", null)
         lateinit var pass: Password
@@ -206,6 +211,7 @@ class PassEditFragment : Fragment() {
                 object : Observer<Password> {
                     override fun onChanged(o: Password?) {
                         if (o != null) {
+                            // Procedemos a insertar los datos en los campos de la entrada de la contraseña a editar
                             pass = o
                             passwordID = o.id
                             insertFields(email, pass)
@@ -224,6 +230,7 @@ class PassEditFragment : Fragment() {
         }
     }
 
+    // Función que se encarga de la lógica de los inputs introducidos en la contraseña a editar
     private fun checkInputs(title: String, pass: String, email: String, url: String): Int {
         return when {
             title.isEmpty() -> {
@@ -232,7 +239,7 @@ class PassEditFragment : Fragment() {
             pass.isEmpty() -> {
                 2
             }
-            email.isNotEmpty() && !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+            email.isNotEmpty() && !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
                 3
             }
             url.isNotEmpty() && !Patterns.WEB_URL.matcher(url).matches() -> {

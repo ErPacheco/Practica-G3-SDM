@@ -8,7 +8,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.* // ktlint-disable no-wildcard-imports
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -33,7 +33,7 @@ class PasswordGeneratorFragment : Fragment() {
         binding = FragmentPasswordGeneratorBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        // Link the number next to the seekbar to the real number indicated by the seekbar
+        // Listener que lee el la longitud del seekbar del generador de contraseñas
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 binding.lengthNumber.text = "$progress"
@@ -48,7 +48,7 @@ class PasswordGeneratorFragment : Fragment() {
             }
         })
 
-        // Import repository password breaches API
+        // Importamos el repositorio de la API Web
         val repository = Repository()
         val passViewModelFactory = PassInfoViewModelFactory(repository)
         val passViewModel = ViewModelProvider(this, passViewModelFactory).get(PassInfoViewModel::class.java)

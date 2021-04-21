@@ -10,7 +10,7 @@ import androidx.room.ForeignKey.CASCADE
 )
 data class Password(
     @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    val id: Long, // identificador del password
     val name: String, // nombre de entrada
     @ForeignKey
     (
@@ -23,8 +23,8 @@ data class Password(
     val user: String, // Usuario al que pertenece esta entrada
     val inputEmail: String?, // Email de la entrada de la contraseña
     val inputUser: String?, // Nombre de usuario de la entrada de la contraseña
-    val hashPassword: String,
-    val url: String?
+    val hashPassword: String, // Contraseña de la entrada cifrada
+    val url: String? // Url de la entrada
 ) {
     constructor() : this(
         0, "",
