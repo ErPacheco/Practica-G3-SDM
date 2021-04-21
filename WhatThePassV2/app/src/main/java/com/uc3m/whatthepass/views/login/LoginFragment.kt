@@ -257,7 +257,6 @@ class LoginFragment : Fragment() {
                     val myRef = database.getReference("Users/" + user!!.uid + "/masterPass")
                     myRef.get().addOnSuccessListener {
                         val masterPassOnline = it.getValue(String::class.java)
-
                         if (masterPassOnline == null) {
                             lifecycleScope.launch {
                                 val masterPass = PasswordGenerator.generatePassword(isCapital = true, isLower = true, isNumeric = true, isSpecial = true, length = 42, minNumNumeric = 1, minNumSpecial = 1)

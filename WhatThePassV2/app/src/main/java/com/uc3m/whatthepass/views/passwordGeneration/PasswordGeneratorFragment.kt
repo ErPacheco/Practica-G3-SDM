@@ -76,7 +76,6 @@ class PasswordGeneratorFragment : Fragment() {
                         binding.numSpecial.text.toString().toInt()
                     )
                 }
-                binding.exposedPassword.visibility = View.VISIBLE
             } else {
                 Toast.makeText(requireContext(), "You need to specify at least one type of character to generate the password", Toast.LENGTH_LONG).show()
             }
@@ -174,9 +173,7 @@ class PasswordGeneratorFragment : Fragment() {
         minNumSpecial: Int
     ): String {
         var password = ""
-        if (length> 0 && ((minNumNumeric <= length || minNumSpecial <= length) || (minNumNumeric + minNumSpecial <= length))) {
-            password = generatePassword(isCapital, isLower, isNumeric, isSpecial, length, minNumNumeric, minNumSpecial)
-        } else if (length <= 0) {
+        if (length <= 0) {
             Toast.makeText(requireContext(), "La contraseña debe tener una longitud mayor a 0", Toast.LENGTH_LONG).show()
         } else if (minNumNumeric >= length) {
             Toast.makeText(
@@ -199,6 +196,9 @@ class PasswordGeneratorFragment : Fragment() {
                     "debe ser menor que la longitud de la contraseña a generar",
                 Toast.LENGTH_LONG
             ).show()
+        } else {
+            password = generatePassword(isCapital, isLower, isNumeric, isSpecial, length, minNumNumeric, minNumSpecial)
+            binding.exposedPassword.visibility = View.VISIBLE
         }
         return password
     }
